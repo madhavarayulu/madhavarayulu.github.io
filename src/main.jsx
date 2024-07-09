@@ -9,34 +9,37 @@ import Certifications from './routes/certifications/Certifications.jsx';
 import About from './routes/about/About.jsx';
 import Contact from './routes/contact/Contact.jsx';
 
-const router = createBrowserRouter([
-  {
-    path: '/',
-    element: <App />,
-    children: [
-      {
-        path: '/',
-        element: <Home />,
-      },
-      {
-        path: '/projects',
-        element: <Projects />,
-      },
-      {
-        path: '/certifications',
-        element: <Certifications />,
-      },
-      {
-        path: '/about',
-        element: <About />,
-      },
-      {
-        path: '/contact',
-        element: <Contact />,
-      },
-    ],
-  },
-]);
+const router = createBrowserRouter(
+  [
+    {
+      path: '/',
+      element: <App />,
+      children: [
+        {
+          path: '/',
+          element: <Home />,
+        },
+        {
+          path: '/projects',
+          element: <Projects />,
+        },
+        {
+          path: '/certifications',
+          element: <Certifications />,
+        },
+        {
+          path: '/about',
+          element: <About />,
+        },
+        {
+          path: '/contact',
+          element: <Contact />,
+        },
+      ],
+    },
+  ],
+  { basename: '/' }
+);
 
 ReactDOM.createRoot(document.getElementById('root')).render(
   <React.StrictMode>
