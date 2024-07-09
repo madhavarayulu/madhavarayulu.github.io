@@ -1,6 +1,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
-import { createBrowserRouter, RouterProvider } from 'react-router-dom';
+import { createHashRouter, RouterProvider } from 'react-router-dom';
 import App from './App.jsx';
 import './index.css';
 import Home from './routes/home/Home.jsx';
@@ -9,7 +9,7 @@ import Certifications from './routes/certifications/Certifications.jsx';
 import About from './routes/about/About.jsx';
 import Contact from './routes/contact/Contact.jsx';
 
-const router = createBrowserRouter(
+const router = createHashRouter(
   [
     {
       path: '/',
