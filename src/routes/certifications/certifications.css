@@ -1,0 +1,130 @@
+.certifications-container {
+  text-align: center;
+  padding: 2rem;
+  color: #ffffff;
+}
+
+@media (max-width: 768px) {
+  .certifications-container {
+    padding: 1rem;
+  }
+}
+
+@media (max-width: 425px) {
+  .certifications-container {
+    padding: 0.5rem;
+  }
+}
+
+.certifications-container h1 {
+  font-size: 2.5rem;
+  margin-bottom: 2rem;
+  font-weight: 600;
+}
+
+@media (max-width: 768px) {
+  .certifications-container h1 {
+    font-size: 2rem;
+  }
+}
+
+@media (max-width: 425px) {
+  .certifications-container h1 {
+    font-size: 1.5rem;
+  }
+}
+
+.carousel {
+  position: relative;
+  display: inline-block;
+  max-width: 70%;
+  margin: auto;
+  background-color: #1f1f1f;
+  padding: 2rem;
+  border-radius: 10px;
+}
+
+@media (max-width: 768px) {
+  .carousel {
+    padding: 1rem;
+  }
+
+  /* .carousel-button.prev {
+    left: -30px;
+  }
+
+  .carousel-button.next {
+    right: -30px;
+  } */
+}
+
+.certificate-image {
+  width: 100%;
+  height: auto;
+  border-radius: 8px;
+}
+
+.certificate-description {
+  margin-top: 0;
+  font-size: 1.2rem;
+}
+
+@media (max-width: 768px) {
+  .certificate-description {
+    font-size: 1rem;
+  }
+}
+
+@media (max-width: 425px) {
+  .certificate-description {
+    font-size: 0.8rem;
+  }
+}
+
+.carousel-button {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  background-color: #e11d48;
+  color: #ffffff;
+  border: none;
+  padding: 0.5rem 1rem;
+  cursor: pointer;
+  border-radius: 50%;
+  font-size: 1.5rem;
+  transition: background-color 0.3s ease;
+}
+
+.carousel-button:hover {
+  background-color: #ff476f;
+}
+
+.carousel-button.prev {
+  left: -50px;
+}
+
+.carousel-button.next {
+  right: -50px;
+}
+
+@media (max-width: 768px) {
+  .carousel-button {
+    padding: 0.4rem 0.8rem;
+    font-size: 1.3rem;
+  }
+}
+
+@media (max-width: 425px) {
+  .carousel-button {
+    font-size: 1rem;
+    padding: 0.2rem 0.4rem;
+  }
+
+  .carousel-button.prev {
+    left: -30px;
+  }
+  
+  .carousel-button.next {
+    right: -30px;
+  }
+}

@@ -1,0 +1,127 @@
+.home-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: flex-start;
+  height: 100%;
+  padding-top: 10rem;
+  /* padding-top: 8%; */
+  padding-left: 5%;
+}
+
+/* Responsive home container */
+@media (max-width: 768px) {
+  .home-container {
+    padding: 1.75rem 2rem 0 2rem;
+  }
+
+  .home-container h1 {
+    font-size: 3rem;
+  }
+
+  .home-container p {
+    font-size: 1.2rem;
+  }
+
+  .home-container button {
+    font-size: 1rem;
+  }
+}
+
+@media (max-width: 425px) {
+  .home-container {
+    padding: 2.8rem 1rem 0 1rem;
+  }
+}
+
+@media (max-width: 320px) {
+  .home-container {
+    padding: 4.2rem 1rem 0 1rem;
+  }
+}
+
+.home-container h1 {
+  font-size: 4rem;
+  color: #f0f0f0;
+  margin-bottom: 1rem;
+}
+
+.home-container h1 span:first-child {
+  font-weight: 500;
+  color: #f0f0f0;
+}
+
+.home-container h1 span:last-child {
+  font-weight: 600;
+  color: #e11d48;
+}
+
+@media (max-width: 425px) {
+  .home-container h1 {
+    font-size: 2.5rem;
+  }
+}
+
+@media (max-width: 375px) {
+  .home-container h1 {
+    font-size: 2rem;
+  }
+}
+
+@media (max-width: 320px) {
+  .home-container h1 {
+    font-size: 1.75rem;
+  }
+}
+
+.home-container p {
+  font-size: 1.5rem;
+  font-weight: 400;
+  color: #909090;
+  margin-top: 0;
+  margin-bottom: 3rem;
+}
+
+@media (max-width: 425px) {
+  .home-container p {
+    font-size: 1.2rem;
+    margin-bottom: 2.5rem;
+  }
+}
+
+@media (max-width: 375px) {
+  .home-container p {
+    font-size: 1rem;
+    margin-bottom: 2.25rem;
+  }
+}
+
+.home-container button {
+  padding: 0.8rem 1.5rem;
+  font-size: 1.2rem;
+  font-weight: 500;
+  background-color: #e11d48;
+  color: #f0f0f0;
+  border: none;
+  border-radius: 0.5rem;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.home-container button:hover {
+  background-color: #bf0e39;
+}
+
+@media (max-width: 425px) {
+  .home-container button {
+    font-size: 1rem;
+    padding: 0.7rem 1.2rem;
+  }
+}
+
+@media (max-width: 375px) {
+  .home-container button {
+    font-size: 0.75rem;
+    padding: 0.6rem 1.3rem;
+  }
+}

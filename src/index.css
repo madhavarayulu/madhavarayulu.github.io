@@ -1,0 +1,61 @@
+/* Reset default styles */
+html,
+body {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  font-family: "Fira Code", monospace;
+  background-color: #181818;
+  color: #f0f0f0;
+}
+
+body::-webkit-scrollbar {
+  display: none;
+}
+
+/* Basic layout for #root */
+#root {
+  padding: 3.5rem;
+}
+
+/* Responsive padding for #root */
+@media (max-width: 768px) {
+  #root {
+    padding: 2.5rem;
+  }
+}
+
+@media (max-width: 425px) {
+  #root {
+    padding: 1.5rem;
+  }
+}
+
+@media (max-width: 375px) {
+  #root {
+    padding: 2rem 1.25rem 1.25rem 1.25rem;
+  }
+}
+
+@media (max-width: 320px) {
+  #root {
+    padding: 2rem 0.5rem 0.5rem 0.5rem;
+  }
+}
+
+.navbar-link {
+  color: #f0f0f0;
+}
+
+.navbar-link:hover {
+  color: #0073e6;
+}
+
+.button-primary {
+  background-color: #0073e6;
+  color: #fff;
+}
+
+.button-primary:hover {
+  background-color: #0057ad;
+}
