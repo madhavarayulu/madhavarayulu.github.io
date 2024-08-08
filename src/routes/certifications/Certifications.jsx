@@ -7,6 +7,10 @@ const certifications = [
     description: 'Frontend Developer',
   },
   {
+    image: 'backend-apis.png',
+    description: 'Back End Development and APIs',
+  },
+  {
     image: 'node.png',
     description: 'Node.js',
   },
