@@ -1,5 +1,12 @@
 export const featuredProjects = [
   {
+    title: 'Incisive Solutions',
+    description:
+      'Developed, deployed, and delivered a professional company website for a client.',
+    link: 'https://github.com/madhavarayulu/is',
+    site: 'https://incisivesolutions.in/',
+  },
+  {
     title: 'Meokja',
     description: 'A full-stack food ordering and management system.',
     link: 'https://github.com/madhavarayulu/meokja',
