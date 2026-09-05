@@ -16,6 +16,7 @@ jobs:
         run: |
           import re, html, shutil, pathlib
           SITE = 'https://madhavarayulu.github.io'
+          AUTHOR = 'https://www.linkedin.com/in/madhavarayulu'
           posts = pathlib.Path('posts')
           entry = pathlib.Path('entry')
           if entry.exists():
@@ -43,6 +44,8 @@ jobs:
               title = meta.get('title', slug)
               desc = excerpt(raw)
               image = SITE + '/cairn-card-wide.png'
+              date_tag = f'<meta property="article:published_time" content="{meta.get("date","")}">\n' if meta.get('date') else ''
+              author_tag = f'<meta property="article:author" content="{AUTHOR}">\n' if AUTHOR else ''
               page = (
                   '<!DOCTYPE html>\n'
                   '<html lang="en"><head>\n'
@@ -57,6 +60,7 @@ jobs:
                   '<meta property="og:image:height" content="628">\n'
                   '<meta property="og:image:alt" content="A cairn — six stacked stones with a terracotta capstone">\n'
                   '<meta name="twitter:card" content="summary_large_image">\n'
+                  + date_tag + author_tag
                   f'<meta http-equiv="refresh" content="0; url=/#/entry/{slug}">\n'
                   f'<script>location.replace("/#/entry/{slug}")</script>\n'
                   '</head><body style="font-family:monospace;background:#F2EDE2;color:#26221B;padding:2rem">\n'
