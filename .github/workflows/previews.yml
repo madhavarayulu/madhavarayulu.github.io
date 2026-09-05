@@ -12,12 +12,14 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - name: Generate per-entry preview stubs
+        shell: python
         run: |
-          python3 - << 'PY'
           import re, html, shutil, pathlib
           SITE = 'https://madhavarayulu.github.io'
-          posts, entry = pathlib.Path('posts'), pathlib.Path('entry')
-          if entry.exists(): shutil.rmtree(entry)
+          posts = pathlib.Path('posts')
+          entry = pathlib.Path('entry')
+          if entry.exists():
+              shutil.rmtree(entry)
           entry.mkdir()
           def excerpt(body, n=160):
               t = re.sub(r'```[\s\S]*?```', ' ', body)
@@ -27,36 +29,43 @@ jobs:
               return (t[:n].rsplit(' ', 1)[0] + '…') if len(t) > n else t
           for f in sorted(posts.glob('*.md')):
               raw = f.read_text(encoding='utf-8', errors='replace').lstrip()
-              meta, m = {}, re.match(r'^---\s*\n([\s\S]*?)\n---', raw)
+              meta = {}
+              m = re.match(r'^---\s*\n([\s\S]*?)\n---', raw)
               if m:
                   for line in m.group(1).splitlines():
                       kv = re.match(r'^(\w+)\s*:\s*(.*)$', line)
-                      if kv: meta[kv.group(1).lower()] = kv.group(2).strip()
+                      if kv:
+                          meta[kv.group(1).lower()] = kv.group(2).strip()
                   raw = raw[m.end():]
-              if re.match(r'(?i)^(true|yes|1)$', meta.get('draft', '')): continue
+              if re.match(r'(?i)^(true|yes|1)$', meta.get('draft', '')):
+                  continue
               slug = f.stem
               title = meta.get('title', slug)
               desc = excerpt(raw)
               image = SITE + '/cairn-card-wide.png'
-              d = entry / slug; d.mkdir()
-              (d / 'index.html').write_text(f"""<!DOCTYPE html>
-<html lang="en"><head>
-<meta charset="UTF-8"><title>{html.escape(title)} · Cairn</title>
-<meta property="og:title" content="{html.escape(title)} — Cairn">
-<meta property="og:description" content="{html.escape(desc)}">
-<meta property="og:type" content="article">
-<meta property="og:url" content="{SITE}/entry/{slug}/">
-<meta property="og:image" content="{image}">
-<meta property="og:image:width" content="1200"/>
-<meta property="og:image:height" content="628"/>
-<meta property="og:image:alt" content="A cairn — six stacked stones with a terracotta capstone"/>
-<meta name="twitter:card" content="summary_large_image">
-<meta http-equiv="refresh" content="0; url=/#/entry/{slug}">
-<script>location.replace('/#/entry/{slug}')</script>
-</head><body style="font-family:monospace;background:#F2EDE2;color:#26221B;padding:2rem">
-<p>Opening <a href="/#/entry/{slug}" style="color:#C1502E">{html.escape(title)}</a> …</p>
-</body></html>""", encoding='utf-8')
-          PY
+              page = (
+                  '<!DOCTYPE html>\n'
+                  '<html lang="en"><head>\n'
+                  '<meta charset="UTF-8">\n'
+                  f'<title>{html.escape(title)} · Cairn</title>\n'
+                  f'<meta property="og:title" content="{html.escape(title)} — Cairn">\n'
+                  f'<meta property="og:description" content="{html.escape(desc)}">\n'
+                  '<meta property="og:type" content="article">\n'
+                  f'<meta property="og:url" content="{SITE}/entry/{slug}/">\n'
+                  f'<meta property="og:image" content="{image}">\n'
+                  '<meta property="og:image:width" content="1200">\n'
+                  '<meta property="og:image:height" content="628">\n'
+                  '<meta property="og:image:alt" content="A cairn — six stacked stones with a terracotta capstone">\n'
+                  '<meta name="twitter:card" content="summary_large_image">\n'
+                  f'<meta http-equiv="refresh" content="0; url=/#/entry/{slug}">\n'
+                  f'<script>location.replace("/#/entry/{slug}")</script>\n'
+                  '</head><body style="font-family:monospace;background:#F2EDE2;color:#26221B;padding:2rem">\n'
+                  f'<p>Opening <a href="/#/entry/{slug}" style="color:#C1502E">{html.escape(title)}</a> …</p>\n'
+                  '</body></html>\n'
+              )
+              d = entry / slug
+              d.mkdir()
+              (d / 'index.html').write_text(page, encoding='utf-8')
       - name: Commit stubs
         run: |
           git config user.name "cairn-bot"
