@@ -540,6 +540,7 @@ function renderPost(slug){
 
   const i = state.published.indexOf(p);
   const newer = state.published[i-1], older = state.published[i+1];
+  const clean = location.origin + '/entry/' + encodeURIComponent(p.slug) + '/';
   const body = window.marked ? marked.parse(p.body) : '<p>' + esc(p.body) + '</p>';
 
   let series = '';
@@ -570,8 +571,8 @@ function renderPost(slug){
       <div class="share">
         ${miniMark}
         <span class="lbl">Leave a marker —</span>
-        <button class="chip" id="copyLinkBtn">Copy link</button>
-        <a class="chip" target="_blank" rel="noopener" href="https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(location.href)}">Carry it to LinkedIn</a>
+        <button class="chip" id="copyLinkBtn" data-url="${esc(clean)}">Copy link</button>
+        <a class="chip" target="_blank" rel="noopener" href="https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(clean)}">Carry it to LinkedIn</a>
       </div>
       ${series}
       <nav class="pn">
@@ -627,7 +628,7 @@ view.addEventListener('click', async e => {
   }
   const cb = e.target.closest('#copyLinkBtn');
   if(cb){
-    const url = location.href;
+    const url = cb.dataset.url || location.href;
     try{ await navigator.clipboard.writeText(url); }
     catch(_){
       const t = document.createElement('textarea');
