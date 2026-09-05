@@ -10,7 +10,7 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
       - name: Generate per-entry preview stubs
         shell: python
         run: |
@@ -61,7 +61,7 @@ jobs:
                   '<meta property="og:image:alt" content="A cairn — six stacked stones with a terracotta capstone">\n'
                   '<meta name="twitter:card" content="summary_large_image">\n'
                   + date_tag + author_tag
-                  f'<meta http-equiv="refresh" content="0; url=/#/entry/{slug}">\n'
+                  + f'<meta http-equiv="refresh" content="0; url=/#/entry/{slug}">\n'
                   f'<script>location.replace("/#/entry/{slug}")</script>\n'
                   '</head><body style="font-family:monospace;background:#F2EDE2;color:#26221B;padding:2rem">\n'
                   f'<p>Opening <a href="/#/entry/{slug}" style="color:#C1502E">{html.escape(title)}</a> …</p>\n'
