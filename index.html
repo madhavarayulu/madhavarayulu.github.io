@@ -436,7 +436,7 @@ function goHomeFresh(e){
   if(!state.filter) return;
   e.preventDefault();
   clearFilter();
-  if(location.hash.startsWith('#/post/') || location.hash.startsWith('#/trailhead')) location.hash = '#/';
+  if(location.hash.startsWith('#/entry/') || location.hash.startsWith('#/trailhead')) location.hash = '#/';
   else route();
 }
  $('#navHome').addEventListener('click', goHomeFresh);
@@ -455,7 +455,7 @@ function renderError(err){
 
 /* ---------- home : lead features the newest, index holds all ---------- */
 const rowHTML = p => `
-  <a class="row" href="#/post/${encodeURIComponent(p.slug)}">
+  <a class="row" href="#/entry/${encodeURIComponent(p.slug)}">
     <span class="no">Nº ${pad(p.no)}</span>
     <span class="mid">
       <span class="tt">${esc(p.title)}</span>
@@ -490,10 +490,10 @@ function renderHome(){
     lead = `
     <p class="plaque">Latest entry</p>
     <article class="lead">
-      <a class="ttl" href="#/post/${encodeURIComponent(f.slug)}">${esc(f.title)}</a>
+      <a class="ttl" href="#/entry/${encodeURIComponent(f.slug)}">${esc(f.title)}</a>
       <div class="meta"><span>Nº ${pad(f.no)}</span><span>${fmtDate(f.date)}</span></div>
       <p class="ex">${esc(f.ex)}</p>
-      <a class="more" href="#/post/${encodeURIComponent(f.slug)}">Read the entry <i data-lucide="arrow-right"></i></a>
+      <a class="more" href="#/entry/${encodeURIComponent(f.slug)}">Read the entry <i data-lucide="arrow-right"></i></a>
     </article>`;
   }
 
@@ -548,7 +548,7 @@ function renderPost(slug){
     <section class="series">
       <div class="list-label">Series — ${esc(p.series)} · ${pad(parts.length)} parts</div>
       ${parts.map((x, ix) => `
-        <a class="srow${x.slug === p.slug ? ' cur' : ''}" href="#/post/${encodeURIComponent(x.slug)}">
+        <a class="srow${x.slug === p.slug ? ' cur' : ''}" href="#/entry/${encodeURIComponent(x.slug)}">
           <span class="pno">Part ${x.part || ix+1}</span>
           <span class="t">${esc(x.title)}</span>
           ${x.slug === p.slug ? '<span class="mt">You are here</span>' : ''}
@@ -572,8 +572,8 @@ function renderPost(slug){
       </div>
       ${series}
       <nav class="pn">
-        ${newer ? `<a href="#/post/${encodeURIComponent(newer.slug)}"><span class="dir">Newer</span><span class="t">${esc(newer.title)}</span></a>` : ''}
-        ${older ? `<a href="#/post/${encodeURIComponent(older.slug)}"><span class="dir">Older</span><span class="t">${esc(older.title)}</span></a>` : ''}
+        ${newer ? `<a href="#/entry/${encodeURIComponent(newer.slug)}"><span class="dir">Newer</span><span class="t">${esc(newer.title)}</span></a>` : ''}
+        ${older ? `<a href="#/entry/${encodeURIComponent(older.slug)}"><span class="dir">Older</span><span class="t">${esc(older.title)}</span></a>` : ''}
       </nav>
     </article>`;
   window.lucide && lucide.createIcons();
@@ -600,7 +600,7 @@ function route(){
   try{
     if(h.startsWith('#/trailhead')) renderAbout();
     else{
-      const m = h.match(/^#\/post\/(.+)$/);
+      const m = h.match(/^#\/entry\/(.+)$/);
       if(m) renderPost(decodeURIComponent(m[1]));
       else renderHome();
     }
@@ -638,7 +638,7 @@ view.addEventListener('click', async e => {
   if(!c) return;
   state.filter = c.classList.contains('on') ? null : c.dataset.tag;
   state.shown = CHUNK;
-  if(location.hash.startsWith('#/post/') || location.hash.startsWith('#/trailhead')) location.hash = '#/';
+  if(location.hash.startsWith('#/entry/') || location.hash.startsWith('#/trailhead')) location.hash = '#/';
   else route();
 });
 
