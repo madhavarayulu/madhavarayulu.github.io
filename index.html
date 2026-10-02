@@ -474,8 +474,8 @@ function renderError(err){
 }
 
 /* ---------- home : lead features the newest, index holds all ---------- */
-const rowHTML = p => `
-  <a class="row" href="#/entry/${encodeURIComponent(p.slug)}">
+const rowHTML = (p, i) => `
+  <a class="row" style="animation-delay:${(i % 10) * 45}ms" href="#/entry/${encodeURIComponent(p.slug)}">
     <span class="no">Nº ${pad(p.no)}</span>
     <span class="mid">
       <span class="tt">${esc(p.title)}</span>
