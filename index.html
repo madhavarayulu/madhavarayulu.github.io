@@ -48,6 +48,11 @@ body{background:var(--paper);color:var(--ink);font:13px/1.6 'IBM Plex Mono',ui-m
 ::selection{background:var(--terra);color:var(--paper)}
 a{color:inherit}
 :focus-visible{outline:2px solid var(--terra);outline-offset:2px}
+.chip:focus-visible,
+.clearbtn:focus-visible,
+.more:focus-visible {
+  outline-offset: 3px;
+}
 .wrap{max-width:820px;margin:0 auto;padding:0 var(--sp-5)}
 
 #pbar{position:fixed;top:0;left:0;height:2px;width:0;background:var(--terra);z-index:60;transition:width .1s linear}
@@ -66,6 +71,7 @@ a{color:inherit}
 
 main{padding-top:var(--sp-6)}
 #view{position:relative}
+#view{transition:opacity .2s ease}
 
 /* ---------- shared parts ---------- */
 .plaque{font-size:10px;letter-spacing:.18em;text-transform:uppercase;color:var(--soft);margin-bottom:var(--sp-5)}
@@ -185,14 +191,25 @@ a.chip{text-decoration:none;display:inline-flex;align-items:center}
 @media (prefers-reduced-motion:reduce){.lead,.art,.row{animation:none}}
 
 @media(max-width:640px){
-  .row,.lead,.art{animation:none}
   .nav{gap:var(--sp-4)}
   .brand b{font-size:20px}
   main{padding-top:var(--sp-5)}
   .home-mark{width:210px}
   .row{display:block}
   .row .no{display:block;margin-bottom:var(--sp-1)}
-  .row .mt{display:block;margin-top:var(--sp-2)}
+  .row .mt{display:block;margin-top:var(--sp-1)}
+.row .ex{margin-top:2px}
+#totop {
+    right: var(--sp-4);
+    bottom: var(--sp-4);
+    width: 32px;
+    height: 32px;
+  }
+  .art > .meta { margin-bottom: var(--sp-3); }
+}
+@media (max-width: 400px) {
+  .home-mark { width: 160px; opacity: 0.7; }
+.srow .mt { display: none; }
 }
 </style>
 </head>
@@ -613,6 +630,8 @@ function renderAbout(){
 /* ---------- routing ---------- */
 function route(){
   const h = location.hash;
+  view.style.opacity = '0';          // ← start faded out
+
   try{
     if(h.startsWith('#/trailhead')) renderAbout();
     else{
@@ -621,6 +640,11 @@ function route(){
       else renderHome();
     }
   }catch(err){ renderError(err); }
+
+  // Force a reflow so the browser notices the opacity:0, then fade in
+  void view.offsetWidth;
+  view.style.opacity = '1';
+
   scrollTo(0, 0);
   setChrome();
 }
