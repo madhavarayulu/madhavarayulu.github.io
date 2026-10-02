@@ -2,6 +2,7 @@
 title: Hello, world
 date: 2026-02-14
 tags: notes
+verified: 25B
 ---
 
 Your first real entry. Write in plain markdown here.
