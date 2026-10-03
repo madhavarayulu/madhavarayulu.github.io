@@ -1,0 +1,10 @@
+[highlight]
+  noClasses = false
+  codeFences = true
+  guessSyntax = true
+  lineNos = false
+  lineNumbersInTable = true
+
+[tableOfContents]
+  startLevel = 2
+  endLevel = 4
