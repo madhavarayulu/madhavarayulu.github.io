@@ -1,49 +1,35 @@
 ---
-import BaseLayout from '../layouts/BaseLayout.astro';
+import BaseLayout from '../../layouts/BaseLayout.astro';
 import { getCollection } from 'astro:content';
 
 const allPosts = await getCollection('posts');
-const latestPosts = allPosts
-  .sort((a, b) => b.data.publishDate.valueOf() - a.data.publishDate.valueOf())
-  .slice(0, 3);
+const sortedPosts = allPosts.sort((a, b) => b.data.publishDate.valueOf() - a.data.publishDate.valueOf());
 ---
 
-<BaseLayout title="Home" description="Oracle Fusion Finance Functional Consultant sharing configurations, troubleshooting, and concepts.">
+<BaseLayout title="Archive">
+  <h1>Archive</h1>
+  <p class="lead">All markers, in reverse chronological order.</p>
   
-  <section style="margin-bottom: 4rem;">
-    <h1>Leaving markers in the enterprise ERP wilderness.</h1>
-    <p class="lead">
-      Welcome to <strong>Cairn</strong>. I am an Oracle Fusion Finance Functional Consultant. 
-      This site is a collection of configurations, troubleshooting steps, and observations 
-      from my implementations. My goal is to leave a clear path for the next consultant navigating the same complex systems.
-    </p>
-    <a href="/posts/" class="btn-primary">Read the Archive →</a>
-  </section>
-
-  <section>
-    <h2 style="margin-top: 0;">Recent Markers</h2>
-    {latestPosts.length === 0 ? (
-      <p class="muted" style="font-style: italic;">Your first post will appear here soon.</p>
-    ) : (
-      <ul class="post-list">
-        {latestPosts.map(post => (
-          <li class="post-list-item">
-            <h3 class="post-list-title">
-              <a href={`/posts/${post.id}/`}>{post.data.title}</a>
-            </h3>
-            <div class="post-meta">
-              <time>{post.data.publishDate.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}</time>
-              {post.data.tags && post.data.tags.map(tag => (
-                <span class="tag">{tag}</span>
-              ))}
-            </div>
-            {post.data.description && (
-              <p class="muted">{post.data.description}</p>
-            )}
-          </li>
-        ))}
-      </ul>
-    )}
-  </section>
-
+  {sortedPosts.length === 0 ? (
+    <p class="muted" style="font-style: italic;">No posts yet.</p>
+  ) : (
+    <ul class="post-list">
+      {sortedPosts.map(post => (
+        <li class="post-list-item">
+          <h3 class="post-list-title">
+            <a href={`/posts/${post.id}/`}>{post.data.title}</a>
+          </h3>
+          <div class="post-meta">
+            <time>{post.data.publishDate.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}</time>
+            {post.data.tags && post.data.tags.map(tag => (
+              <span class="tag">{tag}</span>
+            ))}
+          </div>
+          {post.data.description && (
+            <p class="muted">{post.data.description}</p>
+          )}
+        </li>
+      ))}
+    </ul>
+  )}
 </BaseLayout>
