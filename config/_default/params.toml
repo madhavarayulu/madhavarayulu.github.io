@@ -1,32 +1,90 @@
-[article]
-  showReadingTime = true
-  showTableOfContents = true
-  showRelatedContent = true
-  relatedContentLimit = 3
-  showDate = true
-  showDateUpdated = true
+# -- Theme Options --
+colorScheme = "blowfish"
+defaultAppearance = "dark"
+autoSwitchAppearance = true
+enableA11y = false
+enableSearch = true
+enableCodeCopy = true
+replyByEmail = false
+disableImageOptimization = false
+disableImageOptimizationMD = false
+disableTextInHeader = false
+highlightCurrentMenuArea = true
+fingerprintAlgorithm = "sha512"
 
-[homepage]
-  showRecent = true
-  recentLimit = 8
-  showMoreLink = true
+[seo]
+  # metaDescriptionOrder = ["summary", "description", "site"]
 
 [header]
   layout = "fixed"
-  showTitle = true
+  # mobileMenuStyle = "fullscreen"
 
 [footer]
+  showMenu = true
   showCopyright = true
   showThemeAttribution = false
   showAppearanceSwitcher = true
+  showScrollToTop = true
 
-[appearance]
-  colorScheme = "cairn"
+[homepage]
+  layout = "hero"
+  # homepageImage = "IMAGE.jpg"
+  showRecent = true
+  showRecentItems = 6
+  showMoreLink = true
+  showMoreLinkDest = "/posts/"
+  cardView = false
 
-[search]
-  provider = "pagefind"
-  showSearch = true
+[article]
+  showDate = true
+  showViews = false
+  showLikes = false
+  showDateOnlyInArticle = false
+  showDateUpdated = true
+  showAuthor = true
+  showHero = false
+  showBreadcrumbs = false
+  showDraftLabel = true
+  showEdit = false
+  showHeadingAnchors = true
+  showPagination = true
+  invertPagination = false
+  showReadingTime = true
+  showReadingProgress = false
+  showTableOfContents = true
+  showRelatedContent = true
+  relatedContentLimit = 3
+  showTaxonomies = true
+  showCategories = true
+  showTags = true
+  showWordCount = true
+  sharingLinks = ["linkedin", "email"]
+  showZenMode = false
 
-[analytics]
-  cloudflare = true
-  cloudflareToken = "YOUR_CLOUDFLARE_TOKEN"
+[list]
+  showHero = false
+  showBreadcrumbs = false
+  showSummary = true
+  showTableOfContents = false
+  showCards = false
+  orderByWeight = false
+  groupByYear = true
+  cardView = false
+  constrainItemsWidth = false
+
+[taxonomy]
+  showTermCount = true
+  showHero = false
+  showBreadcrumbs = false
+  showTableOfContents = false
+  cardView = false
+
+[term]
+  showHero = false
+  showBreadcrumbs = false
+  showTableOfContents = true
+  groupByYear = false
+  cardView = false
+
+[sitemap]
+  excludedKinds = ["taxonomy", "term"]
