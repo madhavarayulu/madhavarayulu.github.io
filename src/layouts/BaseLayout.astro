@@ -16,55 +16,32 @@ const currentYear = new Date().getFullYear();
     <meta charset="UTF-8" />
     <meta name="description" content={description} />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
-    <meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)" />
-    <meta name="theme-color" content="#0f172a" media="(prefers-color-scheme: dark)" />
-    <meta name="apple-mobile-web-app-capable" content="yes" />
-    <link rel="icon" type="image/svg+xml" href={`${import.meta.env.BASE_URL}favicon.svg`} />
+    <meta name="theme-color" content="#F9F8F6" media="(prefers-color-scheme: light)" />
+    <meta name="theme-color" content="#141414" media="(prefers-color-scheme: dark)" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    
+    <!-- Premium Typography -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,600;0,9..144,700;1,9..144,400&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+    
     <title>{title} | Cairn</title>
   </head>
-  <body class="bg-white text-slate-900 dark:bg-slate-900 dark:text-slate-100">
-    <header class="max-w-3xl mx-auto px-6 py-8 flex justify-between items-center border-b border-slate-200 dark:border-slate-800">
-      <a href={`${import.meta.env.BASE_URL}`} class="text-2xl font-serif font-bold tracking-tight hover:text-slate-600 dark:hover:text-slate-300 transition">
-        Cairn
-      </a>
-      <nav class="flex gap-6 text-sm font-medium">
-        <a href={`${import.meta.env.BASE_URL}posts/`} class="hover:text-slate-600 dark:hover:text-slate-300 transition">Archive</a>
-        <a href={`${import.meta.env.BASE_URL}about/`} class="hover:text-slate-600 dark:hover:text-slate-300 transition">About</a>
+  <body>
+    <header class="container header">
+      <a href="/" class="logo">Cairn</a>
+      <nav class="nav-links">
+        <a href="/posts/">Archive</a>
+        <a href="/about/">About</a>
       </nav>
     </header>
 
-    <main class="max-w-3xl mx-auto px-6 py-12">
+    <main class="container main-content">
       <slot />
     </main>
 
-    <footer class="max-w-3xl mx-auto px-6 py-12 text-center text-sm text-slate-500 dark:text-slate-400 border-t border-slate-200 dark:border-slate-800">
+    <footer class="container footer">
       <p>&copy; {currentYear} Cairn. Built with intention.</p>
     </footer>
-
-    <style is:global>
-      @media (prefers-color-scheme: dark) {
-        :root { color-scheme: dark; }
-      }
-      body {
-        font-family: ui-sans-serif, system-ui, -apple-system, sans-serif;
-        line-height: 1.7;
-        -webkit-font-smoothing: antialiased;
-        margin: 0;
-      }
-      main h1 { font-family: ui-serif, Georgia, serif; font-size: 2.25rem; font-weight: 700; margin-bottom: 1rem; line-height: 1.2; }
-      main h2 { font-family: ui-serif, Georgia, serif; font-size: 1.5rem; font-weight: 600; margin-top: 2.5rem; margin-bottom: 1rem; }
-      main p { margin-bottom: 1.5rem; }
-      main a { color: #2563eb; text-decoration: underline; text-underline-offset: 2px; }
-      main a:hover { color: #1d4ed8; }
-      main ul, main ol { margin-bottom: 1.5rem; padding-left: 1.5rem; }
-      main li { margin-bottom: 0.5rem; }
-      main blockquote { border-left: 3px solid #cbd5e1; padding-left: 1rem; font-style: italic; color: #64748b; margin-bottom: 1.5rem; }
-      main pre { background: #0f172a; color: #e2e8f0; padding: 1.5rem; border-radius: 0.5rem; overflow-x: auto; margin-bottom: 1.5rem; font-size: 0.9rem; }
-      main code { font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, monospace; }
-      main p code, main li code { background: #f1f5f9; color: #0f172a; padding: 0.2rem 0.4rem; border-radius: 0.25rem; font-size: 0.9em; }
-      @media (prefers-color-scheme: dark) {
-        main p code, main li code { background: #334155; color: #f8fafc; }
-      }
-    </style>
   </body>
 </html>
