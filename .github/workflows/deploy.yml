@@ -42,9 +42,7 @@ jobs:
           go-version: '1.22'
 
       - name: Build Hugo
-        run: |
-          hugo mod get -u
-          hugo --minify --gc
+        run: hugo --minify --gc
 
       - name: Run Pagefind
         run: npx -y pagefind --site public
