@@ -1,11 +1,204 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+/* 1. The Cairn Color Palette (Light & Dark Mode) */
+:root {
+  --bg: #F9F8F6;           /* Warm off-white / paper */
+  --text: #2D2D2A;         /* Deep charcoal */
+  --text-muted: #6B6B68;   /* Subtle stone gray */
+  --accent: #5A6B5D;       /* Muted moss green */
+  --accent-hover: #465448; /* Darker moss */
+  --border: #E5E5E3;       /* Soft divider */
+  --code-bg: #2D2D2A;      /* Dark stone for code */
+  --code-text: #F9F8F6;
+}
 
-/* Custom base styles */
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #141414;         /* Deep night */
+    --text: #EAEAEA;       /* Soft white */
+    --text-muted: #999999;
+    --accent: #A3B18A;     /* Lighter sage green */
+    --accent-hover: #C5D1B5;
+    --border: #2D2D2A;
+    --code-bg: #0A0A0A;
+    --code-text: #EAEAEA;
+  }
+}
+
+/* 2. Base Reset & Typography */
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+html {
+  scroll-behavior: smooth;
+  -webkit-text-size-adjust: 100%;
+}
+
 body {
-  font-family: ui-sans-serif, system-ui, -apple-system, sans-serif;
+  background-color: var(--bg);
+  color: var(--text);
+  font-family: 'Inter', ui-sans-serif, system-ui, -apple-system, sans-serif;
+  font-size: 18px;
   line-height: 1.7;
   -webkit-font-smoothing: antialiased;
-  margin: 0;
+  transition: background-color 0.3s ease, color 0.3s ease;
 }
+
+/* 3. Layout Containers */
+.container {
+  width: 100%;
+  max-width: 680px; /* Perfect reading width */
+  margin: 0 auto;
+  padding: 0 clamp(1.5rem, 5vw, 3rem);
+}
+
+.header {
+  padding: 2rem 0;
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.logo {
+  font-family: 'Fraunces', ui-serif, Georgia, serif;
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--text);
+  text-decoration: none;
+  letter-spacing: -0.02em;
+}
+
+.nav-links {
+  display: flex;
+  gap: 1.5rem;
+}
+
+.nav-links a {
+  color: var(--text-muted);
+  text-decoration: none;
+  font-size: 0.95rem;
+  font-weight: 500;
+  transition: color 0.2s;
+}
+
+.nav-links a:hover { color: var(--text); }
+
+.main-content { padding: 3rem 0 4rem; }
+
+.footer {
+  padding: 2rem 0;
+  border-top: 1px solid var(--border);
+  text-align: center;
+  color: var(--text-muted);
+  font-size: 0.85rem;
+}
+
+/* 4. Typography & Content Elements */
+h1, h2, h3 {
+  font-family: 'Fraunces', ui-serif, Georgia, serif;
+  color: var(--text);
+  line-height: 1.2;
+  letter-spacing: -0.02em;
+}
+
+h1 { font-size: clamp(2rem, 5vw, 2.75rem); margin-bottom: 1rem; font-weight: 700; }
+h2 { font-size: 1.75rem; margin-top: 3rem; margin-bottom: 1.5rem; font-weight: 600; }
+h3 { font-size: 1.35rem; margin-top: 2.5rem; margin-bottom: 1rem; font-weight: 600; }
+
+p { margin-bottom: 1.5rem; }
+
+a {
+  color: var(--accent);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  text-decoration-thickness: 1px;
+  transition: color 0.2s, text-decoration-color 0.2s;
+}
+a:hover { color: var(--accent-hover); text-decoration-thickness: 2px; }
+
+ul, ol { margin-bottom: 1.5rem; padding-left: 1.5rem; }
+li { margin-bottom: 0.5rem; }
+
+blockquote {
+  border-left: 3px solid var(--accent);
+  padding-left: 1.25rem;
+  margin: 2rem 0;
+  font-style: italic;
+  color: var(--text-muted);
+}
+
+/* 5. Code Blocks */
+pre {
+  background: var(--code-bg);
+  color: var(--code-text);
+  padding: 1.5rem;
+  border-radius: 8px;
+  overflow-x: auto;
+  margin: 2rem 0;
+  font-size: 0.9rem;
+  line-height: 1.5;
+}
+
+code {
+  font-family: 'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+}
+
+p code, li code {
+  background: rgba(128, 128, 128, 0.15);
+  color: var(--text);
+  padding: 0.2rem 0.4rem;
+  border-radius: 4px;
+  font-size: 0.9em;
+}
+
+/* 6. Utility Classes */
+.muted { color: var(--text-muted); }
+.lead { font-size: 1.2rem; color: var(--text-muted); margin-bottom: 2rem; }
+.tag {
+  display: inline-block;
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--accent);
+  background: rgba(90, 107, 93, 0.1);
+  padding: 0.25rem 0.6rem;
+  border-radius: 4px;
+  text-decoration: none;
+}
+.btn-primary {
+  display: inline-block;
+  background: var(--text);
+  color: var(--bg);
+  padding: 0.8rem 1.5rem;
+  border-radius: 6px;
+  text-decoration: none;
+  font-weight: 600;
+  font-size: 0.95rem;
+  transition: opacity 0.2s;
+}
+.btn-primary:hover { opacity: 0.85; color: var(--bg); }
+
+.post-meta {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 1rem;
+  color: var(--text-muted);
+  font-size: 0.9rem;
+  margin-bottom: 2.5rem;
+}
+
+.post-list { list-style: none; padding: 0; }
+.post-list-item {
+  padding: 1.5rem 0;
+  border-bottom: 1px solid var(--border);
+}
+.post-list-item:last-child { border-bottom: none; }
+.post-list-title {
+  font-size: 1.35rem;
+  margin-bottom: 0.5rem;
+}
+.post-list-title a {
+  color: var(--text);
+  text-decoration: none;
+}
+.post-list-title a:hover { color: var(--accent); }
