@@ -17,21 +17,18 @@ const formattedDate = publishDate.toLocaleDateString('en-US', {
 
 <BaseLayout title={title} description={description}>
   <article>
-    <header class="mb-10">
+    <header style="margin-bottom: 3rem;">
       <h1>{title}</h1>
-      <div class="flex flex-wrap items-center gap-3 text-sm text-slate-500 dark:text-slate-400">
+      {description && <p class="lead">{description}</p>}
+      <div class="post-meta">
         <time datetime={publishDate.toISOString()}>{formattedDate}</time>
-        {tags && tags.length > 0 && (
-          <div class="flex flex-wrap gap-2">
-            {tags.map(tag => (
-              <span class="px-2 py-0.5 bg-slate-100 dark:bg-slate-800 rounded text-xs">{tag}</span>
-            ))}
-          </div>
-        )}
+        {tags && tags.length > 0 && tags.map(tag => (
+          <span class="tag">{tag}</span>
+        ))}
       </div>
     </header>
     
-    <!-- The actual markdown content will be injected here -->
+    <!-- The actual markdown content is injected here via the slot -->
     <slot />
   </article>
 </BaseLayout>
