@@ -7,7 +7,6 @@ interface Props {
 }
 
 const { entry } = Astro.props;
-const { Content } = await entry.render();
 const { title, description, publishDate, tags } = entry.data;
 const formattedDate = publishDate.toLocaleDateString('en-US', {
   year: 'numeric',
@@ -31,6 +30,8 @@ const formattedDate = publishDate.toLocaleDateString('en-US', {
         )}
       </div>
     </header>
-    <Content />
+    
+    <!-- The actual markdown content will be injected here -->
+    <slot />
   </article>
 </BaseLayout>
