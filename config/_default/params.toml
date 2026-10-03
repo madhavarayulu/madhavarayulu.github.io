@@ -11,6 +11,8 @@ disableImageOptimizationMD = false
 disableTextInHeader = false
 highlightCurrentMenuArea = true
 fingerprintAlgorithm = "sha512"
+colorScheme = "blowfish"
+defaultAppearance = "dark"
 
 [seo]
   # metaDescriptionOrder = ["summary", "description", "site"]
