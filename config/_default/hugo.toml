@@ -1,7 +1,6 @@
 baseURL = "https://madhavarayulu.github.io/"
-languageCode = "en-us"
+defaultContentLanguage = "en"
 title = "Cairn"
-theme = "blowfish"
 
 [module]
   [[module.imports]]
