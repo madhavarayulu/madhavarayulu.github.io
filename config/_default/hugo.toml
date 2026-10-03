@@ -1,0 +1,17 @@
+baseURL = "https://madhavarayulu.github.io/"
+languageCode = "en-us"
+title = "Cairn"
+theme = "blowfish"
+
+[module]
+  [[module.imports]]
+    path = "github.com/nunocoracao/blowfish/v2"
+
+[outputs]
+  home = ["HTML", "RSS", "JSON"]
+  section = ["HTML", "RSS"]
+
+[params]
+  author = "Madhava Rayulu"
+  description = "A trail of notes on Oracle Fusion Cloud Financials — configurations, troubleshooting, concepts, and close."
+  mainSections = ["posts"]
