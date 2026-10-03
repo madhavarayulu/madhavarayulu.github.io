@@ -30,7 +30,7 @@ defaultAppearance = "dark"
 
 [homepage]
   layout = "hero"
-  # homepageImage = "IMAGE.jpg"
+  homepageImage = "author.jpg"
   showRecent = true
   showRecentItems = 6
   showMoreLink = true
