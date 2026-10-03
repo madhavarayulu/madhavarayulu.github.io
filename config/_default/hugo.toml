@@ -12,6 +12,5 @@ theme = "blowfish"
   section = ["HTML", "RSS"]
 
 [params]
-  author = "Madhava Rayulu"
   description = "A trail of notes on Oracle Fusion Cloud Financials — configurations, troubleshooting, concepts, and close."
   mainSections = ["posts"]
