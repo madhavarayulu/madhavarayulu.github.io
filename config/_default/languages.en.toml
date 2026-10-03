@@ -5,11 +5,10 @@ weight = 1
   dateFormat = "2 January 2006"
   title = "Cairn"
   description = "A trail of notes on Oracle Fusion Cloud Financials."
-  author = "Madhava Rayulu"
 
-  [params.author]
-    name = "Madhava Rayulu"
-    headline = "Oracle Fusion Finance Functional Consultant"
-    links = [
-      { linkedin = "https://www.linkedin.com/in/YOUR_PROFILE" },
-    ]
+[params.author]
+  name = "Madhava Rayulu"
+  headline = "Oracle Fusion Finance Functional Consultant"
+  links = [
+    { linkedin = "https://www.linkedin.com/in/YOUR_PROFILE" },
+  ]
