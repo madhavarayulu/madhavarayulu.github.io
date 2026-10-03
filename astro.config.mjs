@@ -5,7 +5,7 @@ import mdx from '@astrojs/mdx';
 // https://astro.build/config
 export default defineConfig({
   site: 'https://yourusername.github.io', // We will update this later with your actual domain
-  base: 'cairn', // This matches your GitHub repository name
+  base: 'madhavarayulu.github.io', // This matches your GitHub repository name
   output: 'static',
   adapter: githubPages(),
   integrations: [mdx()],
