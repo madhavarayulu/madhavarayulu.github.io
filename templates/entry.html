@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>{{TITLE}} · Cairn</title>
+<meta name="description" content="{{EXCERPT}}">
+
+<!-- Open Graph -->
+<meta property="og:type" content="article">
+<meta property="og:title" content="{{TITLE}}">
+<meta property="og:description" content="{{EXCERPT}}">
+<meta property="og:url" content="https://madhavarayulu.github.io/entry/{{SLUG}}/">
+<meta property="og:site_name" content="Cairn">
+<meta property="og:image" content="https://madhavarayulu.github.io/cairn-card-wide.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="628">
+
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="{{TITLE}}">
+<meta name="twitter:description" content="{{EXCERPT}}">
+<meta name="twitter:image" content="https://madhavarayulu.github.io/cairn-card-wide.png">
+
+<style>
+  :root {
+    --bg: #0f0f0f;
+    --text: #f0eee6;
+    --text2: #a8a59c;
+    --muted: #6b6860;
+    --border: #2a2a2a;
+    --accent: #C1502E;
+    --elev: #181818;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: system-ui, -apple-system, sans-serif;
+    font-size: 16px;
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+  }
+  a { color: inherit; text-decoration: none; }
+  .wrap { max-width: 680px; margin: 0 auto; padding: 40px 20px 80px; }
+
+  .back {
+    display: inline-block;
+    font-size: 13px;
+    color: var(--text2);
+    margin-bottom: 28px;
+  }
+  .back:hover { color: var(--accent); }
+  .meta { font-size: 13px; color: var(--text2); margin-bottom: 14px; }
+  .art-title {
+    font-size: clamp(28px, 6vw, 42px);
+    font-weight: 600;
+    line-height: 1.15;
+    letter-spacing: -0.03em;
+    margin-bottom: 28px;
+  }
+  .prose {
+    font-size: 17px;
+    line-height: 1.75;
+    max-width: 62ch;
+  }
+  .prose p { margin-bottom: 1.25em; }
+  .prose h2 { font-size: 1.3em; margin: 1.8em 0 0.6em; font-weight: 600; }
+  .prose h3 { font-size: 1.15em; margin: 1.6em 0 0.5em; font-weight: 600; }
+  .prose a { color: var(--accent); text-decoration: underline; text-underline-offset: 3px; }
+  .prose blockquote {
+    border-left: 3px solid var(--accent);
+    padding-left: 1.2em;
+    margin: 1.5em 0;
+    color: var(--text2);
+    font-style: italic;
+  }
+  .prose ul, .prose ol { margin: 0 0 1.25em; padding-left: 1.3em; }
+  .prose li { margin: 0.35em 0; }
+  .prose code {
+    font-family: ui-monospace, monospace;
+    font-size: 0.88em;
+    background: var(--elev);
+    padding: 2px 6px;
+    border-radius: 4px;
+  }
+  .prose pre {
+    background: #1a1a1a;
+    padding: 16px 18px;
+    border-radius: 8px;
+    overflow-x: auto;
+    margin: 0 0 1.3em;
+    border: 1px solid var(--border);
+  }
+  .prose pre code { background: none; padding: 0; }
+  .prose img {
+    max-width: 100%;
+    height: auto;
+    display: block;
+    border-radius: 8px;
+    margin: 2em 0;
+    border: 1px solid var(--border);
+  }
+
+  .share {
+    margin-top: 48px;
+    padding-top: 28px;
+    border-top: 1px solid var(--border);
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    align-items: center;
+  }
+  .share-label { font-size: 12px; color: var(--muted); margin-right: 4px; }
+  .share-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    height: 36px;
+    padding: 0 16px;
+    font-size: 13px;
+    font-weight: 500;
+    border: 1px solid var(--border);
+    border-radius: 999px;
+    background: transparent;
+    color: var(--text2);
+    text-decoration: none;
+  }
+  .share-btn:hover { border-color: var(--text); color: var(--text); }
+
+  footer {
+    border-top: 1px solid var(--border);
+    padding: 24px 0 36px;
+    font-size: 12px;
+    color: var(--muted);
+    text-align: center;
+  }
+  footer a { color: var(--text2); }
+  footer a:hover { color: var(--accent); }
+</style>
+</head>
+<body>
+  <div class="wrap">
+    <a class="back" href="/">← Field notes</a>
+    <div class="meta">{{DATE}}</div>
+    <h1 class="art-title">{{TITLE}}</h1>
+    <div class="prose">
+      {{BODY_HTML}}
+    </div>
+    <div class="share">
+      <span class="share-label">Leave a marker —</span>
+      <a class="share-btn" href="https://www.linkedin.com/sharing/share-offsite/?url=https://madhavarayulu.github.io/entry/{{SLUG}}/" target="_blank" rel="noopener">
+        Carry it to LinkedIn
+      </a>
+    </div>
+  </div>
+
+  <footer>
+    Madhava Rayulu · 
+    <a href="https://www.linkedin.com/in/madhavarayulu" target="_blank" rel="noopener">LinkedIn ↗</a>
+  </footer>
+</body>
+</html>
