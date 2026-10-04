@@ -1,0 +1,759 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Cairn</title>
+<meta name="description" content="Field notes from Oracle Fusion Finance implementations — configuration walkthroughs, quarterly release notes, and the small gotchas that shouldn't cost anyone else an afternoon.">
+<meta name="theme-color" content="#0f0f0f">
+
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'%3E%3Crect width='512' height='512' rx='100' fill='%230f0f0f'/%3E%3Cellipse cx='256' cy='452' rx='142' ry='11' fill='%23C1502E' opacity='.15'/%3E%3Cellipse cx='250' cy='398' rx='118' ry='44' fill='%232E2A24'/%3E%3Cellipse cx='258' cy='324' rx='94' ry='37' fill='%23403A31'/%3E%3Cellipse cx='248' cy='258' rx='72' ry='30' fill='%23524A3E'/%3E%3Cellipse cx='256' cy='200' rx='52' ry='23' fill='%23645A4B'/%3E%3Cellipse cx='256' cy='160' rx='36' ry='16' fill='%23C1502E'/%3E%3C/svg%3E">
+
+<meta property="og:type" content="website">
+<meta property="og:title" content="Cairn — field notes from the trail">
+<meta property="og:description" content="Field notes from Oracle Fusion Finance implementations — configuration walkthroughs, quarterly release notes, and the small gotchas that shouldn't cost anyone else an afternoon.">
+<meta property="og:url" content="https://madhavarayulu.github.io/">
+<meta property="og:site_name" content="Cairn">
+<meta property="og:image" content="https://madhavarayulu.github.io/cairn-card-wide.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="628">
+<meta name="twitter:card" content="summary_large_image">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+
+<style>
+  :root {
+    --bg: #0f0f0f;
+    --text: #f0eee6;
+    --text2: #a8a59c;
+    --muted: #6b6860;
+    --border: #2a2a2a;
+    --accent: #C1502E;
+    --elev: #181818;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: system-ui, -apple-system, sans-serif;
+    font-size: 16px;
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+  }
+  ::selection { background: var(--accent); color: #fff; }
+  :focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+  a { color: inherit; text-decoration: none; }
+  .wrap { max-width: 680px; margin: 0 auto; padding: 0 20px; }
+
+  header {
+    border-bottom: 1px solid transparent;
+    position: sticky;
+    top: 0;
+    background: rgba(15,15,15,0.92);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    z-index: 20;
+    transition: border-color 0.2s;
+  }
+  header.scrolled { border-color: var(--border); }
+  .header-inner {
+    max-width: 680px;
+    margin: 0 auto;
+    padding: 0 20px;
+    height: 58px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .logo {
+    font-family: 'Fraunces', Georgia, serif;
+    font-size: 22px;
+    font-weight: 600;
+    letter-spacing: -0.02em;
+  }
+  .logo span { color: var(--accent); }
+  nav a {
+    font-size: 13px;
+    color: var(--text2);
+    margin-left: 22px;
+    transition: color 0.15s;
+  }
+  nav a:hover, nav a.active { color: var(--text); }
+
+  main { padding: 40px 0 80px; min-height: 70vh; }
+
+  .label {
+    font-size: 12px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 12px;
+  }
+  .hero { margin-bottom: 48px; }
+  .hero h1 {
+    font-size: clamp(28px, 6vw, 40px);
+    font-weight: 600;
+    line-height: 1.15;
+    letter-spacing: -0.03em;
+    margin-bottom: 12px;
+  }
+  .hero h1 a:hover { color: var(--accent); }
+  .meta { font-size: 13px; color: var(--text2); margin-bottom: 14px; }
+  .meta .vfy { color: var(--accent); }
+  .excerpt { color: var(--text2); margin-bottom: 20px; max-width: 52ch; }
+  .btn {
+    display: inline-block;
+    padding: 10px 18px;
+    border: 1px solid var(--border);
+    border-radius: 999px;
+    font-size: 13px;
+    font-weight: 500;
+    background: var(--elev);
+    transition: all 0.15s;
+  }
+  .btn:hover {
+    background: var(--text);
+    color: var(--bg);
+    border-color: var(--text);
+  }
+
+  .list-label {
+    font-size: 12px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 16px;
+  }
+  .item {
+    display: block;
+    padding: 18px 0;
+    border-bottom: 1px solid var(--border);
+  }
+  .item:hover .item-title { color: var(--accent); }
+  .item-title {
+    font-size: 18px;
+    font-weight: 500;
+    margin-bottom: 4px;
+  }
+  .item-ex { font-size: 14px; color: var(--text2); }
+  .item-date { font-size: 12px; color: var(--muted); margin-top: 6px; }
+  .item-tags { margin-top: 8px; }
+  .tag {
+    display: inline-block;
+    font-size: 11px;
+    padding: 2px 8px;
+    border: 1px solid var(--border);
+    border-radius: 999px;
+    color: var(--text2);
+    margin-right: 6px;
+  }
+
+  .back {
+    display: inline-block;
+    font-size: 13px;
+    color: var(--text2);
+    margin-bottom: 28px;
+  }
+  .back:hover { color: var(--accent); }
+  .art-title {
+    font-size: clamp(28px, 6vw, 42px);
+    font-weight: 600;
+    line-height: 1.15;
+    letter-spacing: -0.03em;
+    margin-bottom: 28px;
+  }
+  .prose {
+    font-size: 17px;
+    line-height: 1.75;
+    max-width: 62ch;
+  }
+  .prose p { margin-bottom: 1.25em; }
+  .prose h2 { font-size: 1.3em; margin: 1.8em 0 0.6em; font-weight: 600; }
+  .prose h3 { font-size: 1.15em; margin: 1.6em 0 0.5em; font-weight: 600; }
+  .prose a { color: var(--accent); text-decoration: underline; text-underline-offset: 3px; }
+  .prose blockquote {
+    border-left: 3px solid var(--accent);
+    padding-left: 1.2em;
+    margin: 1.5em 0;
+    color: var(--text2);
+    font-style: italic;
+  }
+  .prose ul, .prose ol { margin: 0 0 1.25em; padding-left: 1.3em; }
+  .prose li { margin: 0.35em 0; }
+  .prose code {
+    font-family: ui-monospace, monospace;
+    font-size: 0.88em;
+    background: var(--elev);
+    padding: 2px 6px;
+    border-radius: 4px;
+  }
+  .prose pre {
+    background: #1a1a1a;
+    padding: 16px 18px;
+    border-radius: 8px;
+    overflow-x: auto;
+    margin: 0 0 1.3em;
+    border: 1px solid var(--border);
+  }
+  .prose pre code { background: none; padding: 0; }
+  .prose img {
+    max-width: 100%;
+    height: auto;
+    display: block;
+    border-radius: 8px;
+    margin: 2em 0;
+    border: 1px solid var(--border);
+  }
+  .prose hr {
+    border: none;
+    border-top: 1px solid var(--border);
+    margin: 2.2em 0;
+  }
+
+  .share {
+    margin-top: 48px;
+    padding-top: 28px;
+    border-top: 1px solid var(--border);
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    align-items: center;
+  }
+  .share-label {
+    font-size: 12px;
+    color: var(--muted);
+    margin-right: 4px;
+  }
+  .share-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    height: 36px;
+    padding: 0 16px;
+    font-size: 13px;
+    font-weight: 500;
+    border: 1px solid var(--border);
+    border-radius: 999px;
+    background: transparent;
+    color: var(--text2);
+    cursor: pointer;
+    font-family: inherit;
+    line-height: 1;
+    transition: all 0.15s;
+    text-decoration: none;
+  }
+  .share-btn:hover {
+    border-color: var(--text);
+    color: var(--text);
+  }
+
+  .series { margin-top: 40px; }
+  .srow { display: block; padding: 12px 0; border-bottom: 1px solid var(--border); }
+  .srow:hover .s-t, .srow.cur .s-t { color: var(--accent); }
+  .srow .s-no { font-size: 12px; color: var(--muted); }
+  .srow .s-t { font-size: 15px; font-weight: 500; }
+  .srow .s-here { font-size: 11px; color: var(--accent); margin-left: 8px; }
+
+  .pn { margin-top: 48px; border-top: 1px solid var(--border); }
+  .pn a {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    gap: 16px;
+    padding: 16px 0;
+    border-bottom: 1px solid var(--border);
+  }
+  .pn .dir {
+    font-size: 11px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--muted);
+    flex: none;
+  }
+  .pn .pt { font-size: 15px; font-weight: 500; text-align: right; }
+  .pn a:hover .pt { color: var(--accent); }
+
+  .year {
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--muted);
+    margin: 36px 0 12px;
+    letter-spacing: 0.04em;
+  }
+  .year:first-child { margin-top: 0; }
+
+  .search-box {
+    width: 100%;
+    padding: 12px 14px;
+    margin-bottom: 28px;
+    background: var(--elev);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    color: var(--text);
+    font-size: 15px;
+    font-family: inherit;
+  }
+  .search-box:focus {
+    outline: none;
+    border-color: var(--accent);
+  }
+  .search-box::placeholder { color: var(--muted); }
+
+  .filter-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-bottom: 28px;
+  }
+  .filter-tag {
+    font-size: 12px;
+    padding: 5px 12px;
+    border: 1px solid var(--border);
+    border-radius: 999px;
+    color: var(--text2);
+    cursor: pointer;
+    background: transparent;
+    font-family: inherit;
+  }
+  .filter-tag:hover, .filter-tag.active {
+    border-color: var(--text);
+    color: var(--text);
+  }
+  .filter-tag.active {
+    background: var(--text);
+    color: var(--bg);
+  }
+
+  .disclaimer {
+    margin-top: 3em;
+    padding-top: 1.6em;
+    border-top: 1px solid var(--border);
+    font-size: 12.5px;
+    color: var(--muted);
+    line-height: 1.55;
+    opacity: 0.75;
+  }
+
+  footer {
+    border-top: 1px solid var(--border);
+    padding: 24px 0 36px;
+    font-size: 12px;
+    color: var(--muted);
+  }
+  .footer-inner {
+    max-width: 680px;
+    margin: 0 auto;
+    padding: 0 20px;
+    text-align: center;
+  }
+  .footer-inner a { color: var(--text2); }
+  .footer-inner a:hover { color: var(--accent); }
+
+  .empty { color: var(--muted); padding: 20px 0; }
+  .loading {
+    text-align: center;
+    padding: 70px 0;
+    color: var(--muted);
+    font-size: 14px;
+  }
+
+  .toast {
+    position: fixed;
+    left: 50%;
+    bottom: 28px;
+    transform: translateX(-50%) translateY(12px);
+    opacity: 0;
+    background: var(--text);
+    color: var(--bg);
+    padding: 10px 18px;
+    border-radius: 999px;
+    font-size: 13px;
+    font-weight: 500;
+    pointer-events: none;
+    transition: all 0.25s;
+    z-index: 100;
+  }
+  .toast.show {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
+  }
+
+  @media (max-width: 560px) {
+    .pn a { flex-direction: column; align-items: flex-start; gap: 4px; }
+    .pn .pt { text-align: left; }
+    nav a { margin-left: 14px; }
+  }
+</style>
+</head>
+<body>
+
+<header id="header">
+  <div class="header-inner">
+    <a href="#/" class="logo">Cairn<span>.</span></a>
+    <nav>
+      <a href="#/archive" id="nav-archive">The Pile</a>
+      <a href="#/trailhead" id="nav-about">Trailhead</a>
+    </nav>
+  </div>
+</header>
+
+<main>
+  <div class="wrap" id="view">
+    <div class="loading">Stacking stones…</div>
+  </div>
+</main>
+
+<footer>
+  <div class="footer-inner">
+    Madhava Rayulu · 
+    <a href="https://www.linkedin.com/in/madhavarayulu" target="_blank" rel="noopener">LinkedIn ↗</a>
+  </div>
+</footer>
+
+<div class="toast" id="toast">Link copied</div>
+
+<!-- Sample posts (fallback) -->
+<script type="text/markdown" data-slug="why-cairn">
+---
+title: Why Cairn
+date: 2026-01-09
+tags: notes
+---
+
+Above the treeline the trail stops being a trail. It becomes a suggestion — rock, fog, the occasional patch of gravel that might be a path. What keeps you from wandering off is a pile of stones somebody stacked before you arrived.
+
+Nobody owns a cairn. Nobody collects a fee. A stranger you will never meet spent twenty minutes of their one life balancing rocks so that you, specifically, would not get lost.
+
+That seemed like the right shape for a blog.
+
+So this is a cairn too — smaller, slower, made of words instead of granite. Field notes, gotchas, half-finished thoughts, stacked one on top of another as they come. If one of them ever marks the trail for you, the pile has done its job.
+
+> The next storm will knock some of it down. That is fine. That is what stones are for — restacking.
+</script>
+
+<script type="text/markdown" data-slug="the-hold-nobody-applied">
+---
+title: The hold nobody applied
+date: 2026-01-22
+tags: AP, gotchas
+verified: 25B
+---
+
+An AP invoice sat on hold for eleven days. The hold said *price mismatch*, the buyer swore the price was right, and everyone had better things to do than argue with a checkbox.
+
+The invoice was fine. The purchase order was fine. The mismatch was three weeks old, on a different line entirely — a receipt booked against line 2 instead of line 3, quietly, by someone rushing on a Friday. The matching engine doesn't hold grudges; it holds arithmetic. It was comparing the right numbers, just not the numbers anyone was looking at.
+
+The lesson generalizes: **when a hold makes no sense, stop auditing the invoice and start auditing the history.** Match review first, receipts second, tolerances last — the hold names the symptom, never the scene of the accident.
+
+Eleven days of an unpaid supplier for a thirty-minute correction. Someone should have left a marker about this. So — marker left.
+</script>
+
+<script type="text/markdown" data-slug="reading-release-notes-like-a-field-guide">
+---
+title: Reading release notes like a field guide
+date: 2026-02-08
+tags: releases
+---
+
+Every quarter Oracle ships a release, and every quarter most teams experience it as a hundred-page document that is somehow both mandatory and optional reading. It doesn't have to be read like a document. It reads like a field guide: you are not looking for everything, you are looking for what moved in *your* terrain.
+
+Three passes, twenty minutes:
+
+- **Your modules only.** Search for the ones you own — GL, AP, AR, FA — and skip the rest without guilt.
+- **Red getters.** Most features arrive switched off; the red pages in the feature list are the ones that change behavior without asking. Those are yours.
+- **One test per catch.** Anything that touches your flow gets a sandbox check before the update hits the real trail. One test, not a project.
+
+The teams surprised by quarterly updates were never surprised by the notes. They just never walked the ground before the weather changed.
+</script>
+
+<script>
+const CONFIG = {
+  owner:  "madhavarayulu",
+  repo:   "madhavarayulu.github.io",
+  branch: "main",
+  title:  "Cairn",
+  name:   "Madhava Rayulu",
+  linkedin: "https://www.linkedin.com/in/madhavarayulu",
+
+  about: `I work as an Oracle Fusion Finance functional consultant. Most of my days are spent inside large, living systems — configurations, releases, edge cases, and the quiet places where process and reality diverge.
+
+This site is a small collection of notes that survive contact with that work. Some are practical: configuration walkthroughs, quarterly release notes, troubleshooting stories. Some are smaller observations. Client names and confidential details stay behind; the lessons that can travel are allowed to leave.`
+};
+
+const $ = s => document.querySelector(s);
+const esc = s => String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const pad = n => String(n).padStart(2,'0');
+const fmt = s => {
+  const d = new Date(s);
+  return isNaN(d) ? (s || '—') : d.toLocaleDateString('en-US', {month:'short', day:'numeric', year:'numeric'});
+};
+const yr = s => { const d = new Date(s); return isNaN(d) ? '—' : d.getFullYear(); };
+
+function excerpt(md, n = 165){
+  const t = md.replace(/^\s*---[\s\S]*?---/, '')
+    .replace(/```[\s\S]*?```/g, ' ')
+    .replace(/\[([^\]]*)\]\([^)]*\)/g, '$1')
+    .replace(/[#>*_`~]/g, ' ')
+    .replace(/\s+/g, ' ').trim();
+  return t.length > n ? t.slice(0, n).replace(/\s+\S*$/,'') + '…' : t;
+}
+
+function parsePost(raw, slug){
+  raw = String(raw).replace(/^\uFEFF/, '').replace(/^\s+/, '');
+  const meta = {title: slug, date: '', tags: [], draft: false, series: '', part: 0, verified: ''};
+  let body = raw;
+  const m = raw.match(/^---\r?\n([\s\S]*?)\r?\n---\s*(\n|$)/);
+  if(m){
+    body = raw.slice(m[0].length);
+    m[1].split(/\r?\n/).forEach(line => {
+      const kv = line.match(/^(\w+)\s*:\s*(.*)$/); if(!kv) return;
+      const k = kv[1].toLowerCase(), v = kv[2].trim();
+      if(k === 'title') meta.title = v;
+      else if(k === 'date') meta.date = v;
+      else if(k === 'tags') meta.tags = v.split(',').map(s => s.trim()).filter(Boolean);
+      else if(k === 'draft') meta.draft = /^(true|yes|1)$/i.test(v);
+      else if(k === 'series') meta.series = v;
+      else if(k === 'part') meta.part = parseInt(v,10) || 0;
+      else if(k === 'verified') meta.verified = v;
+    });
+  }
+  return {
+    slug, ...meta,
+    dateMs: meta.date ? (new Date(meta.date).getTime() || 0) : 0,
+    ex: excerpt(body),
+    body: body.trim(),
+  };
+}
+
+const collectSamples = () =>
+  [...document.querySelectorAll('script[type="text/markdown"]')]
+    .map(el => parsePost(el.textContent, el.dataset.slug));
+
+async function fetchFromGitHub(){
+  const {owner, repo, branch} = CONFIG;
+  const api = `https://api.github.com/repos/${owner}/${repo}/git/trees/${branch}?recursive=1`;
+  const r = await fetch(api);
+  if(!r.ok) throw new Error('github ' + r.status);
+  const j = await r.json();
+  const paths = ((j || {}).tree || [])
+    .filter(t => t.type === 'blob' && /^posts\/[^/]+\.md$/.test(t.path))
+    .map(t => t.path);
+  if(!paths.length) throw new Error('no posts');
+  const base = `https://raw.githubusercontent.com/${owner}/${repo}/${branch}/`;
+  return Promise.all(paths.map(async path => {
+    const text = await (await fetch(base + path)).text();
+    return parsePost(text, path.slice(6, -3));
+  }));
+}
+
+const view = $('#view'), toastEl = $('#toast'), header = $('#header');
+let POSTS = [], currentTag = null, searchQuery = "";
+
+function toast(msg){
+  toastEl.textContent = msg;
+  toastEl.classList.add('show');
+  clearTimeout(toast._t);
+  toast._t = setTimeout(() => toastEl.classList.remove('show'), 2000);
+}
+function setActive(page){
+  const a = $('#nav-archive'), t = $('#nav-about');
+  if(a) a.className = page === 'archive' ? 'active' : '';
+  if(t) t.className = page === 'about'   ? 'active' : '';
+}
+const metaLine = p =>
+  `Nº ${pad(p.no)} · ${fmt(p.date)}` + (p.verified ? ` · <span class="vfy">● Verified on ${esc(p.verified)}</span>` : '');
+
+window.addEventListener('scroll', () => {
+  header.classList.toggle('scrolled', window.scrollY > 8);
+}, {passive: true});
+
+function renderHome(){
+  setActive('home');
+  document.title = CONFIG.title;
+  const latest = POSTS[0];
+  if(!latest){
+    view.innerHTML = '<div class="label">Field notes</div><p class="empty">The first stone lands soon.</p>';
+    return;
+  }
+  const recent = POSTS.slice(0, 10);
+  const list = recent.map(p =>
+    `<a class="item" href="#/entry/${encodeURIComponent(p.slug)}">` +
+      `<div class="item-title">${esc(p.title)}</div>` +
+      `<div class="item-ex">${esc(p.ex)}</div>` +
+      `<div class="item-date">Nº ${pad(p.no)} · ${fmt(p.date)}</div>` +
+    `</a>`).join('');
+
+  view.innerHTML =
+    `<div class="hero">
+      <div class="label">Latest</div>
+      <h1><a href="#/entry/${encodeURIComponent(latest.slug)}">${esc(latest.title)}</a></h1>
+      <div class="meta">${metaLine(latest)}</div>
+      <p class="excerpt">${esc(latest.ex)}</p>
+      <a class="btn" href="#/entry/${encodeURIComponent(latest.slug)}">Read entry →</a>
+    </div>
+    <div class="list-label">Recent markers</div>
+    ${list}` +
+    (POSTS.length > 10 ? `<p style="margin-top:28px"><a href="#/archive" style="color:var(--text2)">The whole pile →</a></p>` : '');
+}
+
+function renderArchive(){
+  setActive('archive');
+  document.title = `The Pile · ${CONFIG.title}`;
+
+  const allTags = [...new Set(POSTS.flatMap(p => p.tags || []))].sort();
+  let filtered = POSTS;
+  if(currentTag) filtered = filtered.filter(p => (p.tags || []).includes(currentTag));
+  if(searchQuery.trim()){
+    const q = searchQuery.toLowerCase();
+    filtered = filtered.filter(p =>
+      p.title.toLowerCase().includes(q) ||
+      p.ex.toLowerCase().includes(q) ||
+      (p.tags || []).some(t => t.toLowerCase().includes(q)));
+  }
+
+  const years = {};
+  filtered.forEach(p => { const y = yr(p.date); (years[y] = years[y] || []).push(p); });
+  const sortedYears = Object.keys(years).sort((a,b) => b - a);
+
+  let list = '';
+  if(!filtered.length){
+    list = `<p class="empty">No markers match.</p>`;
+  } else {
+    sortedYears.forEach(y => {
+      list += `<div class="year">${y}</div>`;
+      years[y].forEach(p => {
+        const tags = (p.tags || []).map(t => `<span class="tag">${esc(t)}</span>`).join('');
+        list += `<a class="item" href="#/entry/${encodeURIComponent(p.slug)}">` +
+          `<div class="item-title">${esc(p.title)}</div>` +
+          `<div class="item-ex">${esc(p.ex)}</div>` +
+          `<div class="item-date">Nº ${pad(p.no)} · ${fmt(p.date)}</div>` +
+          (tags ? `<div class="item-tags">${tags}</div>` : '') +
+        `</a>`;
+      });
+    });
+  }
+
+  const tagBtns = allTags.map(t =>
+    `<button class="filter-tag${currentTag === t ? ' active' : ''}" data-tag="${esc(t)}">${esc(t)}</button>`).join('');
+
+  view.innerHTML =
+    `<div class="label">The Pile · ${pad(POSTS.length)} markers</div>
+    <input class="search-box" id="search" type="search" placeholder="Search the pile..." value="${esc(searchQuery)}">
+    ${allTags.length ? `<div class="filter-tags">${tagBtns}</div>` : ''}
+    ${list}`;
+
+  const si = document.getElementById('search');
+  si.addEventListener('input', e => {
+    searchQuery = e.target.value;
+    renderArchive();
+    const el = document.getElementById('search');
+    if(el){ el.focus(); el.setSelectionRange(el.value.length, el.value.length); }
+  });
+  view.querySelectorAll('.filter-tag').forEach(b =>
+    b.addEventListener('click', () => {
+      currentTag = currentTag === b.dataset.tag ? null : b.dataset.tag;
+      renderArchive();
+    }));
+}
+
+function renderPost(slug){
+  setActive('home');
+  const p = POSTS.find(x => x.slug === slug);
+  if(!p){
+    view.innerHTML = `<p class="empty">This stone isn't in the pile.</p><a class="back" href="#/">← Field notes</a>`;
+    return;
+  }
+  document.title = `${p.title} · ${CONFIG.title}`;
+  const clean = location.origin + '/entry/' + encodeURIComponent(p.slug) + '/';
+  const body = window.marked ? marked.parse(p.body) : '<p>' + esc(p.body) + '</p>';
+
+  let series = '';
+  if(p.series){
+    const parts = POSTS.filter(x => x.series === p.series)
+      .sort((a,b) => (a.part || a.dateMs) - (b.part || b.dateMs));
+    series = `<section class="series"><div class="list-label">Series — ${esc(p.series)}</div>` +
+      parts.map((x, ix) =>
+        `<a class="srow${x.slug === p.slug ? ' cur' : ''}" href="#/entry/${encodeURIComponent(x.slug)}">` +
+        `<span class="s-no">Part ${x.part || ix+1}</span><br><span class="s-t">${esc(x.title)}</span>` +
+        (x.slug === p.slug ? '<span class="s-here">you are here</span>' : '') + `</a>`).join('') +
+      `</section>`;
+  }
+
+  const i = POSTS.indexOf(p);
+  const newer = POSTS[i-1], older = POSTS[i+1];
+
+  view.innerHTML =
+    `<a class="back" href="#/">← Field notes</a>
+    <div class="meta">${metaLine(p)}</div>
+    <h1 class="art-title">${esc(p.title)}</h1>
+    <div class="prose">${body}</div>
+    <div class="share">
+      <span class="share-label">Leave a marker —</span>
+      <button class="share-btn" id="copy-link" data-url="${esc(clean)}">Copy link</button>
+      <a class="share-btn" target="_blank" rel="noopener" href="https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(clean)}">Carry it to LinkedIn</a>
+    </div>
+    ${series}
+    <nav class="pn">
+      ${newer ? `<a href="#/entry/${encodeURIComponent(newer.slug)}"><span class="dir">Newer</span><span class="pt">${esc(newer.title)}</span></a>` : ''}
+      ${older ? `<a href="#/entry/${encodeURIComponent(older.slug)}"><span class="dir">Older</span><span class="pt">${esc(older.title)}</span></a>` : ''}
+    </nav>`;
+
+  document.getElementById('copy-link').addEventListener('click', async e => {
+    const url = e.currentTarget.dataset.url || location.href;
+    try{ await navigator.clipboard.writeText(url); }
+    catch(_){
+      const ta = document.createElement('textarea');
+      ta.value = url; document.body.appendChild(ta); ta.select();
+      document.execCommand('copy'); ta.remove();
+    }
+    toast('Link copied');
+  });
+}
+
+function renderAbout(){
+  setActive('about');
+  document.title = `Trailhead · ${CONFIG.title}`;
+  const md = (CONFIG.about || '').replace(/^\s+/, '');
+  const html = window.marked ? marked.parse(md) : '<p>' + esc(md) + '</p>';
+  view.innerHTML = `
+    <h1 class="art-title">${esc(CONFIG.name)}</h1>
+    <div class="prose">${html}</div>
+    <div class="disclaimer">
+      This is an independent site. It is not affiliated with, endorsed by, or reviewed by Oracle. Product names are used for identification only. Nothing here constitutes official documentation or advice.
+    </div>`;
+}
+
+function route(){
+  const h = location.hash || '#/';
+  if(h.indexOf('#/archive') !== 0){ currentTag = null; searchQuery = ''; }
+  try{
+    if(h.indexOf('#/trailhead') === 0) renderAbout();
+    else if(h.indexOf('#/archive') === 0) renderArchive();
+    else if(h.indexOf('#/entry/') === 0) renderPost(decodeURIComponent(h.slice(8)));
+    else renderHome();
+  }catch(err){
+    view.innerHTML = `<p class="empty">A stone cracked in transit: ${esc(err.message)}</p><a class="back" href="#/">← Field notes</a>`;
+  }
+  window.scrollTo(0, 0);
+}
+addEventListener('hashchange', route);
+
+(async function(){
+  document.title = CONFIG.title;
+
+  view.innerHTML = '<div class="loading">Stacking stones…</div>';
+  let posts = null;
+  try{ posts = await fetchFromGitHub(); }
+  catch(_){ /* fall back to samples */ }
+  if(!posts) posts = collectSamples();
+
+  POSTS = posts.filter(p => !p.draft).sort((a,b) => b.dateMs - a.dateMs);
+  POSTS.forEach((p,i) => p.no = POSTS.length - i);
+  route();
+})();
+</script>
+</body>
+</html>
