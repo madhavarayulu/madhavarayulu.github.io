@@ -124,7 +124,11 @@
     gap: 10px;
     align-items: center;
   }
-  .share-label { font-size: 12px; color: var(--muted); margin-right: 4px; }
+  .share-label {
+    font-size: 12px;
+    color: var(--muted);
+    margin-right: 2px;
+  }
   .share-btn {
     display: inline-flex;
     align-items: center;
@@ -137,12 +141,16 @@
     border-radius: 999px;
     background: transparent;
     color: var(--text2);
-    text-decoration: none;
     cursor: pointer;
     font-family: inherit;
+    line-height: 1;
     transition: all 0.15s;
+    text-decoration: none;
   }
-  .share-btn:hover { border-color: var(--text); color: var(--text); }
+  .share-btn:hover {
+    border-color: var(--text);
+    color: var(--text);
+  }
 
   footer {
     border-top: 1px solid var(--border);
