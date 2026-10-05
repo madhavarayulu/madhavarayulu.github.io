@@ -216,27 +216,53 @@
   </footer>
 
   <script>
-    // Reading progress bar for static pages
+    // Reading progress bar
     window.addEventListener('scroll', () => {
       const winScroll = document.body.scrollTop || document.documentElement.scrollTop;
       const height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
       const scrolled = (winScroll / height) * 100;
       document.getElementById('progress-bar').style.width = scrolled + "%";
     }, {passive: true});
-
-    // Copy link feedback
-    document.getElementById('copy-link').addEventListener('click', async function(e) {
+  
+    // Copy link
+    document.getElementById('copy-link').addEventListener('click', async function() {
       const url = this.dataset.url;
       try { await navigator.clipboard.writeText(url); }
-      catch(_) {
+      catch (_) {
         const ta = document.createElement('textarea');
         ta.value = url; document.body.appendChild(ta); ta.select();
         document.execCommand('copy'); ta.remove();
       }
-      const originalText = this.textContent;
+      const original = this.textContent;
       this.textContent = '✓ Copied';
-      setTimeout(() => { this.textContent = originalText; }, 2000);
+      setTimeout(() => this.textContent = original, 2000);
     });
+  
+    // Native Share
+    const shareBtn = document.getElementById('native-share');
+    if (navigator.share) {
+      shareBtn.addEventListener('click', async () => {
+        try {
+          await navigator.share({
+            title: shareBtn.dataset.title,
+            url: shareBtn.dataset.url
+          });
+        } catch (_) {}
+      });
+    } else {
+      shareBtn.addEventListener('click', async () => {
+        const url = shareBtn.dataset.url;
+        try { await navigator.clipboard.writeText(url); }
+        catch (_) {
+          const ta = document.createElement('textarea');
+          ta.value = url; document.body.appendChild(ta); ta.select();
+          document.execCommand('copy'); ta.remove();
+        }
+        const original = shareBtn.textContent;
+        shareBtn.textContent = '✓ Copied';
+        setTimeout(() => shareBtn.textContent = original, 2000);
+      });
+    }
   </script>
 </body>
 </html>
