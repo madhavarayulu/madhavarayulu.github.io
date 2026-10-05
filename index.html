@@ -76,15 +76,8 @@
   .back:hover { color: var(--accent); }
   .art-title { font-size: clamp(28px, 6vw, 42px); font-weight: 600; line-height: 1.15; letter-spacing: -0.03em; margin-bottom: 28px; }
 
-  /* --- NATURAL WIDTH FIX --- */
-  .article-body {
-    width: 100%; /* Fills the .wrap container naturally */
-  }
-  .prose {
-    font-size: 17px;
-    line-height: 1.75;
-    width: 100%;
-  }
+  .article-body { width: 100%; }
+  .prose { font-size: 17px; line-height: 1.75; width: 100%; }
   .prose p { margin-bottom: 1.25em; }
   .prose h2 { font-size: 1.3em; margin: 1.8em 0 0.6em; font-weight: 600; }
   .prose h3 { font-size: 1.15em; margin: 1.6em 0 0.5em; font-weight: 600; }
@@ -98,24 +91,38 @@
   .prose img { max-width: 100%; height: auto; display: block; border-radius: 8px; margin: 2em 0; border: 1px solid var(--border); }
   .prose hr { border: none; border-top: 1px solid var(--border); margin: 2.2em 0; }
 
-  .article-footer {
-    width: 100%;
-    margin-top: 48px;
-    display: flex;
-    flex-direction: column;
-    gap: 32px;
-  }
+  .article-footer { width: 100%; margin-top: 48px; display: flex; flex-direction: column; gap: 32px; }
   .share-row { display: flex; align-items: center; gap: 12px; padding-bottom: 24px; border-bottom: 1px solid var(--border); }
   .share-label { font-size: 12px; color: var(--muted); font-weight: 500; margin-right: 4px; }
   .share-btn { display: inline-flex; align-items: center; justify-content: center; height: 34px; padding: 0 14px; font-size: 13px; font-weight: 500; border: 1px solid var(--border); border-radius: 999px; background: transparent; color: var(--text2); cursor: pointer; font-family: inherit; line-height: 1; transition: all 0.15s; }
   .share-btn:hover { border-color: var(--text); color: var(--text); }
 
-  .nav-row { display: flex; justify-content: space-between; gap: 24px; }
-  .nav-link { flex: 1; display: flex; flex-direction: column; gap: 6px; padding: 4px 0; }
-  .nav-link.next { align-items: flex-end; text-align: right; }
+  /* --- CSS GRID FOR PERFECT CORNERS --- */
+  .nav-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 24px;
+    width: 100%;
+  }
+  .nav-link {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    padding: 4px 0;
+  }
+  .nav-link.prev {
+    text-align: left;
+    grid-column: 1;
+  }
+  .nav-link.next {
+    text-align: right;
+    grid-column: 2;
+    align-items: flex-end;
+  }
   .nav-label { font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted); }
   .nav-title { font-size: 15px; font-weight: 500; color: var(--text); transition: color 0.15s; line-height: 1.4; }
   .nav-link:hover .nav-title { color: var(--accent); }
+  /* -------------------------------- */
 
   .series { margin-top: 0; }
   .srow { display: block; padding: 12px 0; border-bottom: 1px solid var(--border); }
@@ -153,8 +160,8 @@
   .pile-link:hover svg { transform: translateX(3px); }
 
   @media (max-width: 560px) {
-    .nav-row { flex-direction: column; gap: 16px; }
-    .nav-link.next { align-items: flex-start; text-align: left; }
+    .nav-row { grid-template-columns: 1fr; gap: 16px; }
+    .nav-link.next { text-align: left; align-items: flex-start; grid-column: 1; }
     nav a { margin-left: 14px; }
   }
 </style>
@@ -334,8 +341,8 @@ function renderPost(slug){
           <button class="share-btn" id="native-share" data-url="${esc(clean)}" data-title="${esc(p.title)}">Share</button>
         </div>
         <nav class="nav-row">
-          ${older ? `<a href="#/entry/${encodeURIComponent(older.slug)}" class="nav-link prev"><span class="nav-label">← Older</span><span class="nav-title">${esc(older.title)}</span></a>` : '<div></div>'}
-          ${newer ? `<a href="#/entry/${encodeURIComponent(newer.slug)}" class="nav-link next"><span class="nav-label">Newer →</span><span class="nav-title">${esc(newer.title)}</span></a>` : '<div></div>'}
+          ${older ? `<a href="#/entry/${encodeURIComponent(older.slug)}" class="nav-link prev"><span class="nav-label">← Older</span><span class="nav-title">${esc(older.title)}</span></a>` : ''}
+          ${newer ? `<a href="#/entry/${encodeURIComponent(newer.slug)}" class="nav-link next"><span class="nav-label">Newer →</span><span class="nav-title">${esc(newer.title)}</span></a>` : ''}
         </nav>
       </div>
     </div>`;
