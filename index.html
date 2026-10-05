@@ -474,7 +474,14 @@ function renderHome(){
     <div class="list-label">Recent</div>
     ${list}` +
     (POSTS.length > 10
-      ? `<p style="margin-top:28px"><a class="pile-link" href="#/archive">View all entries →</a></p>`
+      ? `<p style="margin-top:28px">
+          <a class="pile-link" href="#/archive">
+            View all entries
+            <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2" aria-hidden="true">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M17 8l4 4m0 0l-4 4m4-4H3"/>
+            </svg>
+          </a>
+        </p>`
       : '');
 }
 
