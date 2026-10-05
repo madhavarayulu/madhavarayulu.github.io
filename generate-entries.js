@@ -70,8 +70,24 @@ function main() {
     return;
   }
 
+  // 1. Parse all valid posts first
+  const validPosts = [];
+  files.forEach(file => {
+    const slug = file.replace(/\.md$/, '');
+    const raw = fs.readFileSync(path.join(POSTS_DIR, file), 'utf8');
+    const { meta, body, raw: rawBody } = parseFrontMatter(raw);
+    if (!/^(true|yes|1)$/i.test(meta.draft || '')) {
+      validPosts.push({ slug, meta, body, raw: rawBody });
+    } else {
+      console.log(`- Skipped (draft): ${slug}`);
+    }
+  });
+
+  // 2. Sort by date descending (newest first)
+  validPosts.sort((a, b) => new Date(b.meta.date) - new Date(a.meta.date));
+
   // Remove stale dirs for posts that no longer exist
-  const slugs = files.map(f => f.replace(/\.md$/, ''));
+  const slugs = validPosts.map(p => p.slug);
   fs.readdirSync(ENTRY_DIR).forEach(d => {
     if (!slugs.includes(d)) {
       fs.rmSync(path.join(ENTRY_DIR, d), { recursive: true, force: true });
@@ -79,18 +95,22 @@ function main() {
     }
   });
 
+  // 3. Generate HTML with neighbor context
   const postsMeta = [];
   let made = 0;
 
-  files.forEach(file => {
-    const slug = file.replace(/\.md$/, '');
-    const raw = fs.readFileSync(path.join(POSTS_DIR, file), 'utf8');
-    const { meta, body } = parseFrontMatter(raw);
+  validPosts.forEach((post, index) => {
+    const { slug, meta, body, raw } = post;
+    const newerPost = validPosts[index - 1]; // newer is previous in array (newer date)
+    const olderPost = validPosts[index + 1]; // older is next in array (older date)
 
-    if (/^(true|yes|1)$/i.test(meta.draft || '')) {
-      console.log(`- Skipped (draft): ${slug}`);
-      return;
-    }
+    const newerHtml = newerPost 
+      ? `<a href="/entry/${newerPost.slug}/" class="nav-link prev"><span class="nav-label">← Newer</span><span class="nav-title">${escHtml(newerPost.meta.title)}</span></a>` 
+      : '<div></div>';
+      
+    const olderHtml = olderPost 
+      ? `<a href="/entry/${olderPost.slug}/" class="nav-link next"><span class="nav-label">Older →</span><span class="nav-title">${escHtml(olderPost.meta.title)}</span></a>` 
+      : '<div></div>';
 
     const title = meta.title || slug;
     const verified = meta.verified
@@ -100,12 +120,14 @@ function main() {
     const excerptText = excerpt(body);
     const bodyHtml = marked.parse(body);
 
-    const html = template
+    let html = template
       .replace(/\{\{TITLE\}\}/g, escHtml(title))
       .replace(/\{\{SLUG\}\}/g, slug)
       .replace(/\{\{DATE\}\}/g, date)
       .replace(/\{\{EXCERPT\}\}/g, escHtml(excerptText))
-      .replace(/\{\{BODY_HTML\}\}/g, bodyHtml);
+      .replace(/\{\{BODY_HTML\}\}/g, bodyHtml)
+      .replace(/\{\{NEWER_LINK\}\}/g, newerHtml)
+      .replace(/\{\{OLDER_LINK\}\}/g, olderHtml);
 
     const outDir = path.join(ENTRY_DIR, slug);
     fs.mkdirSync(outDir, { recursive: true });
@@ -113,7 +135,6 @@ function main() {
     console.log(`✓ Generated entry/${slug}/`);
     made++;
 
-    // Collect metadata for instant frontend loading
     postsMeta.push({
       slug,
       title,
@@ -123,7 +144,7 @@ function main() {
       part: meta.part ? parseInt(meta.part, 10) : 0,
       verified: meta.verified,
       excerpt: excerptText,
-      raw: body // Keep raw markdown for SPA dynamic rendering
+      raw: body
     });
   });
 
