@@ -4,7 +4,8 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>{{TITLE}} · Cairn</title>
-<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'%3E%3Crect width='512' height='512' rx='100' fill='%230f0f0f'/%3E%3Cellipse cx='256' cy='452' rx='142' ry='11' fill='%23C1502E' opacity='.15'/%3E%3Cellipse cx='250' cy='398' rx='118' ry='44' fill='%232E2A24'/%3E%3Cellipse cx='258' cy='324' rx='94' ry='37' fill='%23403A31'/%3E%3Cellipse cx='248' cy='258' rx='72' ry='30' fill='%23524A3E'/%3E%3Cellipse cx='256' cy='200' rx='52' ry='23' fill='%23645A4B'/%3E%3Cellipse cx='256' cy='160' rx='36' ry='16' fill='%23C1502E'/%3E%3C/svg%3E">
+<link rel="icon" type="image/png" href="/favicon.png" sizes="192x192">
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'%3E%3Crect width='512' height='512' rx='100' fill='%230f0f0f'/%3E%3Cellipse cx='256' cy='452' rx='142' ry='11' fill='%231a1815' opacity='.5'/%3E%3Cellipse cx='250' cy='398' rx='118' ry='44' fill='%232E2A24'/%3E%3Cellipse cx='258' cy='324' rx='94' ry='37' fill='%23403A31'/%3E%3Cellipse cx='248' cy='258' rx='72' ry='30' fill='%23524A3E'/%3E%3Cellipse cx='256' cy='200' rx='52' ry='23' fill='%23645A4B'/%3E%3Cellipse cx='256' cy='160' rx='36' ry='16' fill='%23C1502E'/%3E%3C/svg%3E">
 <meta name="description" content="{{EXCERPT}}">
 
 <meta property="og:type" content="article">
@@ -12,14 +13,14 @@
 <meta property="og:description" content="{{EXCERPT}}">
 <meta property="og:url" content="https://madhavarayulu.github.io/entry/{{SLUG}}/">
 <meta property="og:site_name" content="Cairn">
-<meta property="og:image" content="https://madhavarayulu.github.io/cairn-card-wide.png">
+<meta property="og:image" content="https://madhavarayulu.github.io/cairn-card-wide-sep.png">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="628">
 
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="{{TITLE}}">
 <meta name="twitter:description" content="{{EXCERPT}}">
-<meta name="twitter:image" content="https://madhavarayulu.github.io/cairn-card-wide.png">
+<meta name="twitter:image" content="https://madhavarayulu.github.io/cairn-card-wide-sep.png">
 
 <style>
   :root { --bg: #0f0f0f; --text: #f0eee6; --text2: #a8a59c; --muted: #6b6860; --border: #2a2a2a; --accent: #C1502E; --elev: #181818; }
@@ -41,28 +42,60 @@
   .prose h2 { font-size: 1.3em; margin: 1.8em 0 0.6em; font-weight: 600; }
   .prose h3 { font-size: 1.15em; margin: 1.6em 0 0.5em; font-weight: 600; }
   .prose a { color: var(--accent); text-decoration: underline; text-underline-offset: 3px; }
-  .prose blockquote { border-left: 3px solid var(--accent); padding-left: 1.2em; margin: 1.5em 0; color: var(--text2); font-style: italic; hanging-punctuation: first; }
-  .prose ul, .prose ol { margin: 0 0 1.25em; padding-left: 1.3em; }
-  .prose li { margin: 0.35em 0; }
+  .prose blockquote { border-left: 2px solid var(--accent); padding-left: 1.2em; margin: 1.5em 0; color: var(--text2); font-style: italic; hanging-punctuation: first; }
+  .prose ul, .prose ol { margin: 0 0 1.25em; padding-left: 1.4em; }
+  .prose li { margin: 0.4em 0; }
   .prose code { font-family: ui-monospace, monospace; font-size: 0.88em; background: var(--elev); padding: 2px 6px; border-radius: 4px; }
   .prose pre { background: #1a1a1a; padding: 16px 18px; border-radius: 8px; overflow-x: auto; margin: 0 0 1.3em; border: 1px solid var(--border); }
   .prose pre code { background: none; padding: 0; }
   .prose img { max-width: 100%; height: auto; display: block; border-radius: 8px; margin: 2em 0; border: 1px solid var(--border); }
 
-  .article-footer { width: 100%; margin-top: 48px; display: flex; flex-direction: column; gap: 32px; }
+  .article-footer { width: 100%; margin-top: 48px; display: flex; flex-direction: column; gap: 20px; }
   .share-row { display: flex; align-items: center; gap: 12px; padding-bottom: 24px; border-bottom: 1px solid var(--border); }
   .share-label { font-size: 12px; color: var(--muted); font-weight: 500; margin-right: 4px; }
   .share-btn { display: inline-flex; align-items: center; justify-content: center; height: 34px; padding: 0 14px; font-size: 13px; font-weight: 500; border: 1px solid var(--border); border-radius: 999px; background: transparent; color: var(--text2); cursor: pointer; font-family: inherit; line-height: 1; transition: all 0.15s; }
   .share-btn:hover { border-color: var(--text); color: var(--text); }
 
-  /* --- SIMPLE NAVIGATION --- */
-  .nav-row { display: flex; justify-content: space-between; width: 100%; }
-  .nav-link { display: flex; flex-direction: column; gap: 6px; padding: 4px 0; }
-  .nav-link.prev { text-align: left; }
-  .nav-link.next { text-align: right; align-items: flex-end; margin-left: auto; }
-  .nav-label { font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted); }
-  .nav-title { font-size: 15px; font-weight: 500; color: var(--text); transition: color 0.15s; line-height: 1.4; }
+  /* --- BOOK PAGE FLIP NAVIGATION --- */
+  .nav-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 24px;
+    padding-top: 24px;
+    border-top: 1px solid var(--border);
+  }
+  .nav-link {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    max-width: 45%;
+    text-decoration: none;
+  }
+  .nav-link.next {
+    align-items: flex-end;
+    text-align: right;
+  }
+  .nav-label {
+    font-size: 11px;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+  .nav-title {
+    font-family: 'Fraunces', Georgia, serif;
+    font-weight: 500;
+    font-size: 16px;
+    color: var(--text);
+    transition: color 0.15s;
+    line-height: 1.4;
+  }
   .nav-link:hover .nav-title { color: var(--accent); }
+
+  @media (max-width: 560px) {
+    .nav-row { flex-direction: column; gap: 16px; }
+    .nav-link.next { align-items: flex-start; text-align: left; }
+  }
 
   footer { border-top: 1px solid var(--border); padding: 24px 0 36px; font-size: 12px; color: var(--muted); text-align: center; }
 </style>
@@ -84,6 +117,12 @@
           <button class="share-btn" id="copy-link" data-url="https://madhavarayulu.github.io/entry/{{SLUG}}/">Copy link</button>
           <button class="share-btn" id="native-share" data-url="https://madhavarayulu.github.io/entry/{{SLUG}}/" data-title="{{TITLE}}">Share</button>
         </div>
+        
+        <!-- BOOK PAGE FLIP NAVIGATION PLACEHOLDERS -->
+        <nav class="nav-row">
+          {{NEWER_LINK}}
+          {{OLDER_LINK}}
+        </nav>
       </div>
     </div>
   </div>
