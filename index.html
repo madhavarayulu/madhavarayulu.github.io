@@ -7,7 +7,7 @@
 <meta name="description" content="Field notes from an Oracle Fusion Finance functional consultant. Practical insights on implementations, process design, and the real-world edge cases that shape financial systems — left as markers for the next consultant navigating the terrain.">
 <meta name="theme-color" content="#0f0f0f">
 
-<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'%3E%3Crect width='512' height='512' rx='100' fill='%230f0f0f'/%3E%3Cellipse cx='256' cy='452' rx='142' ry='11' fill='%23C1502E' opacity='.15'/%3E%3Cellipse cx='250' cy='398' rx='118' ry='44' fill='%232E2A24'/%3E%3Cellipse cx='258' cy='324' rx='94' ry='37' fill='%23403A31'/%3E%3Cellipse cx='248' cy='258' rx='72' ry='30' fill='%23524A3E'/%3E%3Cellipse cx='256' cy='200' rx='52' ry='23' fill='%23645A4B'/%3E%3Cellipse cx='256' cy='160' rx='36' ry='16' fill='%23C1502E'/%3E%3C/svg%3E">
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'%3E%3Crect width='512' height='512' rx='100' fill='%230f0f0f'/%3E%3Cellipse cx='256' cy='452' rx='142' ry='11' fill='%231a1815' opacity='.5'/%3E%3Cellipse cx='250' cy='398' rx='118' ry='44' fill='%232E2A24'/%3E%3Cellipse cx='258' cy='324' rx='94' ry='37' fill='%23403A31'/%3E%3Cellipse cx='248' cy='258' rx='72' ry='30' fill='%23524A3E'/%3E%3Cellipse cx='256' cy='200' rx='52' ry='23' fill='%23645A4B'/%3E%3Cellipse cx='256' cy='160' rx='36' ry='16' fill='%23C1502E'/%3E%3C/svg%3E">
 
 <meta property="og:type" content="website">
 <meta property="og:title" content="Cairn — field notes from the trail">
@@ -72,9 +72,11 @@
   .item-tags { margin-top: 8px; }
   .tag { display: inline-block; font-size: 11px; padding: 2px 8px; border: 1px solid var(--border); border-radius: 999px; color: var(--text2); margin-right: 6px; }
 
-  .back { display: inline-block; font-size: 13px; color: var(--text2); margin-bottom: 28px; }
+  .back { display: inline-flex; align-items: center; gap: 8px; font-size: 11px; letter-spacing: 0.15em; text-transform: uppercase; color: var(--muted); margin-bottom: 30px; transition: color 0.15s; }
   .back:hover { color: var(--accent); }
-  .art-title { font-size: clamp(28px, 6vw, 42px); font-weight: 600; line-height: 1.15; letter-spacing: -0.03em; margin-bottom: 28px; }
+  .back svg { width: 14px; height: 14px; }
+  
+  .art-title { font-family: 'Fraunces', Georgia, serif; font-size: clamp(34px, 5.4vw, 54px); font-weight: 600; line-height: 1.06; letter-spacing: -0.02em; margin-bottom: 18px; }
 
   .article-body { width: 100%; }
   .prose { font-size: 17px; line-height: 1.75; width: 100%; }
@@ -82,14 +84,14 @@
   .prose h2 { font-size: 1.3em; margin: 1.8em 0 0.6em; font-weight: 600; }
   .prose h3 { font-size: 1.15em; margin: 1.6em 0 0.5em; font-weight: 600; }
   .prose a { color: var(--accent); text-decoration: underline; text-underline-offset: 3px; }
-  .prose blockquote { border-left: 3px solid var(--accent); padding-left: 1.2em; margin: 1.5em 0; color: var(--text2); font-style: italic; hanging-punctuation: first; }
-  .prose ul, .prose ol { margin: 0 0 1.25em; padding-left: 1.3em; }
-  .prose li { margin: 0.35em 0; }
+  .prose blockquote { border-left: 2px solid var(--accent); padding-left: 1.2em; margin: 1.5em 0; color: var(--text2); font-style: italic; }
+  .prose ul, .prose ol { margin: 0 0 1.25em; padding-left: 1.4em; }
+  .prose li { margin: 0.4em 0; }
   .prose code { font-family: ui-monospace, monospace; font-size: 0.88em; background: var(--elev); padding: 2px 6px; border-radius: 4px; }
   .prose pre { background: #1a1a1a; padding: 16px 18px; border-radius: 8px; overflow-x: auto; margin: 0 0 1.3em; border: 1px solid var(--border); }
   .prose pre code { background: none; padding: 0; }
   .prose img { max-width: 100%; height: auto; display: block; border-radius: 8px; margin: 2em 0; border: 1px solid var(--border); }
-  .prose hr { border: none; border-top: 1px solid var(--border); margin: 2.2em 0; }
+  .prose hr { border: none; border-top: 1px dashed var(--border); margin: 2.2em 0; }
 
   .article-footer { width: 100%; margin-top: 48px; display: flex; flex-direction: column; gap: 32px; }
   .share-row { display: flex; align-items: center; gap: 12px; padding-bottom: 24px; border-bottom: 1px solid var(--border); }
@@ -97,13 +99,37 @@
   .share-btn { display: inline-flex; align-items: center; justify-content: center; height: 34px; padding: 0 14px; font-size: 13px; font-weight: 500; border: 1px solid var(--border); border-radius: 999px; background: transparent; color: var(--text2); cursor: pointer; font-family: inherit; line-height: 1; transition: all 0.15s; }
   .share-btn:hover { border-color: var(--text); color: var(--text); }
 
-  .nav-row { display: flex; justify-content: space-between; width: 100%; }
-  .nav-link { display: flex; flex-direction: column; gap: 6px; padding: 4px 0; }
-  .nav-link.prev { text-align: left; }
-  .nav-link.next { text-align: right; align-items: flex-end; margin-left: auto; }
-  .nav-label { font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted); }
-  .nav-title { font-size: 15px; font-weight: 500; color: var(--text); transition: color 0.15s; line-height: 1.4; }
-  .nav-link:hover .nav-title { color: var(--accent); }
+  /* --- ORIGINAL ELEGANT FOOTER LAYOUT --- */
+  .pn { margin-top: 60px; border-top: 1px solid var(--border); }
+  .pn a {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    gap: 16px;
+    padding: 16px 0;
+    border-bottom: 1px solid var(--border);
+    text-decoration: none;
+  }
+  .pn .dir {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    flex: none;
+    font-size: 11px;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+  .pn .t {
+    font-family: 'Fraunces', Georgia, serif;
+    font-weight: 500;
+    font-size: 17px;
+    color: var(--text);
+    text-align: right;
+    transition: color 0.15s;
+  }
+  .pn a:hover .t { color: var(--accent); }
+  /* -------------------------------- */
 
   .series { margin-top: 0; }
   .srow { display: block; padding: 12px 0; border-bottom: 1px solid var(--border); }
@@ -148,9 +174,23 @@
   .pile-link svg { transition: transform 0.2s ease; }
   .pile-link:hover svg { transform: translateX(3px); }
 
+  /* --- ORIGINAL STACKED STONES ANIMATION --- */
+  @keyframes drop {
+    from { opacity: 0; transform: translateY(-56px); }
+    60% { opacity: 1; }
+    to { opacity: 1; transform: none; }
+  }
+  @keyframes fadein {
+    from { opacity: 0; }
+    to { opacity: 0.15; }
+  }
+  .stone { animation: drop 0.6s cubic-bezier(0.32, 1.35, 0.5, 1) both; }
+  .fade { animation: fadein 0.7s ease both; }
+  .cairn-mark { width: 120px; flex: none; margin-bottom: 8px; }
+
   @media (max-width: 560px) {
-    .nav-row { flex-direction: column; gap: 16px; }
-    .nav-link.next { text-align: left; align-items: flex-start; margin-left: 0; }
+    .pn a { flex-direction: column; gap: 4px; }
+    .pn .t { text-align: left; }
     nav a { margin-left: 14px; }
   }
 </style>
@@ -303,7 +343,7 @@ function renderArchive(){
 function renderPost(slug){
   setActive('home');
   const p = POSTS.find(x => x.slug === slug);
-  if(!p){ view.innerHTML = `<p class="empty">Entry not found.</p><a class="back" href="#/">← Field notes</a>`; return; }
+  if(!p){ view.innerHTML = `<p class="empty">Entry not found.</p><a class="back" href="#/"><svg width="14" height="14" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M19 12H5m0 0l7 7m-7-7l7-7"/></svg><span>Field notes</span></a>`; return; }
   document.title = `${p.title} · ${CONFIG.title}`;
   const clean = location.origin + '/entry/' + encodeURIComponent(p.slug) + '/';
   const body = window.marked ? marked.parse(p.body) : '<p>' + esc(p.body) + '</p>';
@@ -318,7 +358,7 @@ function renderPost(slug){
   const newer = POSTS[i-1], older = POSTS[i+1];
 
   view.innerHTML = `
-    <a class="back" href="#/">← Field notes</a>
+    <a class="back" href="#/"><svg width="14" height="14" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M19 12H5m0 0l7 7m-7-7l7-7"/></svg><span>Field notes</span></a>
     <div class="meta">${metaLine(p)}</div>
     <h1 class="art-title">${esc(p.title)}</h1>
     
@@ -332,9 +372,9 @@ function renderPost(slug){
           <button class="share-btn" id="copy-link" data-url="${esc(clean)}">Copy link</button>
           <button class="share-btn" id="native-share" data-url="${esc(clean)}" data-title="${esc(p.title)}">Share</button>
         </div>
-        <nav class="nav-row">
-          ${newer ? `<a href="#/entry/${encodeURIComponent(newer.slug)}" class="nav-link prev"><span class="nav-label">← Newer</span><span class="nav-title">${esc(newer.title)}</span></a>` : ''}
-          ${older ? `<a href="#/entry/${encodeURIComponent(older.slug)}" class="nav-link next"><span class="nav-label">Older →</span><span class="nav-title">${esc(older.title)}</span></a>` : ''}
+        <nav class="pn">
+          ${newer ? `<a href="#/entry/${encodeURIComponent(newer.slug)}"><span class="dir"><svg width="13" height="13" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M7 16l-4-4m0 0l4-4m-4 4h18"/></svg>Newer</span><span class="t">${esc(newer.title)}</span></a>` : ''}
+          ${older ? `<a href="#/entry/${encodeURIComponent(older.slug)}"><span class="dir">Older<svg width="13" height="13" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M17 8l4 4m0 0l-4 4m4-4H3"/></svg></span><span class="t">${esc(older.title)}</span></a>` : ''}
         </nav>
       </div>
     </div>`;
@@ -357,6 +397,18 @@ function renderAbout(){
   
   view.innerHTML = `
     <h1 class="art-title">Trailhead</h1>
+    
+    <!-- THE ORIGINAL STACKED STONES ANIMATION (Adapted for Dark Mode) -->
+    <svg class="cairn-mark" viewBox="0 0 512 512" aria-hidden="true" style="margin-bottom: 32px;">
+      <rect width="512" height="512" rx="100" fill="#1a1815"/>
+      <ellipse class="fade" style="animation-delay:420ms" cx="256" cy="452" rx="142" ry="11" fill="#0f0f0f"/>
+      <g class="stone" style="animation-delay:0ms"><ellipse cx="250" cy="398" rx="118" ry="44" fill="#2E2A24"/></g>
+      <g class="stone" style="animation-delay:80ms"><ellipse cx="258" cy="324" rx="94" ry="37" fill="#403A31"/></g>
+      <g class="stone" style="animation-delay:160ms"><ellipse cx="248" cy="258" rx="72" ry="30" fill="#524A3E"/></g>
+      <g class="stone" style="animation-delay:240ms"><ellipse cx="256" cy="200" rx="52" ry="23" fill="#645A4B"/></g>
+      <g class="stone" style="animation-delay:320ms"><ellipse cx="256" cy="160" rx="36" ry="16" fill="#C1502E" transform="rotate(-8 256 160)"/></g>
+    </svg>
+
     <div class="prose">
       <p>I am an Oracle Fusion Finance functional consultant.</p>
       <p>My work is to bridge the gap between business needs and system capabilities—guiding implementations, designing financial processes, and configuring solutions that work in the real world.</p>
@@ -377,7 +429,7 @@ function route(){
     else if(h.indexOf('#/archive') === 0) renderArchive();
     else if(h.indexOf('#/entry/') === 0) renderPost(decodeURIComponent(h.slice(8)));
     else renderHome();
-  }catch(err){ view.innerHTML = `<p class="empty">An error occurred: ${esc(err.message)}</p><a class="back" href="#/">← Field notes</a>`; }
+  }catch(err){ view.innerHTML = `<p class="empty">An error occurred: ${esc(err.message)}</p><a class="back" href="#/"><svg width="14" height="14" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M19 12H5m0 0l7 7m-7-7l7-7"/></svg><span>Field notes</span></a>`; }
   window.scrollTo(0, 0);
 }
 addEventListener('hashchange', route);
