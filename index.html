@@ -99,7 +99,7 @@
   .share-btn { display: inline-flex; align-items: center; justify-content: center; height: 34px; padding: 0 14px; font-size: 13px; font-weight: 500; border: 1px solid var(--border); border-radius: 999px; background: transparent; color: var(--text2); cursor: pointer; font-family: inherit; line-height: 1; transition: all 0.15s; }
   .share-btn:hover { border-color: var(--text); color: var(--text); }
 
-  /* --- ORIGINAL ELEGANT FOOTER LAYOUT --- */
+  /* --- ORIGINAL BOOK PAGE FLIP NAVIGATION --- */
   .pn { margin-top: 60px; border-top: 1px solid var(--border); }
   .pn a {
     display: flex;
@@ -120,6 +120,7 @@
     text-transform: uppercase;
     color: var(--muted);
   }
+  .pn .dir svg { width: 14px; height: 14px; }
   .pn .t {
     font-family: 'Fraunces', Georgia, serif;
     font-weight: 500;
@@ -372,9 +373,11 @@ function renderPost(slug){
           <button class="share-btn" id="copy-link" data-url="${esc(clean)}">Copy link</button>
           <button class="share-btn" id="native-share" data-url="${esc(clean)}" data-title="${esc(p.title)}">Share</button>
         </div>
+        
+        <!-- ORIGINAL BOOK PAGE FLIP NAVIGATION -->
         <nav class="pn">
-          ${newer ? `<a href="#/entry/${encodeURIComponent(newer.slug)}"><span class="dir"><svg width="13" height="13" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M7 16l-4-4m0 0l4-4m-4 4h18"/></svg>Newer</span><span class="t">${esc(newer.title)}</span></a>` : ''}
-          ${older ? `<a href="#/entry/${encodeURIComponent(older.slug)}"><span class="dir">Older<svg width="13" height="13" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M17 8l4 4m0 0l-4 4m4-4H3"/></svg></span><span class="t">${esc(older.title)}</span></a>` : ''}
+          ${newer ? `<a href="#/entry/${encodeURIComponent(newer.slug)}"><span class="dir"><svg width="14" height="14" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M7 16l-4-4m0 0l4-4m-4 4h18"/></svg>Newer</span><span class="t">${esc(newer.title)}</span></a>` : ''}
+          ${older ? `<a href="#/entry/${encodeURIComponent(older.slug)}"><span class="dir">Older<svg width="14" height="14" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M17 8l4 4m0 0l-4 4m4-4H3"/></svg></span><span class="t">${esc(older.title)}</span></a>` : ''}
         </nav>
       </div>
     </div>`;
