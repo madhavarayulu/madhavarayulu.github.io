@@ -274,6 +274,8 @@
     color: var(--text2); transition: color 0.2s ease, gap 0.2s ease;
   }
   .pile-link:hover { color: var(--accent); gap: 10px; }
+  .pile-link svg { transition: transform 0.2s ease; }
+  .pile-link:hover svg { transform: translateX(3px); }
 
   @keyframes drop {
     from { opacity: 0; transform: translateY(-56px); }
