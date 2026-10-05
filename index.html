@@ -26,167 +26,71 @@
 
 <style>
   :root {
-    --bg: #0f0f0f;
-    --text: #f0eee6;
-    --text2: #a8a59c;
-    --muted: #6b6860;
-    --border: #2a2a2a;
-    --accent: #C1502E;
-    --elev: #181818;
+    --bg: #0f0f0f; --text: #f0eee6; --text2: #a8a59c; --muted: #6b6860;
+    --border: #2a2a2a; --accent: #C1502E; --elev: #181818;
   }
   * { margin: 0; padding: 0; box-sizing: border-box; }
   body {
-    background: var(--bg);
-    color: var(--text);
-    font-family: system-ui, -apple-system, sans-serif;
-    font-size: 16px;
-    line-height: 1.6;
-    -webkit-font-smoothing: antialiased;
+    background: var(--bg); color: var(--text); font-family: system-ui, -apple-system, sans-serif;
+    font-size: 16px; line-height: 1.6; -webkit-font-smoothing: antialiased;
   }
   ::selection { background: var(--accent); color: #fff; }
   :focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
   a { color: inherit; text-decoration: none; }
   .wrap { max-width: 680px; margin: 0 auto; padding: 0 20px; }
 
-  #progress-bar {
-    position: fixed;
-    top: 0;
-    left: 0;
-    height: 2px;
-    background: var(--accent);
-    width: 0%;
-    z-index: 100;
-    transition: width 0.1s linear;
-  }
+  #progress-bar { position: fixed; top: 0; left: 0; height: 2px; background: var(--accent); width: 0%; z-index: 100; transition: width 0.1s linear; }
 
-  header {
-    border-bottom: 1px solid transparent;
-    position: sticky;
-    top: 0;
-    background: rgba(15,15,15,0.92);
-    backdrop-filter: blur(12px);
-    -webkit-backdrop-filter: blur(12px);
-    z-index: 20;
-    transition: border-color 0.2s;
-  }
+  header { border-bottom: 1px solid transparent; position: sticky; top: 0; background: rgba(15,15,15,0.92); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); z-index: 20; transition: border-color 0.2s; }
   header.scrolled { border-color: var(--border); }
-  .header-inner {
-    max-width: 680px;
-    margin: 0 auto;
-    padding: 0 20px;
-    height: 58px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-  }
-  .logo {
-    font-family: 'Fraunces', Georgia, serif;
-    font-size: 22px;
-    font-weight: 600;
-    letter-spacing: -0.02em;
-  }
+  .header-inner { max-width: 680px; margin: 0 auto; padding: 0 20px; height: 58px; display: flex; justify-content: space-between; align-items: center; }
+  .logo { font-family: 'Fraunces', Georgia, serif; font-size: 22px; font-weight: 600; letter-spacing: -0.02em; }
   .logo span { color: var(--accent); }
-  nav a {
-    font-size: 13px;
-    color: var(--text2);
-    margin-left: 22px;
-    transition: color 0.15s;
-  }
+  nav a { font-size: 13px; color: var(--text2); margin-left: 22px; transition: color 0.15s; }
   nav a:hover, nav a.active { color: var(--text); }
 
   main { padding: 40px 0 80px; min-height: 70vh; }
 
-  .label {
-    font-size: 12px;
-    letter-spacing: 0.1em;
-    text-transform: uppercase;
-    color: var(--muted);
-    margin-bottom: 12px;
-  }
+  .label { font-size: 12px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted); margin-bottom: 12px; }
   .hero { margin-bottom: 48px; }
-  .hero h1 {
-    font-size: clamp(28px, 6vw, 40px);
-    font-weight: 600;
-    line-height: 1.15;
-    letter-spacing: -0.03em;
-    margin-bottom: 12px;
-  }
+  .hero h1 { font-size: clamp(28px, 6vw, 40px); font-weight: 600; line-height: 1.15; letter-spacing: -0.03em; margin-bottom: 12px; }
   .hero h1 a:hover { color: var(--accent); }
   .meta { font-size: 13px; color: var(--text2); margin-bottom: 14px; }
   .meta .vfy { color: var(--accent); }
   .excerpt { color: var(--text2); margin-bottom: 20px; max-width: 52ch; }
-  .btn {
-    display: inline-block;
-    padding: 10px 18px;
-    border: 1px solid var(--border);
-    border-radius: 999px;
-    font-size: 13px;
-    font-weight: 500;
-    background: var(--elev);
-    transition: all 0.15s;
-  }
-  .btn:hover {
-    background: var(--text);
-    color: var(--bg);
-    border-color: var(--text);
-  }
+  .btn { display: inline-block; padding: 10px 18px; border: 1px solid var(--border); border-radius: 999px; font-size: 13px; font-weight: 500; background: var(--elev); transition: all 0.15s; }
+  .btn:hover { background: var(--text); color: var(--bg); border-color: var(--text); }
 
-  .list-label {
-    font-size: 12px;
-    letter-spacing: 0.1em;
-    text-transform: uppercase;
-    color: var(--muted);
-    margin-bottom: 16px;
-  }
-  
+  .list-label { font-size: 12px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted); margin-bottom: 16px; }
   #archive-list { transition: opacity 0.2s ease; }
 
-  .item {
-    display: block;
-    padding: 18px 0;
-    border-bottom: 1px solid var(--border);
-  }
+  .item { display: block; padding: 18px 0; border-bottom: 1px solid var(--border); }
   .item:hover .item-title { color: var(--accent); }
   .item-title { font-size: 18px; font-weight: 500; margin-bottom: 4px; }
   .item-ex { font-size: 14px; color: var(--text2); }
   .item-date { font-size: 12px; color: var(--muted); margin-top: 6px; }
   .item-tags { margin-top: 8px; }
-  .tag {
-    display: inline-block;
-    font-size: 11px;
-    padding: 2px 8px;
-    border: 1px solid var(--border);
-    border-radius: 999px;
-    color: var(--text2);
-    margin-right: 6px;
-  }
+  .tag { display: inline-block; font-size: 11px; padding: 2px 8px; border: 1px solid var(--border); border-radius: 999px; color: var(--text2); margin-right: 6px; }
 
   .back { display: inline-block; font-size: 13px; color: var(--text2); margin-bottom: 28px; }
   .back:hover { color: var(--accent); }
-  .art-title {
-    font-size: clamp(28px, 6vw, 42px);
-    font-weight: 600;
-    line-height: 1.15;
-    letter-spacing: -0.03em;
-    margin-bottom: 28px;
+  .art-title { font-size: clamp(28px, 6vw, 42px); font-weight: 600; line-height: 1.15; letter-spacing: -0.03em; margin-bottom: 28px; }
+
+  /* --- THE BULLETPROOF ALIGNMENT FIX --- */
+  .article-body {
+    max-width: 62ch; /* This container locks the width for BOTH text and footer */
+    width: 100%;
   }
   .prose {
     font-size: 17px;
     line-height: 1.75;
-    max-width: 62ch;
+    /* Removed max-width: 62ch from here so it fills the parent */
   }
   .prose p { margin-bottom: 1.25em; }
   .prose h2 { font-size: 1.3em; margin: 1.8em 0 0.6em; font-weight: 600; }
   .prose h3 { font-size: 1.15em; margin: 1.6em 0 0.5em; font-weight: 600; }
   .prose a { color: var(--accent); text-decoration: underline; text-underline-offset: 3px; }
-  .prose blockquote {
-    border-left: 3px solid var(--accent);
-    padding-left: 1.2em;
-    margin: 1.5em 0;
-    color: var(--text2);
-    font-style: italic;
-    hanging-punctuation: first;
-  }
+  .prose blockquote { border-left: 3px solid var(--accent); padding-left: 1.2em; margin: 1.5em 0; color: var(--text2); font-style: italic; hanging-punctuation: first; }
   .prose ul, .prose ol { margin: 0 0 1.25em; padding-left: 1.3em; }
   .prose li { margin: 0.35em 0; }
   .prose code { font-family: ui-monospace, monospace; font-size: 0.88em; background: var(--elev); padding: 2px 6px; border-radius: 4px; }
@@ -195,76 +99,24 @@
   .prose img { max-width: 100%; height: auto; display: block; border-radius: 8px; margin: 2em 0; border: 1px solid var(--border); }
   .prose hr { border: none; border-top: 1px solid var(--border); margin: 2.2em 0; }
 
-  /* --- REIMAGINED ARTICLE FOOTER --- */
   .article-footer {
-    max-width: 62ch; /* Perfectly matches .prose width */
     width: 100%;
-    margin: 48px auto 0;
+    margin-top: 48px;
     display: flex;
     flex-direction: column;
     gap: 32px;
   }
-  
-  .share-row {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    padding-bottom: 24px;
-    border-bottom: 1px solid var(--border);
-  }
-  .share-label {
-    font-size: 12px;
-    color: var(--muted);
-    font-weight: 500;
-    margin-right: 4px;
-  }
-  .share-btn {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    height: 34px;
-    padding: 0 14px;
-    font-size: 13px;
-    font-weight: 500;
-    border: 1px solid var(--border);
-    border-radius: 999px;
-    background: transparent;
-    color: var(--text2);
-    cursor: pointer;
-    font-family: inherit;
-    line-height: 1;
-    transition: all 0.15s;
-  }
+  .share-row { display: flex; align-items: center; gap: 12px; padding-bottom: 24px; border-bottom: 1px solid var(--border); }
+  .share-label { font-size: 12px; color: var(--muted); font-weight: 500; margin-right: 4px; }
+  .share-btn { display: inline-flex; align-items: center; justify-content: center; height: 34px; padding: 0 14px; font-size: 13px; font-weight: 500; border: 1px solid var(--border); border-radius: 999px; background: transparent; color: var(--text2); cursor: pointer; font-family: inherit; line-height: 1; transition: all 0.15s; }
   .share-btn:hover { border-color: var(--text); color: var(--text); }
 
-  .nav-row {
-    display: flex;
-    justify-content: space-between;
-    gap: 24px;
-  }
-  .nav-link {
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-    gap: 6px;
-    padding: 4px 0;
-  }
+  .nav-row { display: flex; justify-content: space-between; gap: 24px; }
+  .nav-link { flex: 1; display: flex; flex-direction: column; gap: 6px; padding: 4px 0; }
   .nav-link.next { align-items: flex-end; text-align: right; }
-  .nav-label {
-    font-size: 11px;
-    letter-spacing: 0.1em;
-    text-transform: uppercase;
-    color: var(--muted);
-  }
-  .nav-title {
-    font-size: 15px;
-    font-weight: 500;
-    color: var(--text);
-    transition: color 0.15s;
-    line-height: 1.4;
-  }
+  .nav-label { font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted); }
+  .nav-title { font-size: 15px; font-weight: 500; color: var(--text); transition: color 0.15s; line-height: 1.4; }
   .nav-link:hover .nav-title { color: var(--accent); }
-  /* -------------------------------- */
 
   .series { margin-top: 0; }
   .srow { display: block; padding: 12px 0; border-bottom: 1px solid var(--border); }
@@ -276,19 +128,12 @@
   .year { font-size: 14px; font-weight: 600; color: var(--muted); margin: 36px 0 12px; letter-spacing: 0.04em; }
   .year:first-child { margin-top: 0; }
 
-  .search-box {
-    width: 100%; padding: 12px 14px; margin-bottom: 28px;
-    background: var(--elev); border: 1px solid var(--border); border-radius: 8px;
-    color: var(--text); font-size: 15px; font-family: inherit;
-  }
+  .search-box { width: 100%; padding: 12px 14px; margin-bottom: 28px; background: var(--elev); border: 1px solid var(--border); border-radius: 8px; color: var(--text); font-size: 15px; font-family: inherit; }
   .search-box:focus { outline: none; border-color: var(--accent); }
   .search-box::placeholder { color: var(--muted); }
 
   .filter-tags { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 28px; }
-  .filter-tag {
-    font-size: 12px; padding: 5px 12px; border: 1px solid var(--border); border-radius: 999px;
-    color: var(--text2); cursor: pointer; background: transparent; font-family: inherit; transition: all 0.15s;
-  }
+  .filter-tag { font-size: 12px; padding: 5px 12px; border: 1px solid var(--border); border-radius: 999px; color: var(--text2); cursor: pointer; background: transparent; font-family: inherit; transition: all 0.15s; }
   .filter-tag:hover, .filter-tag.active { border-color: var(--text); color: var(--text); }
   .filter-tag.active { background: var(--text); color: var(--bg); }
 
@@ -300,17 +145,10 @@
   .empty { color: var(--muted); padding: 20px 0; }
   .loading { text-align: center; padding: 70px 0; color: var(--muted); font-size: 14px; }
 
-  .toast {
-    position: fixed; left: 50%; bottom: 28px; transform: translateX(-50%) translateY(12px); opacity: 0;
-    background: var(--text); color: var(--bg); padding: 10px 18px; border-radius: 999px;
-    font-size: 13px; font-weight: 500; pointer-events: none; transition: all 0.25s; z-index: 100;
-  }
+  .toast { position: fixed; left: 50%; bottom: 28px; transform: translateX(-50%) translateY(12px); opacity: 0; background: var(--text); color: var(--bg); padding: 10px 18px; border-radius: 999px; font-size: 13px; font-weight: 500; pointer-events: none; transition: all 0.25s; z-index: 100; }
   .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
 
-  .pile-link {
-    display: inline-flex; align-items: center; gap: 6px; color: var(--text2);
-    transition: color 0.2s ease, gap 0.2s ease;
-  }
+  .pile-link { display: inline-flex; align-items: center; gap: 6px; color: var(--text2); transition: color 0.2s ease, gap 0.2s ease; }
   .pile-link:hover { color: var(--accent); gap: 10px; }
   .pile-link svg { transition: transform 0.2s ease; }
   .pile-link:hover svg { transform: translateX(3px); }
@@ -343,9 +181,7 @@
 </main>
 
 <footer>
-  <div class="footer-inner">
-    Madhava Rayulu
-  </div>
+  <div class="footer-inner">Madhava Rayulu</div>
 </footer>
 
 <div class="toast" id="toast">Link copied</div>
@@ -370,20 +206,12 @@ So this is a cairn too — smaller, slower, made of words instead of granite. Fi
 
 <script>
 const CONFIG = {
-  owner:  "madhavarayulu",
-  repo:   "madhavarayulu.github.io",
-  branch: "main",
-  title:  "Cairn",
-  name:   "Madhava Rayulu",
-
-  about: `I work as an Oracle Fusion Finance functional consultant. Most of my days are spent inside large, living systems — configurations, releases, edge cases, and the quiet places where process and reality diverge.
-
-This site is a small collection of notes that survive contact with that work. Some are practical: configuration walkthroughs, quarterly release notes, troubleshooting stories. Some are smaller observations. Client names and confidential details stay behind; the lessons that can travel are allowed to leave.`
+  owner:  "madhavarayulu", repo: "madhavarayulu.github.io", branch: "main", title: "Cairn", name: "Madhava Rayulu",
+  about: `I work as an Oracle Fusion Finance functional consultant. Most of my days are spent inside large, living systems — configurations, releases, edge cases, and the quiet places where process and reality diverge. This site is a small collection of notes that survive contact with that work. Some are practical: configuration walkthroughs, quarterly release notes, troubleshooting stories. Some are smaller observations. Client names and confidential details stay behind; the lessons that can travel are allowed to leave.`
 };
 
 const $ = s => document.querySelector(s);
 const esc = s => String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
-const pad = n => String(n).padStart(2,'0');
 const fmt = s => { const d = new Date(s); return isNaN(d) ? (s || '—') : d.toLocaleDateString('en-US', {month:'short', day:'numeric', year:'numeric'}); };
 const yr = s => { const d = new Date(s); return isNaN(d) ? '—' : d.getFullYear(); };
 
@@ -419,10 +247,7 @@ const collectSamples = () => [...document.querySelectorAll('script[type="text/ma
 async function fetchPosts(){
   try {
     const res = await fetch('/posts.json');
-    if (res.ok) {
-      const data = await res.json();
-      return data.map(p => ({ ...p, dateMs: p.date ? (new Date(p.date).getTime() || 0) : 0, ex: p.excerpt, body: p.raw }));
-    }
+    if (res.ok) { const data = await res.json(); return data.map(p => ({ ...p, dateMs: p.date ? (new Date(p.date).getTime() || 0) : 0, ex: p.excerpt, body: p.raw })); }
   } catch (e) {}
   const {owner, repo, branch} = CONFIG;
   const api = `https://api.github.com/repos/${owner}/${repo}/git/trees/${branch}?recursive=1`;
@@ -494,23 +319,27 @@ function renderPost(slug){
   const i = POSTS.indexOf(p);
   const newer = POSTS[i-1], older = POSTS[i+1];
 
+  // Note the new .article-body wrapper wrapping both .prose and .article-footer
   view.innerHTML = `
     <a class="back" href="#/">← Field notes</a>
     <div class="meta">${metaLine(p)}</div>
     <h1 class="art-title">${esc(p.title)}</h1>
-    <div class="prose">${body}</div>
     
-    <div class="article-footer">
-      ${series}
-      <div class="share-row">
-        <span class="share-label">Share</span>
-        <button class="share-btn" id="copy-link" data-url="${esc(clean)}">Copy link</button>
-        <button class="share-btn" id="native-share" data-url="${esc(clean)}" data-title="${esc(p.title)}">Share</button>
+    <div class="article-body">
+      <div class="prose">${body}</div>
+      
+      <div class="article-footer">
+        ${series}
+        <div class="share-row">
+          <span class="share-label">Share</span>
+          <button class="share-btn" id="copy-link" data-url="${esc(clean)}">Copy link</button>
+          <button class="share-btn" id="native-share" data-url="${esc(clean)}" data-title="${esc(p.title)}">Share</button>
+        </div>
+        <nav class="nav-row">
+          ${older ? `<a href="#/entry/${encodeURIComponent(older.slug)}" class="nav-link prev"><span class="nav-label">← Older</span><span class="nav-title">${esc(older.title)}</span></a>` : '<div></div>'}
+          ${newer ? `<a href="#/entry/${encodeURIComponent(newer.slug)}" class="nav-link next"><span class="nav-label">Newer →</span><span class="nav-title">${esc(newer.title)}</span></a>` : '<div></div>'}
+        </nav>
       </div>
-      <nav class="nav-row">
-        ${older ? `<a href="#/entry/${encodeURIComponent(older.slug)}" class="nav-link prev"><span class="nav-label">← Older</span><span class="nav-title">${esc(older.title)}</span></a>` : '<div></div>'}
-        ${newer ? `<a href="#/entry/${encodeURIComponent(newer.slug)}" class="nav-link next"><span class="nav-label">Newer →</span><span class="nav-title">${esc(newer.title)}</span></a>` : '<div></div>'}
-      </nav>
     </div>`;
   
   document.getElementById('copy-link').addEventListener('click', async e => {
