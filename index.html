@@ -93,43 +93,53 @@
   .prose img { max-width: 100%; height: auto; display: block; border-radius: 8px; margin: 2em 0; border: 1px solid var(--border); }
   .prose hr { border: none; border-top: 1px dashed var(--border); margin: 2.2em 0; }
 
-  .article-footer { width: 100%; margin-top: 48px; display: flex; flex-direction: column; gap: 32px; }
+  .article-footer { width: 100%; margin-top: 48px; display: flex; flex-direction: column; gap: 20px; }
   .share-row { display: flex; align-items: center; gap: 12px; padding-bottom: 24px; border-bottom: 1px solid var(--border); }
   .share-label { font-size: 12px; color: var(--muted); font-weight: 500; margin-right: 4px; }
   .share-btn { display: inline-flex; align-items: center; justify-content: center; height: 34px; padding: 0 14px; font-size: 13px; font-weight: 500; border: 1px solid var(--border); border-radius: 999px; background: transparent; color: var(--text2); cursor: pointer; font-family: inherit; line-height: 1; transition: all 0.15s; }
   .share-btn:hover { border-color: var(--text); color: var(--text); }
 
-  /* --- ORIGINAL BOOK PAGE FLIP NAVIGATION --- */
-  .pn { margin-top: 60px; border-top: 1px solid var(--border); }
-  .pn a {
+  /* --- BOOK PAGE FLIP NAVIGATION --- */
+  .nav-row {
     display: flex;
     justify-content: space-between;
-    align-items: baseline;
-    gap: 16px;
-    padding: 16px 0;
-    border-bottom: 1px solid var(--border);
+    align-items: flex-start;
+    gap: 24px;
+    padding-top: 24px;
+    border-top: 1px solid var(--border);
+  }
+  .nav-link {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    max-width: 45%;
     text-decoration: none;
   }
-  .pn .dir {
-    display: inline-flex;
-    align-items: center;
-    gap: 8px;
-    flex: none;
+  .nav-link.next {
+    align-items: flex-end;
+    text-align: right;
+  }
+  .nav-label {
     font-size: 11px;
     letter-spacing: 0.15em;
     text-transform: uppercase;
     color: var(--muted);
   }
-  .pn .dir svg { width: 14px; height: 14px; }
-  .pn .t {
+  .nav-title {
     font-family: 'Fraunces', Georgia, serif;
     font-weight: 500;
-    font-size: 17px;
+    font-size: 16px;
     color: var(--text);
-    text-align: right;
     transition: color 0.15s;
+    line-height: 1.4;
   }
-  .pn a:hover .t { color: var(--accent); }
+  .nav-link:hover .nav-title { color: var(--accent); }
+  
+  @media (max-width: 560px) {
+    .nav-row { flex-direction: column; gap: 16px; }
+    .nav-link.next { align-items: flex-start; text-align: left; }
+  }
+  /* -------------------------------- */
   /* -------------------------------- */
 
   .series { margin-top: 0; }
@@ -374,10 +384,9 @@ function renderPost(slug){
           <button class="share-btn" id="native-share" data-url="${esc(clean)}" data-title="${esc(p.title)}">Share</button>
         </div>
         
-        <!-- ORIGINAL BOOK PAGE FLIP NAVIGATION -->
-        <nav class="pn">
-          ${newer ? `<a href="#/entry/${encodeURIComponent(newer.slug)}"><span class="dir"><svg width="14" height="14" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M7 16l-4-4m0 0l4-4m-4 4h18"/></svg>Newer</span><span class="t">${esc(newer.title)}</span></a>` : ''}
-          ${older ? `<a href="#/entry/${encodeURIComponent(older.slug)}"><span class="dir">Older<svg width="14" height="14" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M17 8l4 4m0 0l-4 4m4-4H3"/></svg></span><span class="t">${esc(older.title)}</span></a>` : ''}
+        <nav class="nav-row">
+          ${newer ? `<a href="#/entry/${encodeURIComponent(newer.slug)}" class="nav-link prev"><span class="nav-label">← Newer</span><span class="nav-title">${esc(newer.title)}</span></a>` : '<div></div>'}
+          ${older ? `<a href="#/entry/${encodeURIComponent(older.slug)}" class="nav-link next"><span class="nav-label">Older →</span><span class="nav-title">${esc(older.title)}</span></a>` : '<div></div>'}
         </nav>
       </div>
     </div>`;
