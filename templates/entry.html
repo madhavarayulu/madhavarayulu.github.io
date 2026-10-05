@@ -22,10 +22,7 @@
 <meta name="twitter:image" content="https://madhavarayulu.github.io/cairn-card-wide.png">
 
 <style>
-  :root {
-    --bg: #0f0f0f; --text: #f0eee6; --text2: #a8a59c; --muted: #6b6860;
-    --border: #2a2a2a; --accent: #C1502E; --elev: #181818;
-  }
+  :root { --bg: #0f0f0f; --text: #f0eee6; --text2: #a8a59c; --muted: #6b6860; --border: #2a2a2a; --accent: #C1502E; --elev: #181818; }
   * { margin: 0; padding: 0; box-sizing: border-box; }
   body { background: var(--bg); color: var(--text); font-family: system-ui, -apple-system, sans-serif; font-size: 16px; line-height: 1.6; -webkit-font-smoothing: antialiased; }
   a { color: inherit; text-decoration: none; }
@@ -37,7 +34,9 @@
   .back:hover { color: var(--accent); }
   .meta { font-size: 13px; color: var(--text2); margin-bottom: 14px; }
   .art-title { font-size: clamp(28px, 6vw, 42px); font-weight: 600; line-height: 1.15; letter-spacing: -0.03em; margin-bottom: 28px; }
-  .prose { font-size: 17px; line-height: 1.75; max-width: 62ch; }
+
+  .article-body { max-width: 62ch; width: 100%; }
+  .prose { font-size: 17px; line-height: 1.75; }
   .prose p { margin-bottom: 1.25em; }
   .prose h2 { font-size: 1.3em; margin: 1.8em 0 0.6em; font-weight: 600; }
   .prose h3 { font-size: 1.15em; margin: 1.6em 0 0.5em; font-weight: 600; }
@@ -50,24 +49,10 @@
   .prose pre code { background: none; padding: 0; }
   .prose img { max-width: 100%; height: auto; display: block; border-radius: 8px; margin: 2em 0; border: 1px solid var(--border); }
 
-  /* --- REIMAGINED ARTICLE FOOTER --- */
-  .article-footer {
-    max-width: 62ch;
-    width: 100%;
-    margin: 48px auto 0;
-    display: flex;
-    flex-direction: column;
-    gap: 32px;
-  }
-  .share-row {
-    display: flex; align-items: center; gap: 12px; padding-bottom: 24px; border-bottom: 1px solid var(--border);
-  }
+  .article-footer { width: 100%; margin-top: 48px; display: flex; flex-direction: column; gap: 32px; }
+  .share-row { display: flex; align-items: center; gap: 12px; padding-bottom: 24px; border-bottom: 1px solid var(--border); }
   .share-label { font-size: 12px; color: var(--muted); font-weight: 500; margin-right: 4px; }
-  .share-btn {
-    display: inline-flex; align-items: center; justify-content: center; height: 34px; padding: 0 14px;
-    font-size: 13px; font-weight: 500; border: 1px solid var(--border); border-radius: 999px;
-    background: transparent; color: var(--text2); cursor: pointer; font-family: inherit; line-height: 1; transition: all 0.15s;
-  }
+  .share-btn { display: inline-flex; align-items: center; justify-content: center; height: 34px; padding: 0 14px; font-size: 13px; font-weight: 500; border: 1px solid var(--border); border-radius: 999px; background: transparent; color: var(--text2); cursor: pointer; font-family: inherit; line-height: 1; transition: all 0.15s; }
   .share-btn:hover { border-color: var(--text); color: var(--text); }
 
   .nav-row { display: flex; justify-content: space-between; gap: 24px; }
@@ -76,7 +61,6 @@
   .nav-label { font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted); }
   .nav-title { font-size: 15px; font-weight: 500; color: var(--text); transition: color 0.15s; line-height: 1.4; }
   .nav-link:hover .nav-title { color: var(--accent); }
-  /* -------------------------------- */
 
   footer { border-top: 1px solid var(--border); padding: 24px 0 36px; font-size: 12px; color: var(--muted); text-align: center; }
 </style>
@@ -88,13 +72,16 @@
     <a class="back" href="/">← Field notes</a>
     <div class="meta">{{DATE}}</div>
     <h1 class="art-title">{{TITLE}}</h1>
-    <div class="prose">{{BODY_HTML}}</div>
     
-    <div class="article-footer">
-      <div class="share-row">
-        <span class="share-label">Share</span>
-        <button class="share-btn" id="copy-link" data-url="https://madhavarayulu.github.io/entry/{{SLUG}}/">Copy link</button>
-        <button class="share-btn" id="native-share" data-url="https://madhavarayulu.github.io/entry/{{SLUG}}/" data-title="{{TITLE}}">Share</button>
+    <div class="article-body">
+      <div class="prose">{{BODY_HTML}}</div>
+      
+      <div class="article-footer">
+        <div class="share-row">
+          <span class="share-label">Share</span>
+          <button class="share-btn" id="copy-link" data-url="https://madhavarayulu.github.io/entry/{{SLUG}}/">Copy link</button>
+          <button class="share-btn" id="native-share" data-url="https://madhavarayulu.github.io/entry/{{SLUG}}/" data-title="{{TITLE}}">Share</button>
+        </div>
       </div>
     </div>
   </div>
