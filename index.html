@@ -97,7 +97,6 @@
   .share-btn { display: inline-flex; align-items: center; justify-content: center; height: 34px; padding: 0 14px; font-size: 13px; font-weight: 500; border: 1px solid var(--border); border-radius: 999px; background: transparent; color: var(--text2); cursor: pointer; font-family: inherit; line-height: 1; transition: all 0.15s; }
   .share-btn:hover { border-color: var(--text); color: var(--text); }
 
-  /* --- SIMPLE NAVIGATION --- */
   .nav-row { display: flex; justify-content: space-between; width: 100%; }
   .nav-link { display: flex; flex-direction: column; gap: 6px; padding: 4px 0; }
   .nav-link.prev { text-align: left; }
@@ -195,7 +194,13 @@ So this is a cairn too — smaller, slower, made of words instead of granite. Fi
 <script>
 const CONFIG = {
   owner:  "madhavarayulu", repo: "madhavarayulu.github.io", branch: "main", title: "Cairn", name: "Madhava Rayulu",
-  about: `I work as an Oracle Fusion Finance functional consultant. Most of my days are spent inside large, living systems — configurations, releases, edge cases, and the quiet places where process and reality diverge. This site is a small collection of notes that survive contact with that work. Some are practical: configuration walkthroughs, quarterly release notes, troubleshooting stories. Some are smaller observations. Client names and confidential details stay behind; the lessons that can travel are allowed to leave.`
+  about: `I am an Oracle Fusion Finance functional consultant.
+
+My work is to bridge the gap between business needs and system capabilities—guiding implementations, designing financial processes, and configuring solutions that work in the real world.
+
+Cairn is a collection of field notes from that journey. It covers the practical realities of deployments, release cycles, and the edge cases that official documentation misses.
+
+Client identities remain confidential. The insights, however, are left here for anyone walking the same trail.`
 };
 
 const $ = s => document.querySelector(s);
@@ -307,7 +312,6 @@ function renderPost(slug){
   const i = POSTS.indexOf(p);
   const newer = POSTS[i-1], older = POSTS[i+1];
 
-  // SWAPPED: Newer on left (prev), Older on right (next)
   view.innerHTML = `
     <a class="back" href="#/">← Field notes</a>
     <div class="meta">${metaLine(p)}</div>
@@ -346,7 +350,12 @@ function renderAbout(){
   setActive('about'); document.title = `Trailhead · ${CONFIG.title}`;
   const md = (CONFIG.about || '').replace(/^\s+/, '');
   const html = window.marked ? marked.parse(md) : '<p>' + esc(md) + '</p>';
-  view.innerHTML = `<h1 class="art-title">${esc(CONFIG.name)}</h1><div class="prose">${html}</div><div class="disclaimer">This is an independent site. It is not affiliated with, endorsed by, or reviewed by Oracle. Product names are used for identification only. Nothing here constitutes official documentation or advice.</div>`;
+  view.innerHTML = `
+    <h1 class="art-title">Trailhead</h1>
+    <div class="prose">${html}</div>
+    <div class="disclaimer">
+      This site is an independent project and is not affiliated with, endorsed by, or sponsored by Oracle Corporation. Oracle and related trademarks are the property of their respective owners. The content provided here is for informational purposes only, based on personal experience, and does not constitute official documentation or professional advice.
+    </div>`;
 }
 
 function route(){
