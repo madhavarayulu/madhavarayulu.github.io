@@ -7,7 +7,6 @@
 <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'%3E%3Crect width='512' height='512' rx='100' fill='%230f0f0f'/%3E%3Cellipse cx='256' cy='452' rx='142' ry='11' fill='%23C1502E' opacity='.15'/%3E%3Cellipse cx='250' cy='398' rx='118' ry='44' fill='%232E2A24'/%3E%3Cellipse cx='258' cy='324' rx='94' ry='37' fill='%23403A31'/%3E%3Cellipse cx='248' cy='258' rx='72' ry='30' fill='%23524A3E'/%3E%3Cellipse cx='256' cy='200' rx='52' ry='23' fill='%23645A4B'/%3E%3Cellipse cx='256' cy='160' rx='36' ry='16' fill='%23C1502E'/%3E%3C/svg%3E">
 <meta name="description" content="{{EXCERPT}}">
 
-<!-- Open Graph -->
 <meta property="og:type" content="article">
 <meta property="og:title" content="{{TITLE}}">
 <meta property="og:description" content="{{EXCERPT}}">
@@ -44,7 +43,6 @@
   a { color: inherit; text-decoration: none; }
   .wrap { max-width: 680px; margin: 0 auto; padding: 40px 20px 80px; }
 
-  /* Reading Progress Bar */
   #progress-bar {
     position: fixed;
     top: 0;
@@ -86,7 +84,7 @@
     margin: 1.5em 0;
     color: var(--text2);
     font-style: italic;
-    hanging-punctuation: first; /* Progressive enhancement */
+    hanging-punctuation: first;
   }
   .prose ul, .prose ol { margin: 0 0 1.25em; padding-left: 1.3em; }
   .prose li { margin: 0.35em 0; }
@@ -121,13 +119,14 @@
     border-top: 1px solid var(--border);
     display: flex;
     flex-wrap: wrap;
-    gap: 10px;
+    gap: 12px;
     align-items: center;
   }
   .share-label {
     font-size: 12px;
     color: var(--muted);
-    margin-right: 2px;
+    font-weight: 500;
+    margin-right: 4px;
   }
   .share-btn {
     display: inline-flex;
@@ -147,16 +146,11 @@
     transition: all 0.15s;
     text-decoration: none;
   }
-  .share-btn:hover {
-    border-color: var(--text);
-    color: var(--text);
-  }
+  .share-btn:hover { border-color: var(--text); color: var(--text); }
 
-    /* Older / Newer – aligned with article width */
   .pn {
     margin-top: 48px;
     border-top: 1px solid var(--border);
-    max-width: 62ch;
   }
   .pn a {
     display: flex;
@@ -204,7 +198,7 @@
       {{BODY_HTML}}
     </div>
     <div class="share">
-      <span class="share-label">Leave a marker</span>
+      <span class="share-label">Share this marker:</span>
       <button class="share-btn" id="copy-link" data-url="https://madhavarayulu.github.io/entry/{{SLUG}}/">Copy link</button>
       <button class="share-btn" id="native-share" data-url="https://madhavarayulu.github.io/entry/{{SLUG}}/" data-title="{{TITLE}}">Share</button>
     </div>
@@ -216,7 +210,6 @@
   </footer>
 
   <script>
-    // Reading progress bar
     window.addEventListener('scroll', () => {
       const winScroll = document.body.scrollTop || document.documentElement.scrollTop;
       const height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
@@ -224,7 +217,6 @@
       document.getElementById('progress-bar').style.width = scrolled + "%";
     }, {passive: true});
   
-    // Copy link
     document.getElementById('copy-link').addEventListener('click', async function() {
       const url = this.dataset.url;
       try { await navigator.clipboard.writeText(url); }
@@ -238,30 +230,31 @@
       setTimeout(() => this.textContent = original, 2000);
     });
   
-    // Native Share
     const shareBtn = document.getElementById('native-share');
-    if (navigator.share) {
-      shareBtn.addEventListener('click', async () => {
-        try {
-          await navigator.share({
-            title: shareBtn.dataset.title,
-            url: shareBtn.dataset.url
-          });
-        } catch (_) {}
-      });
-    } else {
-      shareBtn.addEventListener('click', async () => {
-        const url = shareBtn.dataset.url;
-        try { await navigator.clipboard.writeText(url); }
-        catch (_) {
-          const ta = document.createElement('textarea');
-          ta.value = url; document.body.appendChild(ta); ta.select();
-          document.execCommand('copy'); ta.remove();
-        }
-        const original = shareBtn.textContent;
-        shareBtn.textContent = '✓ Copied';
-        setTimeout(() => shareBtn.textContent = original, 2000);
-      });
+    if (shareBtn) {
+      if (navigator.share) {
+        shareBtn.addEventListener('click', async () => {
+          try {
+            await navigator.share({
+              title: shareBtn.dataset.title,
+              url: shareBtn.dataset.url
+            });
+          } catch (_) {}
+        });
+      } else {
+        shareBtn.addEventListener('click', async () => {
+          const url = shareBtn.dataset.url;
+          try { await navigator.clipboard.writeText(url); }
+          catch (_) {
+            const ta = document.createElement('textarea');
+            ta.value = url; document.body.appendChild(ta); ta.select();
+            document.execCommand('copy'); ta.remove();
+          }
+          const original = shareBtn.textContent;
+          shareBtn.textContent = '✓ Copied';
+          setTimeout(() => shareBtn.textContent = original, 2000);
+        });
+      }
     }
   </script>
 </body>
