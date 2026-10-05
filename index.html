@@ -231,19 +231,18 @@
   }
 
   .share {
-    margin-top: 48px;
-    padding-top: 28px;
+    margin-top: 40px;
+    padding-top: 24px;
     border-top: 1px solid var(--border);
     display: flex;
     flex-wrap: wrap;
-    gap: 12px; /* Consistent spacing */
+    gap: 12px;
     align-items: center;
   }
   .share-label {
     font-size: 12px;
     color: var(--muted);
     font-weight: 500;
-    margin-right: 4px;
   }
   .share-btn {
     display: inline-flex;
@@ -275,10 +274,11 @@
   .srow .s-t { font-size: 15px; font-weight: 500; }
   .srow .s-here { font-size: 11px; color: var(--accent); margin-left: 8px; }
 
-  /* Older / Newer – spans full width of .wrap for elegant alignment */
+  /* Perfectly aligned with .prose max-width */
   .pn {
     margin-top: 48px;
     border-top: 1px solid var(--border);
+    max-width: 62ch;
   }
   .pn a {
     display: flex;
@@ -408,6 +408,25 @@
   .toast.show {
     opacity: 1;
     transform: translateX(-50%) translateY(0);
+  }
+
+  /* Animated pile link */
+  .pile-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    color: var(--text2);
+    transition: color 0.2s ease, gap 0.2s ease;
+  }
+  .pile-link:hover {
+    color: var(--accent);
+    gap: 10px;
+  }
+  .pile-link svg {
+    transition: transform 0.2s ease;
+  }
+  .pile-link:hover svg {
+    transform: translateX(3px);
   }
 
   @media (max-width: 560px) {
@@ -573,8 +592,9 @@ function setActive(page){
   if(t) t.className = page === 'about'   ? 'active' : '';
 }
 
+// Removed "Nº XX" entirely
 const metaLine = p =>
-  `Nº ${pad(p.no)} · ${fmt(p.date)}` + (p.verified ? ` · <span class="vfy">● Verified on ${esc(p.verified)}</span>` : '');
+  `${fmt(p.date)}` + (p.verified ? ` · <span class="vfy">● Verified on ${esc(p.verified)}</span>` : '');
 
 window.addEventListener('scroll', () => {
   header.classList.toggle('scrolled', window.scrollY > 8);
@@ -597,7 +617,7 @@ function renderHome(){
     `<a class="item" href="#/entry/${encodeURIComponent(p.slug)}">` +
       `<div class="item-title">${esc(p.title)}</div>` +
       `<div class="item-ex">${esc(p.ex)}</div>` +
-      `<div class="item-date">Nº ${pad(p.no)} · ${fmt(p.date)}</div>` +
+      `<div class="item-date">${fmt(p.date)}</div>` +
     `</a>`).join('');
 
   view.innerHTML =
@@ -608,9 +628,9 @@ function renderHome(){
       <p class="excerpt">${esc(latest.ex)}</p>
       <a class="btn" href="#/entry/${encodeURIComponent(latest.slug)}">Read entry →</a>
     </div>
-    <div class="list-label">Recent markers</div>
+    <div class="list-label">Recent stones</div>
     ${list}` +
-    (POSTS.length > 10 ? `<p style="margin-top:28px"><a href="#/archive" style="color:var(--text2)">The whole pile →</a></p>` : '');
+    (POSTS.length > 10 ? `<p style="margin-top:28px"><a class="pile-link" href="#/archive">The whole pile <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M17 8l4 4m0 0l-4 4m4-4H3"/></svg></a></p>` : '');
 }
 
 function renderArchive(){
@@ -634,7 +654,7 @@ function renderArchive(){
 
   let list = '';
   if(!filtered.length){
-    list = `<p class="empty">No markers match.</p>`;
+    list = `<p class="empty">No stones match.</p>`;
   } else {
     sortedYears.forEach(y => {
       list += `<div class="year">${y}</div>`;
@@ -643,7 +663,7 @@ function renderArchive(){
         list += `<a class="item" href="#/entry/${encodeURIComponent(p.slug)}">` +
           `<div class="item-title">${esc(p.title)}</div>` +
           `<div class="item-ex">${esc(p.ex)}</div>` +
-          `<div class="item-date">Nº ${pad(p.no)} · ${fmt(p.date)}</div>` +
+          `<div class="item-date">${fmt(p.date)}</div>` +
           (tags ? `<div class="item-tags">${tags}</div>` : '') +
         `</a>`;
       });
@@ -657,8 +677,8 @@ function renderArchive(){
   container.id = 'archive-list';
   container.style.opacity = '0';
   container.innerHTML =
-    `<div class="label">The Pile · ${pad(POSTS.length)} markers</div>
-    <input class="search-box" id="search" type="search" placeholder="Search the pile..." value="${esc(searchQuery)}">
+    `<div class="label">The Pile · ${pad(POSTS.length)} stones</div>
+    <input class="search-box" id="search" type="search" placeholder="Search the stones..." value="${esc(searchQuery)}">
     ${allTags.length ? `<div class="filter-tags">${tagBtns}</div>` : ''}
     ${list}`;
   
@@ -716,7 +736,7 @@ function renderPost(slug){
     <h1 class="art-title">${esc(p.title)}</h1>
     <div class="prose">${body}</div>
     <div class="share">
-      <span class="share-label">Share this marker:</span>
+      <span class="share-label">Share this stone:</span>
       <button class="share-btn" id="copy-link" data-url="${esc(clean)}">Copy link</button>
       <button class="share-btn" id="native-share" data-url="${esc(clean)}" data-title="${esc(p.title)}">Share</button>
     </div>
@@ -766,7 +786,7 @@ function renderPost(slug){
       });
     }
   }
-} // <-- THIS CLOSING BRACE WAS MISSING AND BREAKING YOUR SITE
+}
 
 function renderAbout(){
   setActive('about');
