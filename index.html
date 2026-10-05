@@ -734,7 +734,8 @@ function renderPost(slug){
       ${newer ? `<a href="#/entry/${encodeURIComponent(newer.slug)}"><span class="dir">Newer</span><span class="pt">${esc(newer.title)}</span></a>` : ''}
       ${older ? `<a href="#/entry/${encodeURIComponent(older.slug)}"><span class="dir">Older</span><span class="pt">${esc(older.title)}</span></a>` : ''}
     </nav>`;
-
+  
+  // Copy link
   document.getElementById('copy-link').addEventListener('click', async e => {
     const url = e.currentTarget.dataset.url || location.href;
     try { await navigator.clipboard.writeText(url); }
@@ -749,6 +750,7 @@ function renderPost(slug){
     setTimeout(() => btn.textContent = original, 2000);
   });
   
+  // Native Share (or fallback)
   const shareBtn = document.getElementById('native-share');
   if (shareBtn) {
     if (navigator.share) {
@@ -761,8 +763,6 @@ function renderPost(slug){
         } catch (_) {}
       });
     } else {
-      // Fallback if Web Share API is not supported
-      shareBtn.textContent = 'Copy link';
       shareBtn.addEventListener('click', async () => {
         const url = shareBtn.dataset.url;
         try { await navigator.clipboard.writeText(url); }
@@ -771,12 +771,12 @@ function renderPost(slug){
           ta.value = url; document.body.appendChild(ta); ta.select();
           document.execCommand('copy'); ta.remove();
         }
+        const original = shareBtn.textContent;
         shareBtn.textContent = '✓ Copied';
-        setTimeout(() => shareBtn.textContent = 'Copy link', 2000);
+        setTimeout(() => shareBtn.textContent = original, 2000);
       });
     }
   }
-}
 
 function renderAbout(){
   setActive('about');
