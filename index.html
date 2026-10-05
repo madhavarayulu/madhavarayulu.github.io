@@ -124,7 +124,15 @@
   .filter-tag:hover, .filter-tag.active { border-color: var(--text); color: var(--text); }
   .filter-tag.active { background: var(--text); color: var(--bg); }
 
-  .disclaimer { margin-top: 3em; padding-top: 1.6em; border-top: 1px solid var(--border); font-size: 12.5px; color: var(--muted); line-height: 1.55; opacity: 0.75; }
+  .disclaimer { 
+    margin-top: 3em; 
+    padding-top: 1.6em; 
+    border-top: 1px solid var(--border); 
+    font-size: 12.5px; 
+    color: var(--muted); 
+    line-height: 1.55; 
+    opacity: 0.75; 
+  }
 
   footer { border-top: 1px solid var(--border); padding: 24px 0 36px; font-size: 12px; color: var(--muted); }
   .footer-inner { max-width: 680px; margin: 0 auto; padding: 0 20px; text-align: center; }
@@ -193,14 +201,11 @@ So this is a cairn too — smaller, slower, made of words instead of granite. Fi
 
 <script>
 const CONFIG = {
-  owner:  "madhavarayulu", repo: "madhavarayulu.github.io", branch: "main", title: "Cairn", name: "Madhava Rayulu",
-  about: `I am an Oracle Fusion Finance functional consultant.
-
-My work is to bridge the gap between business needs and system capabilities—guiding implementations, designing financial processes, and configuring solutions that work in the real world.
-
-Cairn is a collection of field notes from that journey. It covers the practical realities of deployments, release cycles, and the edge cases that official documentation misses.
-
-Client identities remain confidential. The insights, however, are left here for anyone walking the same trail.`
+  owner:  "madhavarayulu", 
+  repo:   "madhavarayulu.github.io", 
+  branch: "main", 
+  title:  "Cairn", 
+  name:   "Madhava Rayulu"
 };
 
 const $ = s => document.querySelector(s);
@@ -347,15 +352,21 @@ function renderPost(slug){
 }
 
 function renderAbout(){
-  setActive('about'); document.title = `Trailhead · ${CONFIG.title}`;
-  const md = (CONFIG.about || '').replace(/^\s+/, '');
-  const html = window.marked ? marked.parse(md) : '<p>' + esc(md) + '</p>';
+  setActive('about'); 
+  document.title = `Trailhead · ${CONFIG.title}`;
+  
   view.innerHTML = `
     <h1 class="art-title">Trailhead</h1>
-    <div class="prose">${html}</div>
+    <div class="prose">
+      <p>I am an Oracle Fusion Finance functional consultant.</p>
+      <p>My work is to bridge the gap between business needs and system capabilities—guiding implementations, designing financial processes, and configuring solutions that work in the real world.</p>
+      <p>Cairn is a collection of field notes from that journey. It covers the practical realities of deployments, release cycles, and the edge cases that official documentation misses.</p>
+      <p>Client identities remain confidential. The insights, however, are left here for anyone walking the same trail.</p>
+    </div>
     <div class="disclaimer">
       This site is an independent project and is not affiliated with, endorsed by, or sponsored by Oracle Corporation. Oracle and related trademarks are the property of their respective owners. The content provided here is for informational purposes only, based on personal experience, and does not constitute official documentation or professional advice.
-    </div>`;
+    </div>
+  `;
 }
 
 function route(){
