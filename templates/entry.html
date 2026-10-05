@@ -152,6 +152,36 @@
     color: var(--text);
   }
 
+    /* Older / Newer – aligned with article width */
+  .pn {
+    margin-top: 48px;
+    border-top: 1px solid var(--border);
+    max-width: 62ch;
+  }
+  .pn a {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    gap: 16px;
+    padding: 16px 0;
+    border-bottom: 1px solid var(--border);
+  }
+  .pn .dir {
+    font-size: 11px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--muted);
+    flex: none;
+  }
+  .pn .pt {
+    font-size: 15px;
+    font-weight: 500;
+    text-align: right;
+  }
+  .pn a:hover .pt {
+    color: var(--accent);
+  }
+
   footer {
     border-top: 1px solid var(--border);
     padding: 24px 0 36px;
