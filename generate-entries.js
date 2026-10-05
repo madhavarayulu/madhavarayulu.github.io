@@ -1,8 +1,8 @@
 #!/usr/bin/env node
 /**
  * generate-entries.js
- * Reads all .md files from /posts and generates static pages in /entry/{slug}/
- * Skips drafts. Removes stale dirs for deleted/renamed posts.
+ * Reads all .md files from /posts, generates static pages in /entry/{slug}/,
+ * and creates a root posts.json for instant, rate-limit-free frontend loading.
  */
 
 const fs = require('fs');
@@ -18,7 +18,7 @@ const escHtml = s => String(s).replace(/[&<>"']/g, c =>
 
 function parseFrontMatter(raw) {
   const match = raw.match(/^---\r?\n([\s\S]*?)\r?\n---\s*(\n|$)/);
-  const meta = { title: '', date: '', tags: [], draft: '', verified: '' };
+  const meta = { title: '', date: '', tags: [], draft: '', verified: '', series: '', part: '' };
   let body = raw;
   if (match) {
     body = raw.slice(match[0].length);
@@ -32,9 +32,11 @@ function parseFrontMatter(raw) {
       else if (key === 'tags') meta.tags = val.split(',').map(s => s.trim()).filter(Boolean);
       else if (key === 'draft') meta.draft = val;
       else if (key === 'verified') meta.verified = val;
+      else if (key === 'series') meta.series = val;
+      else if (key === 'part') meta.part = val;
     });
   }
-  return { meta, body: body.trim() };
+  return { meta, body: body.trim(), raw };
 }
 
 function excerpt(text, max = 160) {
@@ -68,7 +70,7 @@ function main() {
     return;
   }
 
-  // remove stale dirs for posts that no longer exist
+  // Remove stale dirs for posts that no longer exist
   const slugs = files.map(f => f.replace(/\.md$/, ''));
   fs.readdirSync(ENTRY_DIR).forEach(d => {
     if (!slugs.includes(d)) {
@@ -77,7 +79,9 @@ function main() {
     }
   });
 
+  const postsMeta = [];
   let made = 0;
+
   files.forEach(file => {
     const slug = file.replace(/\.md$/, '');
     const raw = fs.readFileSync(path.join(POSTS_DIR, file), 'utf8');
@@ -108,8 +112,25 @@ function main() {
     fs.writeFileSync(path.join(outDir, 'index.html'), html);
     console.log(`✓ Generated entry/${slug}/`);
     made++;
+
+    // Collect metadata for instant frontend loading
+    postsMeta.push({
+      slug,
+      title,
+      date: meta.date,
+      tags: meta.tags,
+      series: meta.series,
+      part: meta.part ? parseInt(meta.part, 10) : 0,
+      verified: meta.verified,
+      excerpt: excerptText,
+      raw: body // Keep raw markdown for SPA dynamic rendering
+    });
   });
 
+  // Sort by date descending and write to root posts.json
+  postsMeta.sort((a, b) => new Date(b.date) - new Date(a.date));
+  fs.writeFileSync(path.join(__dirname, 'posts.json'), JSON.stringify(postsMeta, null, 2));
+  console.log(`✓ Generated posts.json for instant loading`);
   console.log(`\nDone. Generated ${made} entry pages.`);
 }
 
