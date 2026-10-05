@@ -1,10 +1,4 @@
 #!/usr/bin/env node
-/**
- * generate-entries.js
- * Reads all .md files from /posts, generates static pages in /entry/{slug}/,
- * and creates a root posts.json for instant, rate-limit-free frontend loading.
- */
-
 const fs = require('fs');
 const path = require('path');
 const { marked } = require('marked');
@@ -13,8 +7,7 @@ const POSTS_DIR = path.join(__dirname, 'posts');
 const ENTRY_DIR = path.join(__dirname, 'entry');
 const TEMPLATE_PATH = path.join(__dirname, 'templates', 'entry.html');
 
-const escHtml = s => String(s).replace(/[&<>"']/g, c =>
-  ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const escHtml = s => String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 
 function parseFrontMatter(raw) {
   const match = raw.match(/^---\r?\n([\s\S]*?)\r?\n---\s*(\n|$)/);
@@ -40,12 +33,7 @@ function parseFrontMatter(raw) {
 }
 
 function excerpt(text, max = 160) {
-  const clean = text
-    .replace(/```[\s\S]*?```/g, ' ')
-    .replace(/\[([^\]]*)\]\([^)]*\)/g, '$1')
-    .replace(/[#>*_`~]/g, ' ')
-    .replace(/\s+/g, ' ')
-    .trim();
+  const clean = text.replace(/```[\s\S]*?```/g, ' ').replace(/\[([^\]]*)\]\([^)]*\)/g, '$1').replace(/[#>*_`~]/g, ' ').replace(/\s+/g, ' ').trim();
   return clean.length > max ? clean.slice(0, max).replace(/\s+\S*$/, '') + '…' : clean;
 }
 
@@ -56,21 +44,14 @@ function formatDate(dateStr) {
 }
 
 function main() {
-  if (!fs.existsSync(POSTS_DIR)) {
-    console.error('No /posts folder found');
-    process.exit(1);
-  }
+  if (!fs.existsSync(POSTS_DIR)) { console.error('No /posts folder found'); process.exit(1); }
 
   const template = fs.readFileSync(TEMPLATE_PATH, 'utf8');
   if (!fs.existsSync(ENTRY_DIR)) fs.mkdirSync(ENTRY_DIR);
 
   const files = fs.readdirSync(POSTS_DIR).filter(f => f.endsWith('.md'));
-  if (files.length === 0) {
-    console.log('No markdown files found in /posts');
-    return;
-  }
+  if (files.length === 0) { console.log('No markdown files found in /posts'); return; }
 
-  // 1. Parse all valid posts first
   const validPosts = [];
   files.forEach(file => {
     const slug = file.replace(/\.md$/, '');
@@ -78,31 +59,25 @@ function main() {
     const { meta, body, raw: rawBody } = parseFrontMatter(raw);
     if (!/^(true|yes|1)$/i.test(meta.draft || '')) {
       validPosts.push({ slug, meta, body, raw: rawBody });
-    } else {
-      console.log(`- Skipped (draft): ${slug}`);
     }
   });
 
-  // 2. Sort by date descending (newest first)
   validPosts.sort((a, b) => new Date(b.meta.date) - new Date(a.meta.date));
 
-  // Remove stale dirs for posts that no longer exist
   const slugs = validPosts.map(p => p.slug);
   fs.readdirSync(ENTRY_DIR).forEach(d => {
     if (!slugs.includes(d)) {
       fs.rmSync(path.join(ENTRY_DIR, d), { recursive: true, force: true });
-      console.log(`- Removed stale: entry/${d}/`);
     }
   });
 
-  // 3. Generate HTML with neighbor context
   const postsMeta = [];
   let made = 0;
 
   validPosts.forEach((post, index) => {
-    const { slug, meta, body, raw } = post;
-    const newerPost = validPosts[index - 1]; // newer is previous in array (newer date)
-    const olderPost = validPosts[index + 1]; // older is next in array (older date)
+    const { slug, meta, body } = post;
+    const newerPost = validPosts[index - 1];
+    const olderPost = validPosts[index + 1];
 
     const newerHtml = newerPost 
       ? `<a href="/entry/${newerPost.slug}/" class="nav-link prev"><span class="nav-label">← Newer</span><span class="nav-title">${escHtml(newerPost.meta.title)}</span></a>` 
@@ -113,9 +88,7 @@ function main() {
       : '<div></div>';
 
     const title = meta.title || slug;
-    const verified = meta.verified
-      ? ` · <span style="color:var(--accent)">● Verified on ${escHtml(meta.verified)}</span>`
-      : '';
+    const verified = meta.verified ? ` · <span style="color:var(--accent)">● Verified on ${escHtml(meta.verified)}</span>` : '';
     const date = formatDate(meta.date) + verified;
     const excerptText = excerpt(body);
     const bodyHtml = marked.parse(body);
@@ -132,27 +105,14 @@ function main() {
     const outDir = path.join(ENTRY_DIR, slug);
     fs.mkdirSync(outDir, { recursive: true });
     fs.writeFileSync(path.join(outDir, 'index.html'), html);
-    console.log(`✓ Generated entry/${slug}/`);
     made++;
 
-    postsMeta.push({
-      slug,
-      title,
-      date: meta.date,
-      tags: meta.tags,
-      series: meta.series,
-      part: meta.part ? parseInt(meta.part, 10) : 0,
-      verified: meta.verified,
-      excerpt: excerptText,
-      raw: body
-    });
+    postsMeta.push({ slug, title, date: meta.date, tags: meta.tags, series: meta.series, part: meta.part ? parseInt(meta.part, 10) : 0, verified: meta.verified, excerpt: excerptText, raw: body });
   });
 
-  // Sort by date descending and write to root posts.json
   postsMeta.sort((a, b) => new Date(b.date) - new Date(a.date));
   fs.writeFileSync(path.join(__dirname, 'posts.json'), JSON.stringify(postsMeta, null, 2));
-  console.log(`✓ Generated posts.json for instant loading`);
-  console.log(`\nDone. Generated ${made} entry pages.`);
+  console.log(`✓ Generated ${made} entry pages and posts.json`);
 }
 
 main();
