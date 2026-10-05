@@ -97,34 +97,14 @@
   .share-btn { display: inline-flex; align-items: center; justify-content: center; height: 34px; padding: 0 14px; font-size: 13px; font-weight: 500; border: 1px solid var(--border); border-radius: 999px; background: transparent; color: var(--text2); cursor: pointer; font-family: inherit; line-height: 1; transition: all 0.15s; }
   .share-btn:hover { border-color: var(--text); color: var(--text); }
 
-  /* --- FLEXBOX NAVIGATION FOR PERFECT CORNERS --- */
-  .nav-row {
-    display: flex;
-    justify-content: space-between;
-    width: 100%;
-  }
-  .nav-link {
-    display: flex;
-    flex-direction: column;
-    gap: 6px;
-    padding: 4px 0;
-  }
-  .nav-link.prev {
-    text-align: left;
-  }
-  .nav-link.next {
-    text-align: right;
-    align-items: flex-end;
-    margin-left: auto; /* Forces 'Newer' to the far right corner */
-  }
-  /* Arrows added via CSS to keep text perfectly anchored to edges */
-  .nav-link.prev .nav-label::before { content: '← '; opacity: 0.7; }
-  .nav-link.next .nav-label::after { content: ' →'; opacity: 0.7; }
-  
+  /* --- SIMPLE NAVIGATION --- */
+  .nav-row { display: flex; justify-content: space-between; width: 100%; }
+  .nav-link { display: flex; flex-direction: column; gap: 6px; padding: 4px 0; }
+  .nav-link.prev { text-align: left; }
+  .nav-link.next { text-align: right; align-items: flex-end; margin-left: auto; }
   .nav-label { font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted); }
   .nav-title { font-size: 15px; font-weight: 500; color: var(--text); transition: color 0.15s; line-height: 1.4; }
   .nav-link:hover .nav-title { color: var(--accent); }
-  /* -------------------------------- */
 
   .series { margin-top: 0; }
   .srow { display: block; padding: 12px 0; border-bottom: 1px solid var(--border); }
@@ -164,8 +144,6 @@
   @media (max-width: 560px) {
     .nav-row { flex-direction: column; gap: 16px; }
     .nav-link.next { text-align: left; align-items: flex-start; margin-left: 0; }
-    .nav-link.next .nav-label::after { content: ''; }
-    .nav-link.next .nav-label::before { content: '→ '; opacity: 0.7; }
     nav a { margin-left: 14px; }
   }
 </style>
@@ -329,6 +307,7 @@ function renderPost(slug){
   const i = POSTS.indexOf(p);
   const newer = POSTS[i-1], older = POSTS[i+1];
 
+  // SWAPPED: Newer on left (prev), Older on right (next)
   view.innerHTML = `
     <a class="back" href="#/">← Field notes</a>
     <div class="meta">${metaLine(p)}</div>
@@ -345,8 +324,8 @@ function renderPost(slug){
           <button class="share-btn" id="native-share" data-url="${esc(clean)}" data-title="${esc(p.title)}">Share</button>
         </div>
         <nav class="nav-row">
-          ${older ? `<a href="#/entry/${encodeURIComponent(older.slug)}" class="nav-link prev"><span class="nav-label">Older</span><span class="nav-title">${esc(older.title)}</span></a>` : ''}
-          ${newer ? `<a href="#/entry/${encodeURIComponent(newer.slug)}" class="nav-link next"><span class="nav-label">Newer</span><span class="nav-title">${esc(newer.title)}</span></a>` : ''}
+          ${newer ? `<a href="#/entry/${encodeURIComponent(newer.slug)}" class="nav-link prev"><span class="nav-label">← Newer</span><span class="nav-title">${esc(newer.title)}</span></a>` : ''}
+          ${older ? `<a href="#/entry/${encodeURIComponent(older.slug)}" class="nav-link next"><span class="nav-label">Older →</span><span class="nav-title">${esc(older.title)}</span></a>` : ''}
         </nav>
       </div>
     </div>`;
