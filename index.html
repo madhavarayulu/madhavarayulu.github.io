@@ -3,194 +3,277 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-
 <meta name="google-site-verification" content="Y5jWx0Kz_J9emwHafyr9bKi4S7n-x2F1MsjZOVWKFuU" />
-
 <title>Cairn | Oracle Fusion Finance Field Notes</title>
-<meta name="description" content="Field notes from an Oracle Fusion Finance functional consultant. Practical insights on implementations, process design, and the real-world edge cases that shape financial systems — left as markers for the next consultant navigating the terrain.">
+<meta name="description" content="Field notes from an Oracle Fusion Finance functional consultant. Practical insights on implementations, process design, and the real-world edge cases that shape financial systems.">
 <meta name="theme-color" content="#0f0f0f">
-
 <link rel="icon" type="image/png" href="/favicon.png" sizes="192x192">
 <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'%3E%3Crect width='512' height='512' rx='100' fill='%230f0f0f'/%3E%3Cellipse cx='256' cy='452' rx='142' ry='11' fill='%231a1815' opacity='.5'/%3E%3Cellipse cx='250' cy='398' rx='118' ry='44' fill='%232E2A24'/%3E%3Cellipse cx='258' cy='324' rx='94' ry='37' fill='%23403A31'/%3E%3Cellipse cx='248' cy='258' rx='72' ry='30' fill='%23524A3E'/%3E%3Cellipse cx='256' cy='200' rx='52' ry='23' fill='%23645A4B'/%3E%3Cellipse cx='256' cy='160' rx='36' ry='16' fill='%23C1502E'/%3E%3C/svg%3E">
-
 <meta property="og:type" content="website">
 <meta property="og:title" content="Cairn — field notes from the trail">
-<meta property="og:description" content="Field notes from an Oracle Fusion Finance functional consultant. Practical insights on implementations, process design, and the real-world edge cases that shape financial systems — left as markers for the next consultant navigating the terrain.">
+<meta property="og:description" content="Field notes from an Oracle Fusion Finance functional consultant. Practical insights on implementations, process design, and the real-world edge cases that shape financial systems.">
 <meta property="og:url" content="https://madhavarayulu.github.io/">
 <meta property="og:site_name" content="Cairn">
 <meta property="og:image" content="https://madhavarayulu.github.io/cairn-card-wide-sep.png">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="628">
+<meta property="og:image:type" content="image/png">
 <meta name="twitter:card" content="summary_large_image">
-
+<meta name="twitter:title" content="Cairn — field notes from the trail">
+<meta name="twitter:description" content="Field notes from an Oracle Fusion Finance functional consultant.">
+<meta name="twitter:image" content="https://madhavarayulu.github.io/cairn-card-wide-sep.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600&display=swap" rel="stylesheet">
-
 <script src="https://cdn.jsdelivr.net/npm/marked@12.0.2/marked.min.js"></script>
-
 <style>
   :root {
-    --bg: #0f0f0f; --text: #f0eee6; --text2: #a8a59c; --muted: #6b6860;
-    --border: #2a2a2a; --accent: #C1502E; --elev: #181818;
+    --bg: #0f0f0f;
+    --text: #f0eee6;
+    --text2: #a8a59c;
+    --muted: #6b6860;
+    --border: #2a2a2a;
+    --accent: #C1502E;
+    --elev: #181818;
   }
   * { margin: 0; padding: 0; box-sizing: border-box; }
   body {
-    background: var(--bg); color: var(--text); font-family: system-ui, -apple-system, sans-serif;
-    font-size: 16px; line-height: 1.6; -webkit-font-smoothing: antialiased;
+    background: var(--bg);
+    color: var(--text);
+    font-family: system-ui, -apple-system, sans-serif;
+    font-size: 16px;
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
   }
   ::selection { background: var(--accent); color: #fff; }
   :focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
   a { color: inherit; text-decoration: none; }
   .wrap { max-width: 680px; margin: 0 auto; padding: 0 20px; }
 
-  #progress-bar { position: fixed; top: 0; left: 0; height: 2px; background: var(--accent); width: 0%; z-index: 100; transition: width 0.1s linear; }
+  #progress-bar {
+    position: fixed; top: 0; left: 0;
+    height: 2px; background: var(--accent);
+    width: 0%; z-index: 100; transition: width 0.1s linear;
+  }
 
-  header { border-bottom: 1px solid transparent; position: sticky; top: 0; background: rgba(15,15,15,0.92); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); z-index: 20; transition: border-color 0.2s; }
+  header {
+    border-bottom: 1px solid transparent;
+    position: sticky; top: 0;
+    background: rgba(15,15,15,0.92);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    z-index: 20;
+    transition: border-color 0.2s;
+  }
   header.scrolled { border-color: var(--border); }
-  .header-inner { max-width: 680px; margin: 0 auto; padding: 0 20px; height: 58px; display: flex; justify-content: space-between; align-items: center; }
-  .logo { font-family: 'Fraunces', Georgia, serif; font-size: 22px; font-weight: 600; letter-spacing: -0.02em; }
+  .header-inner {
+    max-width: 680px; margin: 0 auto; padding: 0 20px;
+    height: 58px; display: flex;
+    justify-content: space-between; align-items: center;
+  }
+  .logo {
+    font-family: 'Fraunces', Georgia, serif;
+    font-size: 22px; font-weight: 600; letter-spacing: -0.02em;
+  }
   .logo span { color: var(--accent); }
-  nav a { font-size: 13px; color: var(--text2); margin-left: 22px; transition: color 0.15s; }
+  nav a {
+    font-size: 13px; color: var(--text2);
+    margin-left: 22px; transition: color 0.15s;
+  }
   nav a:hover, nav a.active { color: var(--text); }
 
   main { padding: 40px 0 80px; min-height: 70vh; }
 
-  .label { font-size: 12px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted); margin-bottom: 12px; }
+  .label {
+    font-size: 12px; letter-spacing: 0.1em;
+    text-transform: uppercase; color: var(--muted); margin-bottom: 12px;
+  }
   .hero { margin-bottom: 48px; }
-  .hero h1 { font-size: clamp(28px, 6vw, 40px); font-weight: 600; line-height: 1.15; letter-spacing: -0.03em; margin-bottom: 12px; }
+  .hero h1 {
+    font-size: clamp(28px, 6vw, 40px); font-weight: 600;
+    line-height: 1.15; letter-spacing: -0.03em; margin-bottom: 12px;
+  }
   .hero h1 a:hover { color: var(--accent); }
   .meta { font-size: 13px; color: var(--text2); margin-bottom: 14px; }
   .meta .vfy { color: var(--accent); }
   .excerpt { color: var(--text2); margin-bottom: 20px; max-width: 52ch; }
-  .btn { display: inline-block; padding: 10px 18px; border: 1px solid var(--border); border-radius: 999px; font-size: 13px; font-weight: 500; background: var(--elev); transition: all 0.15s; }
+  .btn {
+    display: inline-block; padding: 10px 18px;
+    border: 1px solid var(--border); border-radius: 999px;
+    font-size: 13px; font-weight: 500; background: var(--elev);
+    transition: all 0.15s;
+  }
   .btn:hover { background: var(--text); color: var(--bg); border-color: var(--text); }
 
-  .list-label { font-size: 12px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted); margin-bottom: 16px; }
-  #archive-list { transition: opacity 0.2s ease; }
-
-  .item { display: block; padding: 18px 0; border-bottom: 1px solid var(--border); }
+  .list-label {
+    font-size: 12px; letter-spacing: 0.1em;
+    text-transform: uppercase; color: var(--muted); margin-bottom: 16px;
+  }
+  .item {
+    display: block; padding: 18px 0;
+    border-bottom: 1px solid var(--border);
+  }
   .item:hover .item-title { color: var(--accent); }
   .item-title { font-size: 18px; font-weight: 500; margin-bottom: 4px; }
   .item-ex { font-size: 14px; color: var(--text2); }
   .item-date { font-size: 12px; color: var(--muted); margin-top: 6px; }
   .item-tags { margin-top: 8px; }
-  .tag { display: inline-block; font-size: 11px; padding: 2px 8px; border: 1px solid var(--border); border-radius: 999px; color: var(--text2); margin-right: 6px; }
+  .tag {
+    display: inline-block; font-size: 11px; padding: 2px 8px;
+    border: 1px solid var(--border); border-radius: 999px;
+    color: var(--text2); margin-right: 6px;
+  }
 
-  .back { display: inline-flex; align-items: center; gap: 8px; font-size: 11px; letter-spacing: 0.15em; text-transform: uppercase; color: var(--muted); margin-bottom: 30px; transition: color 0.15s; }
+  .back {
+    display: inline-flex; align-items: center; gap: 8px;
+    font-size: 11px; letter-spacing: 0.15em; text-transform: uppercase;
+    color: var(--muted); margin-bottom: 30px; transition: color 0.15s;
+  }
   .back:hover { color: var(--accent); }
   .back svg { width: 14px; height: 14px; }
-  
-  .art-title { font-family: 'Fraunces', Georgia, serif; font-size: clamp(34px, 5.4vw, 54px); font-weight: 600; line-height: 1.06; letter-spacing: -0.02em; margin-bottom: 18px; }
 
-  .article-body { width: 100%; }
-  .prose { font-size: 17px; line-height: 1.75; width: 100%; }
+  .art-title {
+    font-family: 'Fraunces', Georgia, serif;
+    font-size: clamp(28px, 5.4vw, 42px); font-weight: 600;
+    line-height: 1.15; letter-spacing: -0.03em; margin-bottom: 28px;
+  }
+  .prose {
+    font-size: 17px; line-height: 1.75; max-width: 62ch;
+  }
   .prose p { margin-bottom: 1.25em; }
   .prose h2 { font-size: 1.3em; margin: 1.8em 0 0.6em; font-weight: 600; }
   .prose h3 { font-size: 1.15em; margin: 1.6em 0 0.5em; font-weight: 600; }
   .prose a { color: var(--accent); text-decoration: underline; text-underline-offset: 3px; }
-  .prose blockquote { border-left: 2px solid var(--accent); padding-left: 1.2em; margin: 1.5em 0; color: var(--text2); font-style: italic; }
+  .prose blockquote {
+    border-left: 2px solid var(--accent); padding-left: 1.2em;
+    margin: 1.5em 0; color: var(--text2); font-style: italic;
+  }
   .prose ul, .prose ol { margin: 0 0 1.25em; padding-left: 1.4em; }
   .prose li { margin: 0.4em 0; }
-  .prose code { font-family: ui-monospace, monospace; font-size: 0.88em; background: var(--elev); padding: 2px 6px; border-radius: 4px; }
-  .prose pre { background: #1a1a1a; padding: 16px 18px; border-radius: 8px; overflow-x: auto; margin: 0 0 1.3em; border: 1px solid var(--border); }
+  .prose code {
+    font-family: ui-monospace, monospace; font-size: 0.88em;
+    background: var(--elev); padding: 2px 6px; border-radius: 4px;
+  }
+  .prose pre {
+    background: #1a1a1a; padding: 16px 18px; border-radius: 8px;
+    overflow-x: auto; margin: 0 0 1.3em; border: 1px solid var(--border);
+  }
   .prose pre code { background: none; padding: 0; }
-  .prose img { max-width: 100%; height: auto; display: block; border-radius: 8px; margin: 2em 0; border: 1px solid var(--border); }
-  .prose hr { border: none; border-top: 1px dashed var(--border); margin: 2.2em 0; }
+  .prose img {
+    max-width: 100%; height: auto; display: block;
+    border-radius: 8px; margin: 2em 0; border: 1px solid var(--border);
+  }
+  .prose hr {
+    border: none; border-top: 1px dashed var(--border); margin: 2.2em 0;
+  }
 
-  .article-footer { width: 100%; margin-top: 48px; display: flex; flex-direction: column; gap: 20px; }
-  .share-row { display: flex; align-items: center; gap: 12px; padding-bottom: 24px; border-bottom: 1px solid var(--border); }
-  .share-label { font-size: 12px; color: var(--muted); font-weight: 500; margin-right: 4px; }
-  .share-btn { display: inline-flex; align-items: center; justify-content: center; height: 34px; padding: 0 14px; font-size: 13px; font-weight: 500; border: 1px solid var(--border); border-radius: 999px; background: transparent; color: var(--text2); cursor: pointer; font-family: inherit; line-height: 1; transition: all 0.15s; }
+  /* Unified article footer — matches static pages */
+  .article-footer {
+    margin-top: 48px;
+    max-width: 62ch;
+  }
+  .share-row {
+    display: flex; flex-wrap: wrap; align-items: center;
+    gap: 10px; padding-bottom: 28px;
+    border-bottom: 1px solid var(--border);
+  }
+  .share-label {
+    font-size: 12px; color: var(--muted); font-weight: 500;
+  }
+  .share-btn {
+    display: inline-flex; align-items: center; justify-content: center;
+    height: 34px; padding: 0 14px; font-size: 13px; font-weight: 500;
+    border: 1px solid var(--border); border-radius: 999px;
+    background: transparent; color: var(--text2); cursor: pointer;
+    font-family: inherit; line-height: 1; transition: all 0.15s;
+  }
   .share-btn:hover { border-color: var(--text); color: var(--text); }
 
-  /* --- BOOK PAGE FLIP NAVIGATION --- */
   .nav-row {
-    display: flex;
-    justify-content: space-between;
-    align-items: flex-start;
-    gap: 24px;
-    padding-top: 24px;
-    border-top: 1px solid var(--border);
+    display: flex; justify-content: space-between;
+    align-items: flex-start; gap: 24px; padding-top: 28px;
   }
   .nav-link {
-    display: flex;
-    flex-direction: column;
-    gap: 6px;
-    max-width: 45%;
-    text-decoration: none;
+    display: flex; flex-direction: column; gap: 6px;
+    max-width: 45%; text-decoration: none;
   }
   .nav-link.next {
-    align-items: flex-end;
-    text-align: right;
+    align-items: flex-end; text-align: right; margin-left: auto;
   }
   .nav-label {
-    font-size: 11px;
-    letter-spacing: 0.15em;
-    text-transform: uppercase;
-    color: var(--muted);
+    font-size: 11px; letter-spacing: 0.15em;
+    text-transform: uppercase; color: var(--muted);
   }
   .nav-title {
-    font-family: 'Fraunces', Georgia, serif;
-    font-weight: 500;
-    font-size: 16px;
-    color: var(--text);
-    transition: color 0.15s;
-    line-height: 1.4;
+    font-size: 15px; font-weight: 500; color: var(--text);
+    line-height: 1.4; transition: color 0.15s;
   }
   .nav-link:hover .nav-title { color: var(--accent); }
-  
-  @media (max-width: 560px) {
-    .nav-row { flex-direction: column; gap: 16px; }
-    .nav-link.next { align-items: flex-start; text-align: left; }
-  }
-  /* -------------------------------- */
-  /* -------------------------------- */
 
-  .series { margin-top: 0; }
+  .series { margin-bottom: 28px; padding-bottom: 24px; border-bottom: 1px solid var(--border); }
   .srow { display: block; padding: 12px 0; border-bottom: 1px solid var(--border); }
   .srow:hover .s-t, .srow.cur .s-t { color: var(--accent); }
   .srow .s-no { font-size: 12px; color: var(--muted); }
   .srow .s-t { font-size: 15px; font-weight: 500; }
   .srow .s-here { font-size: 11px; color: var(--accent); margin-left: 8px; }
 
-  .year { font-size: 14px; font-weight: 600; color: var(--muted); margin: 36px 0 12px; letter-spacing: 0.04em; }
+  .year {
+    font-size: 14px; font-weight: 600; color: var(--muted);
+    margin: 36px 0 12px; letter-spacing: 0.04em;
+  }
   .year:first-child { margin-top: 0; }
 
-  .search-box { width: 100%; padding: 12px 14px; margin-bottom: 28px; background: var(--elev); border: 1px solid var(--border); border-radius: 8px; color: var(--text); font-size: 15px; font-family: inherit; }
+  .search-box {
+    width: 100%; padding: 12px 14px; margin-bottom: 28px;
+    background: var(--elev); border: 1px solid var(--border);
+    border-radius: 8px; color: var(--text); font-size: 15px;
+    font-family: inherit;
+  }
   .search-box:focus { outline: none; border-color: var(--accent); }
   .search-box::placeholder { color: var(--muted); }
 
   .filter-tags { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 28px; }
-  .filter-tag { font-size: 12px; padding: 5px 12px; border: 1px solid var(--border); border-radius: 999px; color: var(--text2); cursor: pointer; background: transparent; font-family: inherit; transition: all 0.15s; }
+  .filter-tag {
+    font-size: 12px; padding: 5px 12px; border: 1px solid var(--border);
+    border-radius: 999px; color: var(--text2); cursor: pointer;
+    background: transparent; font-family: inherit; transition: all 0.15s;
+  }
   .filter-tag:hover, .filter-tag.active { border-color: var(--text); color: var(--text); }
   .filter-tag.active { background: var(--text); color: var(--bg); }
 
-  .disclaimer { 
-    margin-top: 3em; 
-    padding-top: 1.6em; 
-    border-top: 1px solid var(--border); 
-    font-size: 12.5px; 
-    color: var(--muted); 
-    line-height: 1.55; 
-    opacity: 0.75; 
+  .disclaimer {
+    margin-top: 3em; padding-top: 1.6em;
+    border-top: 1px solid var(--border);
+    font-size: 12.5px; color: var(--muted);
+    line-height: 1.55; opacity: 0.75;
   }
 
-  footer { border-top: 1px solid var(--border); padding: 24px 0 36px; font-size: 12px; color: var(--muted); }
-  .footer-inner { max-width: 680px; margin: 0 auto; padding: 0 20px; text-align: center; }
+  footer {
+    border-top: 1px solid var(--border);
+    padding: 24px 0 36px; font-size: 12px; color: var(--muted);
+  }
+  .footer-inner {
+    max-width: 680px; margin: 0 auto; padding: 0 20px; text-align: center;
+  }
 
   .empty { color: var(--muted); padding: 20px 0; }
   .loading { text-align: center; padding: 70px 0; color: var(--muted); font-size: 14px; }
-
-  .toast { position: fixed; left: 50%; bottom: 28px; transform: translateX(-50%) translateY(12px); opacity: 0; background: var(--text); color: var(--bg); padding: 10px 18px; border-radius: 999px; font-size: 13px; font-weight: 500; pointer-events: none; transition: all 0.25s; z-index: 100; }
+  .toast {
+    position: fixed; left: 50%; bottom: 28px;
+    transform: translateX(-50%) translateY(12px); opacity: 0;
+    background: var(--text); color: var(--bg);
+    padding: 10px 18px; border-radius: 999px;
+    font-size: 13px; font-weight: 500; pointer-events: none;
+    transition: all 0.25s; z-index: 100;
+  }
   .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
 
-  .pile-link { display: inline-flex; align-items: center; gap: 6px; color: var(--text2); transition: color 0.2s ease, gap 0.2s ease; }
+  .pile-link {
+    display: inline-flex; align-items: center; gap: 6px;
+    color: var(--text2); transition: color 0.2s ease, gap 0.2s ease;
+  }
   .pile-link:hover { color: var(--accent); gap: 10px; }
-  .pile-link svg { transition: transform 0.2s ease; }
-  .pile-link:hover svg { transform: translateX(3px); }
 
-  /* --- ORIGINAL STACKED STONES ANIMATION --- */
   @keyframes drop {
     from { opacity: 0; transform: translateY(-56px); }
     60% { opacity: 1; }
@@ -205,16 +288,17 @@
   .cairn-mark { width: 120px; flex: none; margin-bottom: 8px; }
 
   @media (max-width: 560px) {
-    .pn a { flex-direction: column; gap: 4px; }
-    .pn .t { text-align: left; }
+    .nav-row { flex-direction: column; gap: 20px; }
+    .nav-link, .nav-link.next {
+      max-width: 100%; align-items: flex-start;
+      text-align: left; margin-left: 0;
+    }
     nav a { margin-left: 14px; }
   }
 </style>
 </head>
 <body>
-
 <div id="progress-bar"></div>
-
 <header id="header">
   <div class="header-inner">
     <a href="#/" class="logo">Cairn<span>.</span></a>
@@ -224,17 +308,14 @@
     </nav>
   </div>
 </header>
-
 <main>
   <div class="wrap" id="view">
     <div class="loading">Stacking stones…</div>
   </div>
 </main>
-
 <footer>
   <div class="footer-inner">Madhava Rayulu</div>
 </footer>
-
 <div class="toast" id="toast">Link copied</div>
 
 <script type="text/markdown" data-slug="why-cairn">
@@ -243,34 +324,38 @@ title: Why Cairn
 date: 2026-01-09
 tags: notes
 ---
-
 Above the treeline the trail stops being a trail. It becomes a suggestion — rock, fog, the occasional patch of gravel that might be a path. What keeps you from wandering off is a pile of stones somebody stacked before you arrived.
-
 Nobody owns a cairn. Nobody collects a fee. A stranger you will never meet spent twenty minutes of their one life balancing rocks so that you, specifically, would not get lost.
-
 That seemed like the right shape for a blog.
-
 So this is a cairn too — smaller, slower, made of words instead of granite. Field notes, gotchas, half-finished thoughts, stacked one on top of another as they come. If one of them ever marks the trail for you, the pile has done its job.
-
 > The next storm will knock some of it down. That is fine. That is what stones are for — restacking.
 </script>
 
 <script>
 const CONFIG = {
-  owner:  "madhavarayulu", 
-  repo:   "madhavarayulu.github.io", 
-  branch: "main", 
-  title:  "Cairn", 
+  owner:  "madhavarayulu",
+  repo:   "madhavarayulu.github.io",
+  branch: "main",
+  title:  "Cairn",
   name:   "Madhava Rayulu"
 };
 
 const $ = s => document.querySelector(s);
-const esc = s => String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
-const fmt = s => { const d = new Date(s); return isNaN(d) ? (s || '—') : d.toLocaleDateString('en-US', {month:'short', day:'numeric', year:'numeric'}); };
+const esc = s => String(s).replace(/[&<>"']/g, c =>
+  ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const fmt = s => {
+  const d = new Date(s);
+  return isNaN(d) ? (s || '—')
+    : d.toLocaleDateString('en-US', {month:'short', day:'numeric', year:'numeric'});
+};
 const yr = s => { const d = new Date(s); return isNaN(d) ? '—' : d.getFullYear(); };
 
 function excerpt(md, n = 165){
-  const t = md.replace(/^\s*---[\s\S]*?---/, '').replace(/```[\s\S]*?```/g, ' ').replace(/\[([^\]]*)\]\([^)]*\)/g, '$1').replace(/[#>*_`~]/g, ' ').replace(/\s+/g, ' ').trim();
+  const t = md.replace(/^\s*---[\s\S]*?---/, '')
+    .replace(/```[\s\S]*?```/g, ' ')
+    .replace(/\[([^\]]*)\]\([^)]*\)/g, '$1')
+    .replace(/[#>*_`~]/g, ' ')
+    .replace(/\s+/g, ' ').trim();
   return t.length > n ? t.slice(0, n).replace(/\s+\S*$/,'') + '…' : t;
 }
 
@@ -293,129 +378,272 @@ function parsePost(raw, slug){
       else if(k === 'verified') meta.verified = v;
     });
   }
-  return { slug, ...meta, dateMs: meta.date ? (new Date(meta.date).getTime() || 0) : 0, ex: excerpt(body), body: body.trim() };
+  return {
+    slug, ...meta,
+    dateMs: meta.date ? (new Date(meta.date).getTime() || 0) : 0,
+    ex: excerpt(body),
+    body: body.trim()
+  };
 }
 
-const collectSamples = () => [...document.querySelectorAll('script[type="text/markdown"]')].map(el => parsePost(el.textContent, el.dataset.slug));
+const collectSamples = () =>
+  [...document.querySelectorAll('script[type="text/markdown"]')]
+    .map(el => parsePost(el.textContent, el.dataset.slug));
 
 async function fetchPosts(){
   try {
     const res = await fetch('/posts.json');
-    if (res.ok) { const data = await res.json(); return data.map(p => ({ ...p, dateMs: p.date ? (new Date(p.date).getTime() || 0) : 0, ex: p.excerpt, body: p.raw })); }
+    if (res.ok) {
+      const data = await res.json();
+      return data.map(p => ({
+        ...p,
+        dateMs: p.date ? (new Date(p.date).getTime() || 0) : 0,
+        ex: p.excerpt,
+        body: p.raw
+      }));
+    }
   } catch (e) {}
+
   const {owner, repo, branch} = CONFIG;
   const api = `https://api.github.com/repos/${owner}/${repo}/git/trees/${branch}?recursive=1`;
-  const r = await fetch(api); if(!r.ok) throw new Error('github ' + r.status);
+  const r = await fetch(api);
+  if(!r.ok) throw new Error('github ' + r.status);
   const j = await r.json();
-  const paths = ((j || {}).tree || []).filter(t => t.type === 'blob' && /^posts\/[^/]+\.md$/.test(t.path)).map(t => t.path);
+  const paths = ((j || {}).tree || [])
+    .filter(t => t.type === 'blob' && /^posts\/[^/]+\.md$/.test(t.path))
+    .map(t => t.path);
   if(!paths.length) throw new Error('no posts');
   const base = `https://raw.githubusercontent.com/${owner}/${repo}/${branch}/`;
-  return Promise.all(paths.map(async path => { const text = await (await fetch(base + path)).text(); return parsePost(text, path.slice(6, -3)); }));
+  return Promise.all(paths.map(async path => {
+    const text = await (await fetch(base + path)).text();
+    return parsePost(text, path.slice(6, -3));
+  }));
 }
 
 const view = $('#view'), toastEl = $('#toast'), header = $('#header'), progressBar = $('#progress-bar');
 let POSTS = [], currentTag = null, searchQuery = "";
 
-function toast(msg){ toastEl.textContent = msg; toastEl.classList.add('show'); clearTimeout(toast._t); toast._t = setTimeout(() => toastEl.classList.remove('show'), 2000); }
-function setActive(page){ const a = $('#nav-archive'), t = $('#nav-about'); if(a) a.className = page === 'archive' ? 'active' : ''; if(t) t.className = page === 'about' ? 'active' : ''; }
-const metaLine = p => `${fmt(p.date)}` + (p.verified ? ` · <span class="vfy">● Verified on ${esc(p.verified)}</span>` : '');
+function toast(msg){
+  toastEl.textContent = msg;
+  toastEl.classList.add('show');
+  clearTimeout(toast._t);
+  toast._t = setTimeout(() => toastEl.classList.remove('show'), 2000);
+}
+function setActive(page){
+  const a = $('#nav-archive'), t = $('#nav-about');
+  if(a) a.className = page === 'archive' ? 'active' : '';
+  if(t) t.className = page === 'about' ? 'active' : '';
+}
+const metaLine = p =>
+  `${fmt(p.date)}` + (p.verified ? ` · <span class="vfy">● Verified on ${esc(p.verified)}</span>` : '');
 
 window.addEventListener('scroll', () => {
   header.classList.toggle('scrolled', window.scrollY > 8);
   const winScroll = document.body.scrollTop || document.documentElement.scrollTop;
   const height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
-  progressBar.style.width = ((winScroll / height) * 100) + "%";
+  if (height > 0) progressBar.style.width = ((winScroll / height) * 100) + '%';
 }, {passive: true});
 
 function renderHome(){
-  setActive('home'); document.title = CONFIG.title;
+  setActive('home');
+  document.title = CONFIG.title + ' | Oracle Fusion Finance Field Notes';
   const latest = POSTS[0];
-  if(!latest){ view.innerHTML = '<div class="label">Field notes</div><p class="empty">The first entry lands soon.</p>'; return; }
+  if(!latest){
+    view.innerHTML = '<div class="label">Field notes</div><p class="empty">The first entry lands soon.</p>';
+    return;
+  }
   const recent = POSTS.slice(0, 10);
-  const list = recent.map(p => `<a class="item" href="#/entry/${encodeURIComponent(p.slug)}"><div class="item-title">${esc(p.title)}</div><div class="item-ex">${esc(p.ex)}</div><div class="item-date">${fmt(p.date)}</div></a>`).join('');
-  view.innerHTML = `<div class="hero"><div class="label">Latest</div><h1><a href="#/entry/${encodeURIComponent(latest.slug)}">${esc(latest.title)}</a></h1><div class="meta">${metaLine(latest)}</div><p class="excerpt">${esc(latest.ex)}</p><a class="btn" href="#/entry/${encodeURIComponent(latest.slug)}">Read entry →</a></div><div class="list-label">Recent</div>${list}` + (POSTS.length > 10 ? `<p style="margin-top:28px"><a class="pile-link" href="#/archive">View all entries <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M17 8l4 4m0 0l-4 4m4-4H3"/></svg></a></p>` : '');
+  const list = recent.map(p =>
+    `<a class="item" href="#/entry/${encodeURIComponent(p.slug)}">
+      <div class="item-title">${esc(p.title)}</div>
+      <div class="item-ex">${esc(p.ex)}</div>
+      <div class="item-date">${fmt(p.date)}</div>
+    </a>`).join('');
+
+  view.innerHTML =
+    `<div class="hero">
+      <div class="label">Latest</div>
+      <h1><a href="#/entry/${encodeURIComponent(latest.slug)}">${esc(latest.title)}</a></h1>
+      <div class="meta">${metaLine(latest)}</div>
+      <p class="excerpt">${esc(latest.ex)}</p>
+      <a class="btn" href="#/entry/${encodeURIComponent(latest.slug)}">Read entry →</a>
+    </div>
+    <div class="list-label">Recent</div>
+    ${list}` +
+    (POSTS.length > 10
+      ? `<p style="margin-top:28px"><a class="pile-link" href="#/archive">View all entries →</a></p>`
+      : '');
 }
 
 function renderArchive(){
-  setActive('archive'); document.title = `The Pile · ${CONFIG.title}`;
+  setActive('archive');
+  document.title = `The Pile · ${CONFIG.title}`;
+
   const allTags = [...new Set(POSTS.flatMap(p => p.tags || []))].sort();
   let filtered = POSTS;
   if(currentTag) filtered = filtered.filter(p => (p.tags || []).includes(currentTag));
-  if(searchQuery.trim()){ const q = searchQuery.toLowerCase(); filtered = filtered.filter(p => p.title.toLowerCase().includes(q) || p.ex.toLowerCase().includes(q) || (p.tags || []).some(t => t.toLowerCase().includes(q))); }
-  const years = {}; filtered.forEach(p => { const y = yr(p.date); (years[y] = years[y] || []).push(p); });
+  if(searchQuery.trim()){
+    const q = searchQuery.toLowerCase();
+    filtered = filtered.filter(p =>
+      p.title.toLowerCase().includes(q) ||
+      p.ex.toLowerCase().includes(q) ||
+      (p.tags || []).some(t => t.toLowerCase().includes(q)));
+  }
+
+  const years = {};
+  filtered.forEach(p => {
+    const y = yr(p.date);
+    (years[y] = years[y] || []).push(p);
+  });
   const sortedYears = Object.keys(years).sort((a,b) => b - a);
+
   let list = '';
-  if(!filtered.length){ list = `<p class="empty">No entries match.</p>`; } 
-  else { sortedYears.forEach(y => { list += `<div class="year">${y}</div>`; years[y].forEach(p => { const tags = (p.tags || []).map(t => `<span class="tag">${esc(t)}</span>`).join(''); list += `<a class="item" href="#/entry/${encodeURIComponent(p.slug)}"><div class="item-title">${esc(p.title)}</div><div class="item-ex">${esc(p.ex)}</div><div class="item-date">${fmt(p.date)}</div>${tags ? `<div class="item-tags">${tags}</div>` : ''}</a>`; }); }); }
-  const tagBtns = allTags.map(t => `<button class="filter-tag${currentTag === t ? ' active' : ''}" data-tag="${esc(t)}">${esc(t)}</button>`).join('');
-  const container = document.createElement('div'); container.id = 'archive-list'; container.style.opacity = '0';
-  container.innerHTML = `<div class="label">The Pile · ${POSTS.length} entries</div><input class="search-box" id="search" type="search" placeholder="Search entries..." value="${esc(searchQuery)}">${allTags.length ? `<div class="filter-tags">${tagBtns}</div>` : ''}${list}`;
-  view.innerHTML = ''; view.appendChild(container);
-  requestAnimationFrame(() => { container.style.opacity = '1'; });
-  const si = document.getElementById('search'); si.addEventListener('input', e => { searchQuery = e.target.value; renderArchive(); const el = document.getElementById('search'); if(el){ el.focus(); el.setSelectionRange(el.value.length, el.value.length); } });
-  view.querySelectorAll('.filter-tag').forEach(b => b.addEventListener('click', () => { currentTag = currentTag === b.dataset.tag ? null : b.dataset.tag; renderArchive(); }));
+  if(!filtered.length){
+    list = `<p class="empty">No entries match.</p>`;
+  } else {
+    sortedYears.forEach(y => {
+      list += `<div class="year">${y}</div>`;
+      years[y].forEach(p => {
+        const tags = (p.tags || []).map(t => `<span class="tag">${esc(t)}</span>`).join('');
+        list += `<a class="item" href="#/entry/${encodeURIComponent(p.slug)}">
+          <div class="item-title">${esc(p.title)}</div>
+          <div class="item-ex">${esc(p.ex)}</div>
+          <div class="item-date">${fmt(p.date)}</div>
+          ${tags ? `<div class="item-tags">${tags}</div>` : ''}
+        </a>`;
+      });
+    });
+  }
+
+  const tagBtns = allTags.map(t =>
+    `<button class="filter-tag${currentTag === t ? ' active' : ''}" data-tag="${esc(t)}">${esc(t)}</button>`
+  ).join('');
+
+  view.innerHTML =
+    `<div class="label">The Pile · ${POSTS.length} entries</div>
+    <input class="search-box" id="search" type="search" placeholder="Search entries..." value="${esc(searchQuery)}">
+    ${allTags.length ? `<div class="filter-tags">${tagBtns}</div>` : ''}
+    ${list}`;
+
+  const si = document.getElementById('search');
+  si.addEventListener('input', e => {
+    searchQuery = e.target.value;
+    renderArchive();
+    const el = document.getElementById('search');
+    if(el){ el.focus(); el.setSelectionRange(el.value.length, el.value.length); }
+  });
+  view.querySelectorAll('.filter-tag').forEach(b =>
+    b.addEventListener('click', () => {
+      currentTag = currentTag === b.dataset.tag ? null : b.dataset.tag;
+      renderArchive();
+    }));
 }
 
 function renderPost(slug){
   setActive('home');
   const p = POSTS.find(x => x.slug === slug);
-  if(!p){ view.innerHTML = `<p class="empty">Entry not found.</p><a class="back" href="#/"><svg width="14" height="14" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M19 12H5m0 0l7 7m-7-7l7-7"/></svg><span>Field notes</span></a>`; return; }
+  if(!p){
+    view.innerHTML = `<p class="empty">Entry not found.</p>
+      <a class="back" href="#/">← Field notes</a>`;
+    return;
+  }
   document.title = `${p.title} · ${CONFIG.title}`;
   const clean = location.origin + '/entry/' + encodeURIComponent(p.slug) + '/';
   const body = window.marked ? marked.parse(p.body) : '<p>' + esc(p.body) + '</p>';
 
   let series = '';
   if(p.series){
-    const parts = POSTS.filter(x => x.series === p.series).sort((a,b) => (a.part || a.dateMs) - (b.part || b.dateMs));
-    series = `<div class="series" style="margin-bottom: 32px; border-bottom: 1px solid var(--border); padding-bottom: 24px;"><div class="list-label">Series — ${esc(p.series)}</div>` + parts.map((x, ix) => `<a class="srow${x.slug === p.slug ? ' cur' : ''}" href="#/entry/${encodeURIComponent(x.slug)}"><span class="s-no">Part ${x.part || ix+1}</span><br><span class="s-t">${esc(x.title)}</span>${x.slug === p.slug ? '<span class="s-here">you are here</span>' : ''}</a>`).join('') + `</div>`;
+    const parts = POSTS.filter(x => x.series === p.series)
+      .sort((a,b) => (a.part || a.dateMs) - (b.part || b.dateMs));
+    series = `<div class="series">
+      <div class="list-label">Series — ${esc(p.series)}</div>` +
+      parts.map((x, ix) =>
+        `<a class="srow${x.slug === p.slug ? ' cur' : ''}" href="#/entry/${encodeURIComponent(x.slug)}">
+          <span class="s-no">Part ${x.part || ix+1}</span><br>
+          <span class="s-t">${esc(x.title)}</span>
+          ${x.slug === p.slug ? '<span class="s-here">you are here</span>' : ''}
+        </a>`).join('') +
+      `</div>`;
   }
 
   const i = POSTS.indexOf(p);
   const newer = POSTS[i-1], older = POSTS[i+1];
 
   view.innerHTML = `
-    <a class="back" href="#/"><svg width="14" height="14" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M19 12H5m0 0l7 7m-7-7l7-7"/></svg><span>Field notes</span></a>
+    <a class="back" href="#/">← Field notes</a>
     <div class="meta">${metaLine(p)}</div>
     <h1 class="art-title">${esc(p.title)}</h1>
-    
-    <div class="article-body">
-      <div class="prose">${body}</div>
-      
-      <div class="article-footer">
-        ${series}
-        <div class="share-row">
-          <span class="share-label">Share</span>
-          <button class="share-btn" id="copy-link" data-url="${esc(clean)}">Copy link</button>
-          <button class="share-btn" id="native-share" data-url="${esc(clean)}" data-title="${esc(p.title)}">Share</button>
-        </div>
-        
-        <nav class="nav-row">
-          ${newer ? `<a href="#/entry/${encodeURIComponent(newer.slug)}" class="nav-link prev"><span class="nav-label">← Newer</span><span class="nav-title">${esc(newer.title)}</span></a>` : '<div></div>'}
-          ${older ? `<a href="#/entry/${encodeURIComponent(older.slug)}" class="nav-link next"><span class="nav-label">Older →</span><span class="nav-title">${esc(older.title)}</span></a>` : '<div></div>'}
-        </nav>
+    <div class="prose">${body}</div>
+    <div class="article-footer">
+      ${series}
+      <div class="share-row">
+        <span class="share-label">Share</span>
+        <button class="share-btn" id="copy-link" data-url="${esc(clean)}">Copy link</button>
+        <button class="share-btn" id="native-share" data-url="${esc(clean)}" data-title="${esc(p.title)}">Share</button>
       </div>
+      <nav class="nav-row">
+        ${newer
+          ? `<a href="#/entry/${encodeURIComponent(newer.slug)}" class="nav-link prev">
+              <span class="nav-label">← Newer</span>
+              <span class="nav-title">${esc(newer.title)}</span>
+            </a>`
+          : '<div></div>'}
+        ${older
+          ? `<a href="#/entry/${encodeURIComponent(older.slug)}" class="nav-link next">
+              <span class="nav-label">Older →</span>
+              <span class="nav-title">${esc(older.title)}</span>
+            </a>`
+          : '<div></div>'}
+      </nav>
     </div>`;
-  
+
   document.getElementById('copy-link').addEventListener('click', async e => {
     const url = e.currentTarget.dataset.url || location.href;
-    try { await navigator.clipboard.writeText(url); } catch (_) { const ta = document.createElement('textarea'); ta.value = url; document.body.appendChild(ta); ta.select(); document.execCommand('copy'); ta.remove(); }
-    const btn = e.currentTarget; const original = btn.textContent; btn.textContent = '✓ Copied'; setTimeout(() => btn.textContent = original, 2000);
+    try { await navigator.clipboard.writeText(url); }
+    catch (_) {
+      const ta = document.createElement('textarea');
+      ta.value = url; document.body.appendChild(ta); ta.select();
+      document.execCommand('copy'); ta.remove();
+    }
+    const btn = e.currentTarget;
+    const original = btn.textContent;
+    btn.textContent = '✓ Copied';
+    setTimeout(() => { btn.textContent = original; }, 2000);
   });
+
   const shareBtn = document.getElementById('native-share');
   if (shareBtn) {
-    if (navigator.share) { shareBtn.addEventListener('click', async () => { try { await navigator.share({ title: shareBtn.dataset.title, url: shareBtn.dataset.url }); } catch (_) {} }); } 
-    else { shareBtn.addEventListener('click', async () => { const url = shareBtn.dataset.url; try { await navigator.clipboard.writeText(url); } catch (_) { const ta = document.createElement('textarea'); ta.value = url; document.body.appendChild(ta); ta.select(); document.execCommand('copy'); ta.remove(); } const original = shareBtn.textContent; shareBtn.textContent = '✓ Copied'; setTimeout(() => shareBtn.textContent = original, 2000); }); }
+    if (navigator.share) {
+      shareBtn.addEventListener('click', async () => {
+        try {
+          await navigator.share({
+            title: shareBtn.dataset.title,
+            url: shareBtn.dataset.url
+          });
+        } catch (_) {}
+      });
+    } else {
+      shareBtn.addEventListener('click', async () => {
+        const url = shareBtn.dataset.url;
+        try { await navigator.clipboard.writeText(url); }
+        catch (_) {
+          const ta = document.createElement('textarea');
+          ta.value = url; document.body.appendChild(ta); ta.select();
+          document.execCommand('copy'); ta.remove();
+        }
+        const original = shareBtn.textContent;
+        shareBtn.textContent = '✓ Copied';
+        setTimeout(() => { shareBtn.textContent = original; }, 2000);
+      });
+    }
   }
 }
 
 function renderAbout(){
-  setActive('about'); 
+  setActive('about');
   document.title = `Trailhead · ${CONFIG.title}`;
-  
   view.innerHTML = `
     <h1 class="art-title">Trailhead</h1>
-    
-    <!-- THE ORIGINAL STACKED STONES ANIMATION (Adapted for Dark Mode) -->
     <svg class="cairn-mark" viewBox="0 0 512 512" aria-hidden="true" style="margin-bottom: 32px;">
       <rect width="512" height="512" rx="100" fill="#1a1815"/>
       <ellipse class="fade" style="animation-delay:420ms" cx="256" cy="452" rx="142" ry="11" fill="#0f0f0f"/>
@@ -425,7 +653,6 @@ function renderAbout(){
       <g class="stone" style="animation-delay:240ms"><ellipse cx="256" cy="200" rx="52" ry="23" fill="#645A4B"/></g>
       <g class="stone" style="animation-delay:320ms"><ellipse cx="256" cy="160" rx="36" ry="16" fill="#C1502E" transform="rotate(-8 256 160)"/></g>
     </svg>
-
     <div class="prose">
       <p>I am an Oracle Fusion Finance functional consultant.</p>
       <p>My work is to bridge the gap between business needs and system capabilities—guiding implementations, designing financial processes, and configuring solutions that work in the real world.</p>
@@ -434,8 +661,7 @@ function renderAbout(){
     </div>
     <div class="disclaimer">
       This site is an independent project and is not affiliated with, endorsed by, or sponsored by Oracle Corporation. Oracle and related trademarks are the property of their respective owners. The content provided here is for informational purposes only, based on personal experience, and does not constitute official documentation or professional advice.
-    </div>
-  `;
+    </div>`;
 }
 
 function route(){
@@ -446,14 +672,21 @@ function route(){
     else if(h.indexOf('#/archive') === 0) renderArchive();
     else if(h.indexOf('#/entry/') === 0) renderPost(decodeURIComponent(h.slice(8)));
     else renderHome();
-  }catch(err){ view.innerHTML = `<p class="empty">An error occurred: ${esc(err.message)}</p><a class="back" href="#/"><svg width="14" height="14" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M19 12H5m0 0l7 7m-7-7l7-7"/></svg><span>Field notes</span></a>`; }
+  }catch(err){
+    view.innerHTML = `<p class="empty">An error occurred: ${esc(err.message)}</p>
+      <a class="back" href="#/">← Field notes</a>`;
+  }
   window.scrollTo(0, 0);
 }
+
 addEventListener('hashchange', route);
 
 (async function(){
-  document.title = CONFIG.title; view.innerHTML = '<div class="loading">Stacking stones…</div>';
-  let posts = null; try{ posts = await fetchPosts(); } catch(_){ posts = collectSamples(); }
+  document.title = CONFIG.title;
+  view.innerHTML = '<div class="loading">Stacking stones…</div>';
+  let posts = null;
+  try { posts = await fetchPosts(); }
+  catch (_) { posts = collectSamples(); }
   POSTS = posts.filter(p => !p.draft).sort((a,b) => b.dateMs - a.dateMs);
   route();
 })();
