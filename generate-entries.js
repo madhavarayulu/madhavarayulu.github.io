@@ -199,6 +199,25 @@ function main() {
   );
   console.log('✓ Generated posts.json for instant loading');
   console.log(`\nDone. Generated ${made} entry pages.`);
+
+    // sitemap.xml for search engines
+  const SITE = 'https://madhavarayulu.github.io';
+  const urls = [
+    { loc: SITE + '/', lastmod: parsed[0] && parsed[0].dateMs ? new Date(parsed[0].dateMs).toISOString().slice(0,10) : '' },
+    ...parsed.map(p => ({
+      loc: `${SITE}/entry/${p.slug}/`,
+      lastmod: p.dateMs ? new Date(p.dateMs).toISOString().slice(0,10) : ''
+    }))
+  ];
+  const sitemap = '<?xml version="1.0" encoding="UTF-8"?>\n'
+    + '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n'
+    + urls.map(u => '  <url><loc>' + u.loc + '</loc>'
+        + (u.lastmod ? '<lastmod>' + u.lastmod + '</lastmod>' : '')
+        + '</url>').join('\n')
+    + '\n</urlset>\n';
+  fs.writeFileSync(path.join(__dirname, 'sitemap.xml'), sitemap);
+  console.log('✓ Generated sitemap.xml');
+  
 }
 
 main();
