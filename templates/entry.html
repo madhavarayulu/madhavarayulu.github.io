@@ -1,300 +1,698 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>{{TITLE}} · Cairn</title>
-<link rel="icon" type="image/png" href="/favicon.png" sizes="192x192">
-<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'%3E%3Crect width='512' height='512' rx='100' fill='%230f0f0f'/%3E%3Cellipse cx='256' cy='452' rx='142' ry='11' fill='%231a1815' opacity='.5'/%3E%3Cellipse cx='250' cy='398' rx='118' ry='44' fill='%232E2A24'/%3E%3Cellipse cx='258' cy='324' rx='94' ry='37' fill='%23403A31'/%3E%3Cellipse cx='248' cy='258' rx='72' ry='30' fill='%23524A3E'/%3E%3Cellipse cx='256' cy='200' rx='52' ry='23' fill='%23645A4B'/%3E%3Cellipse cx='256' cy='160' rx='36' ry='16' fill='%23C1502E'/%3E%3C/svg%3E">
-<meta name="description" content="{{EXCERPT}}">
-<meta name="theme-color" content="#0f0f0f">
-<meta property="og:type" content="article">
-<meta property="og:title" content="{{TITLE}}">
-<meta property="og:description" content="{{EXCERPT}}">
-<meta property="og:url" content="https://madhavarayulu.github.io/entry/{{SLUG}}/">
-<meta property="og:site_name" content="Cairn">
-<meta property="og:image" content="https://madhavarayulu.github.io/cairn-card-wide-v2.png">
-<meta property="og:image:width" content="1200">
-<meta property="og:image:height" content="628">
-<meta property="og:image:type" content="image/png">
-<meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="{{TITLE}}">
-<meta name="twitter:description" content="{{EXCERPT}}">
-<meta name="twitter:image" content="https://madhavarayulu.github.io/cairn-card-wide-v2.png">
-<style>
-  :root {
-    --bg: #0f0f0f;
-    --text: #f0eee6;
-    --text2: #a8a59c;
-    --muted: #6b6860;
-    --border: #2a2a2a;
-    --accent: #C1502E;
-    --elev: #181818;
-  }
-  * { margin: 0; padding: 0; box-sizing: border-box; }
-  body {
-    background: var(--bg);
-    color: var(--text);
-    font-family: system-ui, -apple-system, sans-serif;
-    font-size: 16px;
-    line-height: 1.6;
-    -webkit-font-smoothing: antialiased;
-  }
-  a { color: inherit; text-decoration: none; }
-  .wrap {
-    max-width: 680px;
-    margin: 0 auto;
-    padding: 40px 20px 0;
-  }
-  #progress-bar {
-    position: fixed;
-    top: 0; left: 0;
-    height: 2px;
-    background: var(--accent);
-    width: 0%;
-    z-index: 100;
-    transition: width 0.1s linear;
-  }
-  .back {
-    display: inline-flex;
-    align-items: center;
-    gap: 8px;
-    font-size: 11px;
-    letter-spacing: 0.15em;
-    text-transform: uppercase;
-    color: var(--muted);
-    margin-bottom: 30px;
-    transition: color 0.15s;
-  }
-  .back:hover { color: var(--accent); }
-  .meta {
-    font-size: 13px;
-    color: var(--text2);
-    margin-bottom: 14px;
-  }
-  .art-title {
-    font-size: clamp(28px, 5.4vw, 42px);
-    font-weight: 600;
-    line-height: 1.15;
-    letter-spacing: -0.03em;
-    margin-bottom: 28px;
-  }
-  .prose {
-    font-size: 17px;
-    line-height: 1.75;
-    /* max-width: 62ch; */
-  }
-  .prose p { margin-bottom: 1.25em; }
-  .prose h2 { font-size: 1.3em; margin: 1.8em 0 0.6em; font-weight: 600; }
-  .prose h3 { font-size: 1.15em; margin: 1.6em 0 0.5em; font-weight: 600; }
-  .prose a { color: var(--accent); text-decoration: underline; text-underline-offset: 3px; }
-  .prose blockquote {
-    border-left: 2px solid var(--accent);
-    padding-left: 1.2em;
-    margin: 1.5em 0;
-    color: var(--text2);
-    font-style: italic;
-  }
-  .prose ul, .prose ol { margin: 0 0 1.25em; padding-left: 1.4em; }
-  .prose li { margin: 0.4em 0; }
-  .prose code {
-    font-family: ui-monospace, monospace;
-    font-size: 0.88em;
-    background: var(--elev);
-    padding: 2px 6px;
-    border-radius: 4px;
-  }
-  .prose pre {
-    background: #1a1a1a;
-    padding: 16px 18px;
-    border-radius: 8px;
-    overflow-x: auto;
-    margin: 0 0 1.3em;
-    border: 1px solid var(--border);
-  }
-  .prose pre code { background: none; padding: 0; }
-  .prose img {
-    max-width: 100%;
-    height: auto;
-    display: block;
-    border-radius: 8px;
-    margin: 2em 0;
-    border: 1px solid var(--border);
-  }
-  .prose hr {
-    border: none;
-    border-top: 1px dashed var(--border);
-    margin: 2.2em 0;
-  }
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{{TITLE}} · Cairn</title>
+    <link rel="icon" type="image/png" href="/favicon.png" sizes="192x192" />
+    <link
+      rel="icon"
+      type="image/svg+xml"
+      href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'%3E%3Crect width='512' height='512' rx='100' fill='%230f0f0f'/%3E%3Cellipse cx='256' cy='452' rx='142' ry='11' fill='%231a1815' opacity='.5'/%3E%3Cellipse cx='250' cy='398' rx='118' ry='44' fill='%232E2A24'/%3E%3Cellipse cx='258' cy='324' rx='94' ry='37' fill='%23403A31'/%3E%3Cellipse cx='248' cy='258' rx='72' ry='30' fill='%23524A3E'/%3E%3Cellipse cx='256' cy='200' rx='52' ry='23' fill='%23645A4B'/%3E%3Cellipse cx='256' cy='160' rx='36' ry='16' fill='%23C1502E'/%3E%3C/svg%3E"
+    />
+    <meta name="description" content="{{EXCERPT}}" />
+    <meta name="theme-color" content="#141110" />
+    <meta property="og:type" content="article" />
+    <meta property="og:title" content="{{TITLE}}" />
+    <meta property="og:description" content="{{EXCERPT}}" />
+    <meta property="og:url" content="https://madhavarayulu.github.io/entry/{{SLUG}}/" />
+    <meta property="og:site_name" content="Cairn" />
+    <meta property="og:image" content="https://madhavarayulu.github.io/cairn-card-wide-v2.png" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="628" />
+    <meta property="og:image:type" content="image/png" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="{{TITLE}}" />
+    <meta name="twitter:description" content="{{EXCERPT}}" />
+    <meta name="twitter:image" content="https://madhavarayulu.github.io/cairn-card-wide-v2.png" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400..700;1,9..144,400..700&family=Newsreader:ital,opsz,wght@0,6..72,400..600;1,6..72,400..600&family=Spline+Sans+Mono:wght@400;500&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      :root {
+        --bg: #141110;
+        --elev: #1c1815;
+        --elev2: #241f19;
+        --line: #2b261f;
+        --line2: #3e362b;
+        --text: #f0eadd;
+        --text2: #a89e8f;
+        --muted: #71685a;
+        --accent: #c1502e;
+        --accent-hi: #da6437;
+        --disp: "Fraunces", Georgia, serif;
+        --serif: "Newsreader", Georgia, "Times New Roman", serif;
+        --mono: "Spline Sans Mono", ui-monospace, "SF Mono", Menlo, monospace;
+      }
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+      body {
+        background: var(--bg);
+        color: var(--text);
+        font: 400 16px/1.65 var(--serif);
+        -webkit-font-smoothing: antialiased;
+        text-rendering: optimizeLegibility;
+      }
+      body::before {
+        content: "";
+        position: fixed;
+        inset: 0;
+        z-index: 0;
+        pointer-events: none;
+        background: radial-gradient(1000px 520px at 50% -160px, rgba(193, 80, 46, 0.055), transparent 70%);
+      }
+      .grain {
+        position: fixed;
+        inset: 0;
+        z-index: 70;
+        pointer-events: none;
+        opacity: 0.05;
+        background-image: url("data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20width='180'%20height='180'%3E%3Cfilter%20id='g'%3E%3CfeTurbulence%20type='fractalNoise'%20baseFrequency='0.75'%20numOctaves='2'%20stitchTiles='stitch'/%3E%3CfeColorMatrix%20values='0%200%200%200%201%200%200%200%200%201%200%200%200%200%201%200.3%200.3%200.3%200%200'/%3E%3C/filter%3E%3Crect%20width='180'%20height='180'%20filter='url(%23g)'/%3E%3C/svg%3E");
+      }
+      ::selection {
+        background: var(--accent);
+        color: #fff4ea;
+      }
+      :focus-visible {
+        outline: 2px solid var(--accent);
+        outline-offset: 2px;
+        border-radius: 2px;
+      }
+      a {
+        color: inherit;
+        text-decoration: none;
+      }
+      button {
+        font-family: inherit;
+        color: inherit;
+      }
 
-  /* Unified article footer */
-  .article-footer {
-    margin-top: 48px;
-    /* max-width: 62ch; */
-  }
-  .share-row {
-    display: flex;
-    flex-wrap: wrap;
-    align-items: center;
-    gap: 10px;
-    padding-bottom: 28px;
-    border-bottom: 1px solid var(--border);
-  }
-  .share-label {
-    font-size: 12px;
-    color: var(--muted);
-    font-weight: 500;
-  }
-  .share-btn {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    height: 34px;
-    padding: 0 14px;
-    font-size: 13px;
-    font-weight: 500;
-    border: 1px solid var(--border);
-    border-radius: 999px;
-    background: transparent;
-    color: var(--text2);
-    cursor: pointer;
-    font-family: inherit;
-    line-height: 1;
-    transition: all 0.15s;
-  }
-  .share-btn:hover {
-    border-color: var(--text);
-    color: var(--text);
-  }
+      #progress-bar {
+        position: fixed;
+        top: 0;
+        left: 0;
+        height: 2px;
+        width: 0;
+        background: var(--accent);
+        z-index: 95;
+        transition: width 0.1s linear;
+      }
+      #progress-bar::after {
+        content: "";
+        position: absolute;
+        right: -2px;
+        top: -2.5px;
+        width: 7px;
+        height: 7px;
+        border-radius: 50%;
+        background: var(--accent-hi);
+        box-shadow: 0 0 0 3px rgba(193, 80, 46, 0.15);
+        opacity: 0;
+        transition: opacity 0.25s;
+      }
+      #progress-bar.on::after {
+        opacity: 1;
+      }
 
-  .nav-row {
-    display: flex;
-    justify-content: space-between;
-    align-items: flex-start;
-    gap: 24px;
-    padding-top: 28px;
-  }
-  .nav-link {
-    display: flex;
-    flex-direction: column;
-    gap: 6px;
-    max-width: 45%;
-    text-decoration: none;
-  }
-  .nav-link.next {
-    align-items: flex-end;
-    text-align: right;
-    margin-left: auto;
-  }
-  .nav-label {
-    font-size: 11px;
-    letter-spacing: 0.15em;
-    text-transform: uppercase;
-    color: var(--muted);
-  }
-  .nav-title {
-    font-size: 15px;
-    font-weight: 500;
-    color: var(--text);
-    line-height: 1.4;
-    transition: color 0.15s;
-  }
-  .nav-link:hover .nav-title { color: var(--accent); }
+      header {
+        position: sticky;
+        top: 0;
+        z-index: 50;
+        background: rgba(20, 17, 16, 0.86);
+        backdrop-filter: blur(12px);
+        -webkit-backdrop-filter: blur(12px);
+        border-bottom: 1px solid transparent;
+        transition: border-color 0.25s;
+      }
+      header.scrolled {
+        border-bottom-color: var(--line);
+      }
+      .header-inner {
+        max-width: 960px;
+        margin: 0 auto;
+        padding: 0 24px;
+        height: 60px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+      }
+      .logo {
+        font: 600 21px/1 var(--disp);
+        font-optical-sizing: auto;
+        letter-spacing: -0.02em;
+      }
+      .logo span {
+        color: var(--accent);
+      }
+      header nav {
+        display: flex;
+      }
+      header nav a {
+        font: 500 11.5px/1 var(--mono);
+        letter-spacing: 0.16em;
+        text-transform: uppercase;
+        color: var(--text2);
+        margin-left: 26px;
+        padding: 6px 0;
+        transition: color 0.15s;
+      }
+      header nav a:hover {
+        color: var(--text);
+      }
 
-  footer {
-    margin-top: 64px;
-    border-top: 1px solid var(--border);
-    padding: 24px 20px 36px;
-    font-size: 12px;
-    color: var(--muted);
-    text-align: center;
-  }
+      main {
+        position: relative;
+        z-index: 1;
+      }
+      .wrap {
+        max-width: 960px;
+        margin: 0 auto;
+        padding: 0 24px;
+      }
+      .page-grid {
+        display: grid;
+        grid-template-columns: minmax(0, 640px) 240px;
+        column-gap: 32px;
+      }
+      .main-col {
+        grid-column: 1;
+        min-width: 0;
+      }
+      .margin-col {
+        grid-column: 2;
+        min-width: 0;
+      }
+      .m-sticky {
+        position: sticky;
+        top: 92px;
+      }
+      .m-label {
+        font: 500 10.5px/1 var(--mono);
+        letter-spacing: 0.22em;
+        text-transform: uppercase;
+        color: var(--muted);
+        margin-bottom: 14px;
+      }
+      .only-mobile {
+        display: none;
+      }
+      .art-margin {
+        padding-top: 80px;
+      }
 
-  @media (max-width: 560px) {
-    .nav-row { flex-direction: column; gap: 20px; }
-    .nav-link, .nav-link.next {
-      max-width: 100%;
-      align-items: flex-start;
-      text-align: left;
-      margin-left: 0;
-    }
-  }
-</style>
-</head>
-<body>
-  <div id="progress-bar"></div>
+      .meta-line {
+        display: flex;
+        align-items: center;
+        flex-wrap: wrap;
+        gap: 9px;
+        font: 400 12px/1.5 var(--mono);
+        color: var(--text2);
+        letter-spacing: 0.03em;
+      }
+      .meta-line .mdot {
+        color: var(--muted);
+      }
+      .vfy {
+        color: var(--accent);
+      }
 
-  <div class="wrap">
-    <a class="back" href="/">← Field notes</a>
-    <div class="meta">{{DATE}}</div>
-    <h1 class="art-title">{{TITLE}}</h1>
+      .m-note {
+        border-left: 1px solid var(--line2);
+        padding-left: 18px;
+        display: flex;
+        flex-direction: column;
+        gap: 13px;
+      }
+      .nrow {
+        display: grid;
+        grid-template-columns: 56px minmax(0, 1fr);
+        gap: 10px;
+        align-items: baseline;
+      }
+      .nk {
+        font: 500 10px/1.4 var(--mono);
+        letter-spacing: 0.18em;
+        text-transform: uppercase;
+        color: var(--muted);
+      }
+      .nv {
+        font: 400 12.5px/1.55 var(--mono);
+        color: var(--text2);
+        overflow-wrap: break-word;
+      }
+      .m-share {
+        margin-top: 32px;
+        display: flex;
+        flex-direction: column;
+      }
+      .m-share .share-btn {
+        width: 100%;
+        justify-content: flex-start;
+      }
 
-    <div class="prose">
-      {{BODY_HTML}}
-    </div>
+      .back {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        margin-top: 40px;
+        font: 500 11px/1 var(--mono);
+        letter-spacing: 0.2em;
+        text-transform: uppercase;
+        color: var(--muted);
+        transition: color 0.2s;
+      }
+      .back:hover {
+        color: var(--accent-hi);
+      }
+      .mm-slot {
+        margin-top: 26px;
+        margin-bottom: 16px;
+      }
+      .mshare-slot {
+        margin-top: 40px;
+      }
+      .art-title {
+        font: 600 clamp(31px, 5.4vw, 46px) / 1.12 var(--disp);
+        font-optical-sizing: auto;
+        letter-spacing: -0.02em;
+        margin-top: 14px;
+        text-wrap: balance;
+      }
+      .prose {
+        margin-top: 36px;
+        font-size: 17.5px;
+        line-height: 1.8;
+      }
+      .prose p {
+        margin: 0 0 1.3em;
+      }
+      .entry-prose > p:first-child::first-letter {
+        font-family: var(--disp);
+        font-weight: 600;
+        font-size: 3.4em;
+        line-height: 0.8;
+        float: left;
+        padding: 0.06em 0.14em 0 0;
+        color: var(--accent);
+      }
+      .prose h2,
+      .prose h3 {
+        font-family: var(--disp);
+        font-optical-sizing: auto;
+        font-weight: 600;
+        letter-spacing: -0.01em;
+        line-height: 1.3;
+      }
+      .prose h2 {
+        font-size: 1.42em;
+        margin: 2em 0 0.7em;
+      }
+      .prose h2::before {
+        content: "";
+        display: block;
+        width: 24px;
+        height: 2px;
+        background: var(--accent);
+        opacity: 0.9;
+        margin-bottom: 0.6em;
+      }
+      .prose h3 {
+        font-size: 1.18em;
+        margin: 1.7em 0 0.55em;
+      }
+      .prose a {
+        color: var(--accent-hi);
+        text-decoration: underline;
+        text-underline-offset: 3px;
+        text-decoration-thickness: 1px;
+        transition: color 0.15s;
+      }
+      .prose a:hover {
+        color: var(--text);
+      }
+      .prose blockquote {
+        margin: 1.7em 0;
+        padding: 0.15em 0 0.15em 1.4em;
+        border-left: 2px solid var(--accent);
+        color: var(--text2);
+        font-style: italic;
+        font-size: 1.05em;
+      }
+      .prose ul,
+      .prose ol {
+        margin: 0 0 1.3em;
+        padding-left: 1.5em;
+      }
+      .prose li {
+        margin: 0.45em 0;
+      }
+      .prose li::marker {
+        color: var(--accent);
+      }
+      .prose code {
+        font-family: var(--mono);
+        font-size: 0.82em;
+        background: var(--elev2);
+        padding: 3px 7px;
+        border-radius: 6px;
+      }
+      .prose pre {
+        background: var(--elev);
+        border: 1px solid var(--line);
+        border-radius: 12px;
+        padding: 18px 20px;
+        overflow-x: auto;
+        margin: 0 0 1.4em;
+        line-height: 1.6;
+      }
+      .prose pre code {
+        background: none;
+        padding: 0;
+        font-size: 0.85em;
+      }
+      .prose img {
+        max-width: 100%;
+        height: auto;
+        display: block;
+        border-radius: 12px;
+        border: 1px solid var(--line);
+        margin: 2.2em 0;
+      }
+      .prose hr {
+        border: none;
+        border-top: 1px dashed var(--line2);
+        margin: 2.4em 0;
+      }
+      .prose table {
+        border-collapse: collapse;
+        margin: 1.6em 0;
+        width: 100%;
+        font-size: 0.95em;
+      }
+      .prose th,
+      .prose td {
+        border: 1px solid var(--line);
+        padding: 8px 12px;
+        text-align: left;
+      }
+      .prose th {
+        font-family: var(--mono);
+        font-size: 0.78em;
+        letter-spacing: 0.06em;
+        text-transform: uppercase;
+        color: var(--text2);
+        background: var(--elev);
+      }
 
-    <div class="article-footer">
-      <div class="share-row">
-        <span class="share-label">Share</span>
-        <button class="share-btn" id="copy-link" data-url="https://madhavarayulu.github.io/entry/{{SLUG}}/">Copy link</button>
-        <button class="share-btn" id="native-share" data-url="https://madhavarayulu.github.io/entry/{{SLUG}}/" data-title="{{TITLE}}">Share</button>
+      .share-row {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        gap: 10px;
+        padding-bottom: 26px;
+        border-bottom: 1px solid var(--line);
+      }
+      .share-btn {
+        display: inline-flex;
+        align-items: center;
+        height: 34px;
+        padding: 0 16px;
+        font: 500 12px/1 var(--mono);
+        letter-spacing: 0.05em;
+        border: 1px solid var(--line2);
+        border-radius: 999px;
+        background: none;
+        color: var(--text2);
+        cursor: pointer;
+        transition:
+          border-color 0.18s,
+          color 0.18s;
+      }
+      .share-btn:hover {
+        border-color: var(--text2);
+        color: var(--text);
+      }
+      .nav-row {
+        display: flex;
+        justify-content: space-between;
+        gap: 24px;
+        padding-top: 26px;
+      }
+      .nav-link {
+        display: flex;
+        flex-direction: column;
+        gap: 7px;
+        max-width: 46%;
+      }
+      .nav-link.next {
+        align-items: flex-end;
+        text-align: right;
+        margin-left: auto;
+      }
+      .nav-label {
+        font: 500 10.5px/1 var(--mono);
+        letter-spacing: 0.2em;
+        text-transform: uppercase;
+        color: var(--muted);
+      }
+      .nav-title {
+        font: 500 16.5px/1.4 var(--disp);
+        font-optical-sizing: auto;
+        transition: color 0.18s;
+      }
+      .nav-link:hover .nav-title {
+        color: var(--accent-hi);
+      }
+
+      footer {
+        position: relative;
+        z-index: 1;
+        border-top: 1px solid var(--line);
+        margin-top: 80px;
+      }
+      .footer-inner {
+        max-width: 960px;
+        margin: 0 auto;
+        padding: 26px 24px 42px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 10px;
+        flex-wrap: wrap;
+      }
+      .footer-name {
+        display: inline-flex;
+        align-items: center;
+        gap: 9px;
+        font: 500 12px/1 var(--mono);
+        letter-spacing: 0.08em;
+        color: var(--text2);
+      }
+      .footer-name svg {
+        display: block;
+      }
+      .footer-tag {
+        font: 400 11px/1.6 var(--mono);
+        color: var(--muted);
+        letter-spacing: 0.06em;
+      }
+
+      @media (max-width: 880px) {
+        .page-grid {
+          display: flex;
+          flex-direction: column;
+        }
+        .only-desktop {
+          display: none !important;
+        }
+        .only-mobile {
+          display: block;
+        }
+        header nav a {
+          margin-left: 16px;
+        }
+        .nav-row {
+          flex-direction: column;
+          gap: 18px;
+        }
+        .nav-link,
+        .nav-link.next {
+          max-width: 100%;
+          align-items: flex-start;
+          text-align: left;
+          margin-left: 0;
+        }
+        .footer-inner {
+          flex-direction: column;
+          text-align: center;
+        }
+      }
+      @media (prefers-reduced-motion: reduce) {
+        *,
+        *::before,
+        *::after {
+          animation: none !important;
+          transition: none !important;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div id="progress-bar"></div>
+    <div class="grain" aria-hidden="true"></div>
+
+    <header id="header">
+      <div class="header-inner">
+        <a href="/" class="logo">Cairn<span>.</span></a>
+        <nav>
+          <a href="/#/archive">The Pile</a>
+          <a href="/#/trailhead">Trailhead</a>
+        </nav>
       </div>
+    </header>
 
-      <nav class="nav-row">
-        {{NAV}}
-      </nav>
-    </div>
-  </div>
+    <main>
+      <div class="wrap">
+        <div class="page-grid">
+          <div class="main-col">
+            <a class="back" href="/">← Field notes</a>
 
-  <footer>Madhava Rayulu</footer>
+            <div class="only-mobile mm-slot">
+              <div class="meta-line">
+                <span>{{DATE}}</span>
+                <span class="mdot">·</span>
+                <span data-rt>—</span>
+              </div>
+            </div>
 
-  <script>
-    window.addEventListener('scroll', () => {
-      const winScroll = document.body.scrollTop || document.documentElement.scrollTop;
-      const height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
-      const el = document.getElementById('progress-bar');
-      if (el && height > 0) el.style.width = ((winScroll / height) * 100) + '%';
-    }, { passive: true });
+            <h1 class="art-title">{{TITLE}}</h1>
 
-    document.getElementById('copy-link').addEventListener('click', async function () {
-      const url = this.dataset.url;
-      try { await navigator.clipboard.writeText(url); }
-      catch (_) {
-        const ta = document.createElement('textarea');
-        ta.value = url; document.body.appendChild(ta); ta.select();
-        document.execCommand('copy'); ta.remove();
-      }
-      const original = this.textContent;
-      this.textContent = '✓ Copied';
-      setTimeout(() => { this.textContent = original; }, 2000);
-    });
+            <div class="prose entry-prose">{{BODY_HTML}}</div>
 
-    const shareBtn = document.getElementById('native-share');
-    if (shareBtn) {
-      if (navigator.share) {
-        shareBtn.addEventListener('click', async () => {
-          try {
-            await navigator.share({
-              title: shareBtn.dataset.title,
-              url: shareBtn.dataset.url
-            });
-          } catch (_) {}
+            <div class="only-mobile mshare-slot">
+              <div class="share-row">
+                <button
+                  class="share-btn js-share"
+                  data-url="https://madhavarayulu.github.io/entry/{{SLUG}}/"
+                  data-title="{{TITLE}}"
+                >
+                  Copy link
+                </button>
+              </div>
+            </div>
+
+            <nav class="nav-row">{{NAV}}</nav>
+          </div>
+
+          <aside class="margin-col only-desktop art-margin">
+            <div class="m-sticky">
+              <div class="m-note">
+                <div class="m-label">Field note</div>
+                <div class="nrow"><span class="nk">Date</span><span class="nv">{{DATE}}</span></div>
+                <div class="nrow">
+                  <span class="nk">Read</span><span class="nv"><span data-rt>—</span></span>
+                </div>
+              </div>
+              <div class="m-share">
+                <button
+                  class="share-btn js-share"
+                  data-url="https://madhavarayulu.github.io/entry/{{SLUG}}/"
+                  data-title="{{TITLE}}"
+                >
+                  Copy link
+                </button>
+              </div>
+            </div>
+          </aside>
+        </div>
+      </div>
+    </main>
+
+    <footer>
+      <div class="footer-inner">
+        <span class="footer-name">
+          <svg viewBox="0 0 24 24" width="15" height="15" aria-hidden="true">
+            <ellipse cx="12" cy="17.3" rx="8.4" ry="2.4" fill="#403A31" />
+            <ellipse cx="12.4" cy="12.9" rx="5.8" ry="2.1" fill="#524A3E" />
+            <ellipse cx="11.8" cy="9.1" rx="3.9" ry="1.8" fill="#645A4B" />
+            <ellipse cx="12.2" cy="5.7" rx="2.6" ry="1.4" fill="#C1502E" />
+          </svg>
+          Madhava Rayulu
+        </span>
+        <span class="footer-tag">field notes, stacked one stone at a time</span>
+      </div>
+    </footer>
+
+    <script>
+      (function () {
+        var header = document.getElementById("header");
+        var pb = document.getElementById("progress-bar");
+        window.addEventListener(
+          "scroll",
+          function () {
+            header.classList.toggle("scrolled", window.scrollY > 8);
+            var winScroll = document.body.scrollTop || document.documentElement.scrollTop;
+            var h = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+            var p = h > 0 ? (winScroll / h) * 100 : 0;
+            pb.style.width = p + "%";
+            pb.classList.toggle("on", p > 0.5);
+          },
+          { passive: true }
+        );
+
+        /* reading time, injected into both the margin note and the mobile meta line */
+        var prose = document.querySelector(".prose");
+        if (prose) {
+          var w = (prose.textContent || "").trim().split(/\s+/).filter(Boolean).length;
+          var mins = Math.max(1, Math.round(w / 220)) + " min read";
+          document.querySelectorAll("[data-rt]").forEach(function (el) {
+            el.textContent = mins;
+          });
+        }
+
+        /* one adaptive share pill:
+     touch devices  → native share sheet (label: "Share")
+     mouse/trackpad → clipboard copy      (label: "Copy link") */
+        var CAN_SHARE = typeof navigator.share === "function" && matchMedia("(pointer: coarse)").matches;
+        if (CAN_SHARE) {
+          document.querySelectorAll(".js-share").forEach(function (b) {
+            b.textContent = "Share";
+          });
+        }
+        document.querySelectorAll(".js-share").forEach(function (btn) {
+          btn.addEventListener("click", async function () {
+            var url = this.dataset.url;
+            if (CAN_SHARE) {
+              try {
+                await navigator.share({ title: this.dataset.title || document.title, url: url });
+              } catch (_) {}
+              return;
+            }
+            try {
+              await navigator.clipboard.writeText(url);
+            } catch (_) {
+              var ta = document.createElement("textarea");
+              ta.value = url;
+              document.body.appendChild(ta);
+              ta.select();
+              document.execCommand("copy");
+              ta.remove();
+            }
+            var original = this.textContent,
+              b = this;
+            b.textContent = "✓ Copied";
+            setTimeout(function () {
+              b.textContent = original;
+            }, 2000);
+          });
         });
-      } else {
-        shareBtn.addEventListener('click', async () => {
-          const url = shareBtn.dataset.url;
-          try { await navigator.clipboard.writeText(url); }
-          catch (_) {
-            const ta = document.createElement('textarea');
-            ta.value = url; document.body.appendChild(ta); ta.select();
-            document.execCommand('copy'); ta.remove();
-          }
-          const original = shareBtn.textContent;
-          shareBtn.textContent = '✓ Copied';
-          setTimeout(() => { shareBtn.textContent = original; }, 2000);
-        });
-      }
-    }
-  </script>
-</body>
+      })();
+    </script>
+  </body>
 </html>
