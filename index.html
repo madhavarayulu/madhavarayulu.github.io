@@ -1615,7 +1615,7 @@
           return;
         }
         const rest = POSTS.slice(1, 8);
-        const list = rest.map((p, i) => itemHTML(p, i + 2)).join("");
+        const list = rest.map((p, i) => itemHTML(p, POSTS.length - i - 1)).join('');
         const oldest = POSTS[POSTS.length - 1];
         const capDef =
           POSTS.length + (POSTS.length === 1 ? " stone" : " stones") + " · stacked since " + yr(oldest.date);
@@ -1702,9 +1702,7 @@
               years[y].length +
               (years[y].length === 1 ? " stone" : " stones") +
               "</span></div>";
-            years[y].forEach((p) => {
-              list += itemHTML(p, POSTS.indexOf(p) + 1);
-            });
+            years[y].forEach(p => { list += itemHTML(p, POSTS.length - POSTS.indexOf(p)); });
           });
         }
 
@@ -1850,9 +1848,7 @@
           '<div class="nrow"><span class="nk">Read</span><span class="nv">' +
           rt(p.body) +
           "</span></div>" +
-          '<div class="nrow"><span class="nk">Stone</span><span class="nv">#' +
-          String(i + 1).padStart(2, "0") +
-          " in the pile</span></div>" +
+          + '<div class="nrow"><span class="nk">Stone</span><span class="nv">#' + String(POSTS.length - i).padStart(2, '0') + ' in the pile</span></div>' +
           (p.verified
             ? '<div class="nrow"><span class="nk">Status</span><span class="nv vfy">● Verified on ' +
               esc(p.verified) +
