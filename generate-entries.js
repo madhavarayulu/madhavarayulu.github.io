@@ -2,11 +2,20 @@
 /**
  * generate-entries.js
  * Single-source-of-truth static generator for Cairn.
- * Automatically builds static entries, archive/about routes, posts.json, sitemap.xml, rss.xml, and unique article SVG preview cards.
+ * Builds static entries, archive/about routes, posts.json, sitemap.xml, rss.xml,
+ * 404 fallback, and unique per-post preview cards (SVG stencil + PNG for scrapers).
  */
 const fs = require("fs");
 const path = require("path");
 const { marked } = require("marked");
+
+/* resvg is optional at dev time; the workflow installs it for CI */
+let Resvg = null;
+try {
+  ({ Resvg } = require("@resvg/resvg-js"));
+} catch (_) {
+  console.log("- @resvg/resvg-js not installed — card.png will be skipped (npm i @resvg/resvg-js)");
+}
 
 const SITE = "https://madhavarayulu.github.io";
 const POSTS_DIR = path.join(__dirname, "posts");
@@ -19,6 +28,22 @@ const escHtml = (s) =>
     /[&<>"']/g,
     (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[c]
   );
+
+/* Font setup for the PNG rasterizer: fonts/ dir if present, else system fonts */
+function cardFontConfig() {
+  const fontsDir = path.join(__dirname, "fonts");
+  if (fs.existsSync(fontsDir)) {
+    const files = fs
+      .readdirSync(fontsDir)
+      .filter((f) => /\.(ttf|otf)$/i.test(f))
+      .map((f) => path.join(fontsDir, f));
+    if (files.length) {
+      return { loadSystemFonts: false, fontFiles: files, defaultFontFamily: "Fraunces" };
+    }
+  }
+  console.log("- No fonts/ TTFs found — card.png will render with runner system fonts");
+  return { loadSystemFonts: true };
+}
 
 function parseFrontMatter(raw) {
   raw = String(raw).replace(/^\uFEFF/, "").replace(/^\s+/, "");
@@ -127,6 +152,8 @@ function main() {
     cardTemplate = fs.readFileSync(CARD_TEMPLATE_PATH, "utf8");
   }
 
+  const CARD_FONTS = cardFontConfig();
+
   const files = fs.readdirSync(POSTS_DIR).filter((f) => f.endsWith(".md"));
   const parsed = [];
 
@@ -172,7 +199,10 @@ function main() {
     const older = parsed[index + 1];
     const bodyHtml = marked.parse(p.body);
     const url = `${SITE}/entry/${p.slug}/`;
-    const cardImgUrl = cardTemplate ? `${SITE}/entry/${p.slug}/card.svg` : `${SITE}/cairn-card-wide.png`;
+    const cardImgUrl =
+      cardTemplate && Resvg
+        ? `${SITE}/entry/${p.slug}/card.png`
+        : `${SITE}/cairn-card-wide.png`;
     const isoDate = p.dateMs ? new Date(p.dateMs).toISOString() : "";
 
     const jsonLd = JSON.stringify({
@@ -181,6 +211,7 @@ function main() {
       headline: p.title,
       description: p.excerpt,
       datePublished: isoDate,
+      dateModified: isoDate,
       author: { "@type": "Person", name: "Madhava Rayulu", url: SITE },
       publisher: { "@type": "Organization", name: "Cairn" },
       mainEntityOfPage: url,
@@ -193,6 +224,8 @@ function main() {
     <meta property="og:description" content="${escHtml(p.excerpt)}" />
     <meta property="og:url" content="${url}" />
     <meta property="og:image" content="${cardImgUrl}" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="628" />
     <link rel="canonical" href="${url}" />
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:title" content="${escHtml(p.title)}" />
@@ -203,7 +236,7 @@ function main() {
     const viewBlock = `
         <div class="page-grid">
           <div class="main-col">
-            <a class="back-chip" href="/" data-nav><span class="ms-icon">arrow_back</span> Field notes</a>
+            <a class="back-chip" href="/" data-nav><span class="ms-icon" aria-hidden="true">arrow_back</span> Field notes</a>
             <header class="art-header">
               <h1 class="art-title">${escHtml(p.title)}</h1>
               <div class="meta-line">
@@ -225,7 +258,7 @@ function main() {
     fs.mkdirSync(outDir, { recursive: true });
     fs.writeFileSync(path.join(outDir, "index.html"), injectPage(shell, seoBlock, viewBlock));
 
-    // Stamp the post title into the card stencil (replaces <!--TITLE_BLOCK-->)
+    // Stamp the post title into the card stencil, then rasterize to PNG for scrapers
     if (cardTemplate) {
       const lines = wrapCardTitle(p.title);
       const y0 = 352 - (lines.length - 1) * 31;
@@ -233,7 +266,17 @@ function main() {
         '<text x="110" y="' + y0 + '" class="title">' +
         lines.map((l, i) => `<tspan x="110"${i ? ' dy="62"' : ""}>${escHtml(l)}</tspan>`).join("") +
         "</text>";
-      fs.writeFileSync(path.join(outDir, "card.svg"), cardTemplate.replace("<!--TITLE_BLOCK-->", titleBlock));
+      const cardSvg = cardTemplate.replace("<!--TITLE_BLOCK-->", titleBlock);
+      fs.writeFileSync(path.join(outDir, "card.svg"), cardSvg);
+
+      if (Resvg) {
+        const resvg = new Resvg(cardSvg, {
+          fitTo: { mode: "width", value: 1200 },
+          background: "#12100e",
+          font: CARD_FONTS,
+        });
+        fs.writeFileSync(path.join(outDir, "card.png"), resvg.render().asPng());
+      }
     }
 
     console.log(`✓ Generated entry/${p.slug}/`);
@@ -281,21 +324,20 @@ function main() {
   fs.writeFileSync(path.join(__dirname, "sitemap.xml"), sitemap);
   console.log("✓ Generated sitemap.xml");
 
-  // At the end of main(), right after generating posts.json/sitemap:
   fs.writeFileSync(path.join(__dirname, "404.html"), shell);
   console.log("✓ Generated 404.html fallback for graceful routing");
 
   const rssItems = parsed
     .slice(0, 25)
-    .map(
-      (p) => `    <item>
+    .map((p) => {
+      const pub = p.dateMs ? `\n      <pubDate>${new Date(p.dateMs).toUTCString()}</pubDate>` : "";
+      return `    <item>
       <title>${escHtml(p.title)}</title>
       <link>${SITE}/entry/${p.slug}/</link>
-      <guid>${SITE}/entry/${p.slug}/</guid>
-      <pubDate>${p.dateMs ? new Date(p.dateMs).toUTCString() : ""}</pubDate>
+      <guid>${SITE}/entry/${p.slug}/</guid>${pub}
       <description>${escHtml(p.excerpt)}</description>
-    </item>`
-    )
+    </item>`;
+    })
     .join("\n");
 
   const rss = `<?xml version="1.0" encoding="UTF-8"?>
