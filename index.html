@@ -121,6 +121,24 @@
 
       html {
         scroll-behavior: smooth;
+        scrollbar-width: thin;
+        scrollbar-color: var(--md-sys-color-outline-variant) var(--md-sys-color-surface);
+      }
+
+      /* Global Slim Custom Scrollbar */
+      ::-webkit-scrollbar {
+        width: 6px;
+        height: 6px;
+      }
+      ::-webkit-scrollbar-track {
+        background: var(--md-sys-color-surface);
+      }
+      ::-webkit-scrollbar-thumb {
+        background: var(--md-sys-color-outline-variant);
+        border-radius: var(--radius-full);
+      }
+      ::-webkit-scrollbar-thumb:hover {
+        background: var(--md-sys-color-outline);
       }
 
       body {
@@ -251,7 +269,10 @@
         color: var(--md-sys-color-on-surface-variant);
         background: var(--md-sys-color-surface-container);
         border: 1px solid var(--md-sys-color-outline-variant);
-        padding: 5px 10px;
+        padding: 0 11px;
+        height: 36px;
+        display: inline-flex;
+        align-items: center;
         border-radius: var(--radius-full);
       }
 
@@ -268,6 +289,7 @@
         border: 1px solid var(--md-sys-color-outline-variant);
         border-radius: var(--radius-full);
         padding: 3px;
+        height: 36px;
       }
 
       .nav-pill {
@@ -275,7 +297,10 @@
         letter-spacing: 0.08em;
         text-transform: uppercase;
         color: var(--md-sys-color-on-surface-variant);
-        padding: 7px 14px;
+        padding: 0 14px;
+        height: 30px;
+        display: inline-flex;
+        align-items: center;
         border-radius: var(--radius-full);
         transition: all 0.2s var(--ease-m3);
       }
@@ -1210,6 +1235,31 @@
         max-height: 360px;
         overflow-y: auto;
         padding: 8px;
+        scrollbar-width: thin;
+        scrollbar-color: transparent transparent;
+        transition: scrollbar-color 0.2s;
+      }
+
+      .cmd-results:hover {
+        scrollbar-color: var(--md-sys-color-outline-variant) transparent;
+      }
+
+      .cmd-results::-webkit-scrollbar {
+        width: 3px;
+      }
+
+      .cmd-results::-webkit-scrollbar-track {
+        background: transparent;
+      }
+
+      .cmd-results::-webkit-scrollbar-thumb {
+        background: transparent;
+        border-radius: var(--radius-full);
+        transition: background 0.2s;
+      }
+
+      .cmd-results:hover::-webkit-scrollbar-thumb {
+        background: var(--md-sys-color-outline-variant);
       }
 
       .cmd-item {
@@ -1371,10 +1421,6 @@
           align-items: center;
           text-align: center;
           gap: 16px;
-        }
-        .footer-name {
-          flex-direction: column;
-          gap: 6px;
         }
         .footer-links {
           justify-content: center;
