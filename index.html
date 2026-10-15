@@ -1330,9 +1330,16 @@
       .footer-name {
         display: inline-flex;
         align-items: center;
-        gap: 10px;
+        gap: 12px;
         font: 500 12px/1 var(--font-mono);
         color: var(--md-sys-color-on-surface-variant);
+      }
+
+      .footer-desc {
+        font: 400 11.5px/1 var(--font-mono);
+        color: var(--md-sys-color-outline);
+        border-left: 1px solid var(--md-sys-color-outline-variant);
+        padding-left: 12px;
       }
 
       .footer-links {
@@ -1405,6 +1412,10 @@
           align-items: center;
           text-align: center;
           gap: 16px;
+        }
+        .footer-desc {
+          border-left: none;
+          padding-left: 0;
         }
         .footer-links {
           justify-content: center;
@@ -1479,6 +1490,7 @@
             </svg>
             Madhava Rayulu
           </span>
+          <span class="footer-desc">Oracle Fusion Finance Field Notes</span>
         </span>
         <div class="footer-links">
           <a href="/archive/" data-nav>Archive</a>
