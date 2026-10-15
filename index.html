@@ -21,7 +21,7 @@
     <meta name="twitter:title" content="Cairn — Oracle Fusion Finance Field Notes" />
     <meta name="twitter:description" content="Field notes from an Oracle Fusion Finance functional consultant." />
     <!--SEO_END-->
-    <meta name="theme-color" content="#131110" id="meta-theme-color" />
+    <meta name="theme-color" content="#12100e" id="meta-theme-color" />
     <link rel="icon" type="image/png" href="/favicon.png" sizes="192x192" />
     <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
     <link rel="icon" type="image/svg+xml" href="/cairn-favicon.svg" />
@@ -49,16 +49,12 @@
     <script>
       (function () {
         const saved = localStorage.getItem("cairn-theme");
-        const pref = saved || "dark";
-        document.documentElement.setAttribute("data-theme", pref);
+        document.documentElement.setAttribute("data-theme", saved || "dark");
       })();
     </script>
     <script src="https://cdn.jsdelivr.net/npm/marked@12.0.2/marked.min.js"></script>
 
     <style>
-      /* ==========================================================================
-         Material 3 Bespoke Editorial Tokens ("Warm Terracotta & Basalt")
-         ========================================================================== */
       :root,
       [data-theme="dark"] {
         --md-sys-color-surface: #12100e;
@@ -74,10 +70,9 @@
         --md-sys-color-primary: #e06d44;
         --md-sys-color-primary-hover: #f2825a;
         --md-sys-color-primary-container: rgba(224, 109, 68, 0.14);
-        --md-sys-color-on-primary-container: #ffdbce;
         --md-sys-color-secondary: #8ab49b;
         --md-sys-color-secondary-container: rgba(138, 180, 155, 0.14);
-        --md-sys-color-header-bg: rgba(18, 16, 14, 0.82);
+        --md-sys-color-header-bg: rgba(18, 16, 14, 0.84);
         --md-sys-color-scrim: rgba(6, 5, 4, 0.72);
         --md-sys-shadow-elev: 0 20px 50px rgba(0, 0, 0, 0.55), 0 2px 10px rgba(0, 0, 0, 0.3);
         --cairn-glow: rgba(224, 109, 68, 0.06);
@@ -97,10 +92,9 @@
         --md-sys-color-primary: #b9431b;
         --md-sys-color-primary-hover: #963310;
         --md-sys-color-primary-container: rgba(185, 67, 27, 0.11);
-        --md-sys-color-on-primary-container: #5c1903;
         --md-sys-color-secondary: #2e6b4e;
         --md-sys-color-secondary-container: rgba(46, 107, 78, 0.12);
-        --md-sys-color-header-bg: rgba(250, 246, 240, 0.85);
+        --md-sys-color-header-bg: rgba(250, 246, 240, 0.88);
         --md-sys-color-scrim: rgba(24, 20, 16, 0.45);
         --md-sys-shadow-elev: 0 20px 50px rgba(30, 24, 18, 0.14), 0 2px 10px rgba(30, 24, 18, 0.08);
         --cairn-glow: rgba(185, 67, 27, 0.045);
@@ -195,9 +189,6 @@
         user-select: none;
       }
 
-      /* ==========================================================================
-         Top Reading Progress Bar & App Bar
-         ========================================================================== */
       #progress-bar {
         position: fixed;
         top: 0;
@@ -243,11 +234,10 @@
 
       .logo {
         font: 600 22px/1 var(--font-display);
-        font-optical-sizing: auto;
         letter-spacing: -0.025em;
         display: inline-flex;
         align-items: center;
-        gap: 8px;
+        gap: 6px;
       }
 
       .logo-dot {
@@ -346,9 +336,6 @@
         background: var(--md-sys-color-surface-container);
       }
 
-      /* ==========================================================================
-         Layout Grid & Marginalia Architecture
-         ========================================================================== */
       main {
         position: relative;
         z-index: 1;
@@ -404,9 +391,6 @@
         background: var(--md-sys-color-primary);
       }
 
-      /* ==========================================================================
-         Home View — Hero & Tonal Entry Cards
-         ========================================================================== */
       .hero-card {
         margin-top: 36px;
         padding: 36px;
@@ -415,7 +399,7 @@
         border: 1px solid var(--md-sys-color-outline-variant);
         position: relative;
         overflow: hidden;
-        transition: border-color 0.25s var(--ease-m3), transform 0.25s var(--ease-m3);
+        transition: border-color 0.25s var(--ease-m3);
       }
 
       .hero-card:hover {
@@ -445,7 +429,6 @@
 
       .hero-title {
         font: 600 clamp(28px, 4.2vw, 40px) / 1.14 var(--font-display);
-        font-optical-sizing: auto;
         letter-spacing: -0.02em;
         margin-bottom: 14px;
         text-wrap: balance;
@@ -595,9 +578,6 @@
         padding-top: 4px;
       }
 
-      /* ==========================================================================
-         Margin Residents (Cairn Widget, Field Note Metadata, Live TOC)
-         ========================================================================== */
       .m-card {
         padding: 24px 20px;
         border-radius: var(--radius-lg);
@@ -631,7 +611,6 @@
         margin-top: 6px;
       }
 
-      /* Archive Search & Filter */
       .page-head {
         padding: 44px 0 8px;
       }
@@ -725,6 +704,12 @@
         background: var(--md-sys-color-outline-variant);
       }
 
+      .topic-scrollbox {
+        max-height: calc(100vh - 220px);
+        overflow-y: auto;
+        padding-right: 4px;
+      }
+
       .mtag {
         display: flex;
         justify-content: space-between;
@@ -748,9 +733,6 @@
         font-weight: 500;
       }
 
-      /* ==========================================================================
-         Article View & Consultant Prose Styling
-         ========================================================================== */
       .back-chip {
         display: inline-flex;
         align-items: center;
@@ -856,11 +838,6 @@
         font-style: italic;
       }
 
-      .prose blockquote p:last-child {
-        margin-bottom: 0;
-      }
-
-      /* Admonition Callouts */
       .prose blockquote.callout {
         font-style: normal;
         border-left-width: 4px;
@@ -989,7 +966,6 @@
         background: var(--md-sys-color-surface-container);
       }
 
-      /* Margin Metadata & TOC */
       .art-margin {
         padding-top: 36px;
       }
@@ -1121,7 +1097,6 @@
         font: 600 16px/1.35 var(--font-display);
       }
 
-      /* Series Box */
       .series-box {
         margin-top: 28px;
         padding: 20px;
@@ -1154,9 +1129,6 @@
         min-width: 48px;
       }
 
-      /* ==========================================================================
-         Command Palette Modal (Ctrl+K / Cmd+K)
-         ========================================================================== */
       .cmd-backdrop {
         position: fixed;
         inset: 0;
@@ -1256,9 +1228,6 @@
         color: var(--md-sys-color-outline);
       }
 
-      /* ==========================================================================
-         Cairn SVG Animations & Footer
-         ========================================================================== */
       @keyframes stdrop {
         from {
           opacity: 0;
@@ -1366,6 +1335,8 @@
           grid-column: 2;
           align-items: flex-start;
           margin-top: 8px;
+          flex-direction: row;
+          gap: 10px;
         }
         .nav-row {
           grid-template-columns: 1fr;
@@ -1373,6 +1344,14 @@
         .nav-link.next {
           text-align: left;
           align-items: flex-start;
+        }
+        .footer-inner {
+          flex-direction: column;
+          text-align: center;
+          gap: 18px;
+        }
+        .footer-links {
+          justify-content: center;
         }
       }
     </style>
@@ -1391,8 +1370,8 @@
         <div class="header-actions">
           <nav class="nav-pills" aria-label="Primary Navigation">
             <a href="/" class="nav-pill" id="nav-home" data-nav>Notes</a>
-            <a href="/archive/" class="nav-pill" id="nav-archive" data-nav>The Pile</a>
-            <a href="/trailhead/" class="nav-pill" id="nav-about" data-nav>Trailhead</a>
+            <a href="/archive/" class="nav-pill" id="nav-archive" data-nav>Archive</a>
+            <a href="/trailhead/" class="nav-pill" id="nav-about" data-nav>About</a>
           </nav>
 
           <button class="cmd-trigger" id="cmdBtn" aria-label="Search field notes (Ctrl+K)">
@@ -1418,7 +1397,6 @@
       </div>
     </main>
 
-    <!-- Command Palette Modal -->
     <div class="cmd-backdrop" id="cmdModal" role="dialog" aria-modal="true" aria-label="Search Field Notes">
       <div class="cmd-dialog">
         <div class="cmd-header">
@@ -1443,11 +1421,11 @@
             <ellipse cx="11.8" cy="9.1" rx="3.9" ry="1.8" fill="#645A4B" />
             <ellipse cx="12.2" cy="5.7" rx="2.6" ry="1.4" fill="#E06D44" />
           </svg>
-          Madhava Rayulu · Field notes stacked one stone at a time
+          Madhava Rayulu · Field notes, stacked one stone at a time
         </span>
         <div class="footer-links">
           <a href="/archive/" data-nav>Archive</a>
-          <a href="/trailhead/" data-nav>Trailhead</a>
+          <a href="/trailhead/" data-nav>About</a>
           <a href="/rss.xml" target="_blank" rel="noopener">RSS</a>
         </div>
       </div>
@@ -1455,7 +1433,6 @@
 
     <div class="toast" id="toast">Link copied to clipboard</div>
 
-    <!-- Fallback Sample Entry -->
     <script type="text/markdown" data-slug="why-cairn">
 ---
 title: Why Cairn
@@ -1596,7 +1573,6 @@ So this is a cairn too — smaller, slower, made of words instead of granite. Fi
         toast._t = setTimeout(() => toastEl.classList.remove("show"), 2200);
       }
 
-      /* ---------- Theme Controller ---------- */
       function syncThemeUI() {
         const cur = document.documentElement.getAttribute("data-theme") || "dark";
         const icon = $("#themeIcon");
@@ -1634,7 +1610,6 @@ So this is a cairn too — smaller, slower, made of words instead of granite. Fi
         { passive: true }
       );
 
-      /* ---------- Interactive Cairn SVG ---------- */
       function cairnSVG(entries, o = {}) {
         const uid = o.uid || "c" + Math.random().toString(36).slice(2, 7);
         const RAMP = ["#2B2520", "#38312A", "#4A4138", "#5E5347", "#746758"];
@@ -1748,7 +1723,6 @@ So this is a cairn too — smaller, slower, made of words instead of granite. Fi
           </a>`;
       }
 
-      /* ---------- Views ---------- */
       function renderHome() {
         setActiveNav("home");
         document.title = CONFIG.title + " | Oracle Fusion Finance Field Notes";
@@ -1809,7 +1783,7 @@ So this is a cairn too — smaller, slower, made of words instead of granite. Fi
 
       function renderArchive() {
         setActiveNav("archive");
-        document.title = "The Pile · " + CONFIG.title;
+        document.title = "Archive · " + CONFIG.title;
 
         const allTags = [...new Set(POSTS.flatMap((p) => p.tags || []))].sort();
         let filtered = POSTS;
@@ -1863,7 +1837,7 @@ So this is a cairn too — smaller, slower, made of words instead of granite. Fi
             <div class="main-col">
               <div class="page-head">
                 <span class="eyebrow"><span class="eyebrow-dot"></span>Archive</span>
-                <h1 class="page-title">The Pile</h1>
+                <h1 class="page-title">Archive</h1>
                 <p style="font:400 12.5px var(--font-mono);color:var(--md-sys-color-on-surface-variant)">${POSTS.length} field notes · indexed by year & topic</p>
               </div>
               <div class="search-bar">
@@ -1876,7 +1850,7 @@ So this is a cairn too — smaller, slower, made of words instead of granite. Fi
             <aside class="margin-col only-desktop" style="padding-top:44px">
               <div class="m-sticky m-card">
                 <div class="m-label">Topics</div>
-                ${mtagBtns}
+                <div class="topic-scrollbox">${mtagBtns}</div>
               </div>
             </aside>
           </div>`;
@@ -1899,12 +1873,10 @@ So this is a cairn too — smaller, slower, made of words instead of granite. Fi
         );
       }
 
-      /* ---------- Enhance Rendered Prose (Code Copy, Callouts, Heading IDs & Live TOC) ---------- */
       function enhanceArticleDOM() {
         const prose = $(".entry-prose");
         if (!prose) return;
 
-        // 1. Admonition callouts (> [!NOTE], > [!WARNING], > [!TIP])
         prose.querySelectorAll("blockquote").forEach((bq) => {
           const firstP = bq.querySelector("p");
           if (!firstP) return;
@@ -1920,7 +1892,6 @@ So this is a cairn too — smaller, slower, made of words instead of granite. Fi
           }
         });
 
-        // 2. Wrap pre > code with header bar and copy button
         prose.querySelectorAll("pre").forEach((pre) => {
           if (pre.parentElement.classList.contains("code-block-wrap")) return;
           const code = pre.querySelector("code");
@@ -1946,7 +1917,6 @@ So this is a cairn too — smaller, slower, made of words instead of granite. Fi
           });
         });
 
-        // 3. Build Live TOC from h2/h3
         const headings = [...prose.querySelectorAll("h2, h3")];
         const tocSlot = $("#tocSlot");
         if (tocSlot && headings.length >= 2) {
@@ -1979,7 +1949,6 @@ So this is a cairn too — smaller, slower, made of words instead of granite. Fi
           headings.forEach((h) => tocObserver.observe(h));
         }
 
-        // 4. Bind Share Buttons
         const CAN_SHARE = typeof navigator.share === "function" && matchMedia("(pointer: coarse)").matches;
         document.querySelectorAll(".js-share").forEach((b) => {
           if (CAN_SHARE) b.innerHTML = `<span class="ms-icon">share</span> Share`;
@@ -2055,6 +2024,12 @@ So this is a cairn too — smaller, slower, made of words instead of granite. Fi
 
               <div class="prose entry-prose">${bodyHtml}</div>
 
+              <div class="only-mobile" style="margin: 36px 0 24px;">
+                <button class="share-btn js-share" style="width:100%" data-url="${esc(cleanUrl)}" data-title="${esc(p.title)}">
+                  <span class="ms-icon">link</span> Copy link
+                </button>
+              </div>
+
               ${seriesBlock}
 
               <nav class="nav-row">
@@ -2101,7 +2076,7 @@ So this is a cairn too — smaller, slower, made of words instead of granite. Fi
 
       function renderAbout() {
         setActiveNav("about");
-        document.title = "Trailhead · " + CONFIG.title;
+        document.title = "About · " + CONFIG.title;
         const capDef = `${POSTS.length} ${POSTS.length === 1 ? "stone" : "stones"} and counting`;
         const why = POSTS.find((x) => x.slug === "why-cairn");
 
@@ -2110,7 +2085,7 @@ So this is a cairn too — smaller, slower, made of words instead of granite. Fi
             <div class="main-col">
               <div class="page-head">
                 <span class="eyebrow"><span class="eyebrow-dot"></span>About</span>
-                <h1 class="page-title">Trailhead</h1>
+                <h1 class="page-title">About</h1>
               </div>
               <div class="prose">
                 <p>I am an <strong>Oracle Fusion Finance functional consultant</strong>.</p>
@@ -2134,7 +2109,6 @@ So this is a cairn too — smaller, slower, made of words instead of granite. Fi
         bindCairn($("#abCairnD"), $("#abCapD"));
       }
 
-      /* ---------- Command Palette Logic ---------- */
       const cmdModal = $("#cmdModal"),
         cmdInput = $("#cmdInput"),
         cmdResults = $("#cmdResults");
@@ -2225,7 +2199,6 @@ So this is a cairn too — smaller, slower, made of words instead of granite. Fi
         }
       });
 
-      /* ---------- Hybrid PushState + Legacy Hash Router ---------- */
       function navigate(url) {
         history.pushState(null, "", url);
         route();
@@ -2239,7 +2212,6 @@ So this is a cairn too — smaller, slower, made of words instead of granite. Fi
       });
 
       function route() {
-        // Support legacy hash URLs seamlessly by upgrading them to clean paths
         const h = location.hash;
         if (h.startsWith("#/")) {
           const upgraded = h === "#/" ? "/" : h.slice(1).replace(/\/?$/, "/");
