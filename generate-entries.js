@@ -4,15 +4,12 @@
  * Single-source-of-truth static generator for Cairn.
  * Builds static entries, archive/about routes, posts.json, sitemap.xml, rss.xml,
  * 404 fallback, and unique per-post preview cards (SVG stencil + PNG for scrapers).
- * Cards render at 2x (2400x1256) so display-cut hairlines survive scraper downscaling.
- * Fonts in fonts/ are probed and logged; a display-cut instance (72pt) is
- * auto-detected and pinned into the card for the PNG rasterizer.
+ * Card: full-bleed 1200x628, weight comes from whichever Fraunces static sits in fonts/.
  */
 const fs = require("fs");
 const path = require("path");
 const { marked } = require("marked");
 
-/* resvg is optional at dev time; the workflow installs it for CI */
 let Resvg = null;
 try {
   ({ Resvg } = require("@resvg/resvg-js"));
@@ -32,8 +29,6 @@ const escHtml = (s) =>
     (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[c]
   );
 
-/* Font setup for the PNG rasterizer: fonts/ dir if present, else system fonts.
-   Files under 10KB are ignored — a truncated/empty TTF must never poison rendering. */
 function cardFontConfig() {
   const fontsDir = path.join(__dirname, "fonts");
   if (fs.existsSync(fontsDir)) {
@@ -54,7 +49,6 @@ function cardFontConfig() {
   return { loadSystemFonts: true };
 }
 
-/* Read internal family names (nameID 1 + 16) from a TTF/OTF — parses the 'name' table, no deps. */
 function readFontNames(buf) {
   const numTables = buf.readUInt16BE(4);
   let nameOff = -1;
@@ -89,52 +83,33 @@ function readFontNames(buf) {
   return names;
 }
 
-/* Probe fonts/: log every family name resvg will see, and auto-detect a
-   display-cut (72pt) instance for the card title. Returns the chosen families. */
 function probeFonts() {
   const fontsDir = path.join(__dirname, "fonts");
   if (!fs.existsSync(fontsDir)) {
     console.log("font probe: no fonts/ directory");
-    return { display: null, brand: null };
+    return;
   }
   const files = fs
     .readdirSync(fontsDir)
     .filter((f) => /\.(ttf|otf)$/i.test(f) && fs.statSync(path.join(fontsDir, f)).size > 10000);
   if (!files.length) {
     console.log("font probe: no usable ttf/otf files in fonts/");
-    return { display: null, brand: null };
+    return;
   }
-  const names = [];
   for (const f of files) {
     try {
-      const n = readFontNames(fs.readFileSync(path.join(fontsDir, f)));
-      console.log(`font probe ${f}: ${JSON.stringify(n)}`);
-      names.push(...n);
+      console.log(`font probe ${f}: ${JSON.stringify(readFontNames(fs.readFileSync(path.join(fontsDir, f))))}`);
     } catch (e) {
       console.log(`font probe ${f}: failed (${e.message})`);
     }
   }
-  const uniq = [...new Set(names)];
-  const display = uniq.find((n) => /72\s*pt/i.test(n)) || null;
-  const brand = uniq.find((n) => /72\s*pt/i.test(n) && /medium/i.test(n)) || display;
-  console.log(`font probe: display family = ${display || "(none — variable Fraunces will be used)"}`);
-  return { display, brand };
 }
 
 function parseFrontMatter(raw) {
   raw = String(raw).replace(/^\uFEFF/, "").replace(/^\s+/, "");
   const match = raw.match(/^---\r?\n([\s\S]*?)\r?\n---\s*(\n|$)/);
-  const meta = {
-    title: "",
-    date: "",
-    tags: [],
-    draft: "",
-    verified: "",
-    series: "",
-    part: "",
-  };
+  const meta = { title: "", date: "", tags: [], draft: "", verified: "", series: "", part: "" };
   let body = raw;
-
   if (match) {
     body = raw.slice(match[0].length);
     match[1].split(/\r?\n/).forEach((line) => {
@@ -145,17 +120,13 @@ function parseFrontMatter(raw) {
       if (key === "title") meta.title = val;
       else if (key === "date") meta.date = val;
       else if (key === "tags")
-        meta.tags = val
-          .split(",")
-          .map((s) => s.trim())
-          .filter(Boolean);
+        meta.tags = val.split(",").map((s) => s.trim()).filter(Boolean);
       else if (key === "draft") meta.draft = val;
       else if (key === "verified") meta.verified = val;
       else if (key === "series") meta.series = val;
       else if (key === "part") meta.part = val;
     });
   }
-
   return { meta, body: body.trim() };
 }
 
@@ -180,8 +151,7 @@ function readTime(text) {
   return Math.max(1, Math.round(w / 220)) + " min read";
 }
 
-/* Wrap a card title into balanced lines for the SVG stencil (max 3 lines). */
-function wrapCardTitle(title, max = 32, maxLines = 3) {
+function wrapCardTitle(title, max = 30, maxLines = 3) {
   const words = String(title || "").split(/\s+/).filter(Boolean);
   const lines = [];
   let cur = "";
@@ -229,7 +199,7 @@ function main() {
   }
 
   const CARD_FONTS = cardFontConfig();
-  const CARD_FAMILIES = probeFonts();
+  probeFonts();
 
   const files = fs.readdirSync(POSTS_DIR).filter((f) => f.endsWith(".md"));
   const parsed = [];
@@ -238,20 +208,15 @@ function main() {
     const slug = file.replace(/\.md$/, "");
     const raw = fs.readFileSync(path.join(POSTS_DIR, file), "utf8");
     const { meta, body } = parseFrontMatter(raw);
-
     if (/^(true|yes|1)$/i.test(meta.draft || "")) {
       console.log(`- Skipped (draft): ${slug}`);
       return;
     }
-
-    const title = meta.title || slug;
-    const dateMs = meta.date ? new Date(meta.date).getTime() || 0 : 0;
-
     parsed.push({
       slug,
-      title,
+      title: meta.title || slug,
       date: meta.date,
-      dateMs,
+      dateMs: meta.date ? new Date(meta.date).getTime() || 0 : 0,
       tags: meta.tags,
       series: meta.series,
       part: meta.part ? parseInt(meta.part, 10) : 0,
@@ -277,9 +242,7 @@ function main() {
     const bodyHtml = marked.parse(p.body);
     const url = `${SITE}/entry/${p.slug}/`;
     const cardImgUrl =
-      cardTemplate && Resvg
-        ? `${SITE}/entry/${p.slug}/card.png`
-        : `${SITE}/cairn-card-wide.png`;
+      cardTemplate && Resvg ? `${SITE}/entry/${p.slug}/card.png` : `${SITE}/cairn-card-wide.png`;
     const isoDate = p.dateMs ? new Date(p.dateMs).toISOString() : "";
 
     const jsonLd = JSON.stringify({
@@ -339,31 +302,19 @@ function main() {
     fs.mkdirSync(outDir, { recursive: true });
     fs.writeFileSync(path.join(outDir, "index.html"), injectPage(shell, seoBlock, viewBlock));
 
-    // Stamp the post title into the card stencil, then rasterize to PNG for scrapers.
-    // Rendered at 2x (2400x1256): display-cut hairlines survive only when there are
-    // enough pixels for them; scrapers downscale, which restores the intended contrast.
     if (cardTemplate) {
       const lines = wrapCardTitle(p.title);
-      const y0 = 300 - (lines.length - 1) * 31;
+      const y0 = 334 - (lines.length - 1) * 38;
       const titleBlock =
-        '<text x="110" y="' + y0 + '" class="title">' +
-        lines.map((l, i) => `<tspan x="110"${i ? ' dy="62"' : ""}>${escHtml(l)}</tspan>`).join("") +
+        '<text x="90" y="' + y0 + '" class="title">' +
+        lines.map((l, i) => `<tspan x="90"${i ? ' dy="76"' : ""}>${escHtml(l)}</tspan>`).join("") +
         "</text>";
-      let cardSvg = cardTemplate.replace("<!--TITLE_BLOCK-->", titleBlock);
-
-      // Pin the detected families ahead of the fallbacks (idempotent with the template's own pins)
-      if (CARD_FAMILIES.display) {
-        const override =
-          `\n      .title { font-family: '${CARD_FAMILIES.display}', 'Fraunces', Georgia, serif; }` +
-          `\n      .brand { font-family: '${CARD_FAMILIES.brand || CARD_FAMILIES.display}', 'Fraunces', Georgia, serif; }\n  `;
-        cardSvg = cardSvg.replace("</style>", override + "</style>");
-      }
-
+      const cardSvg = cardTemplate.replace("<!--TITLE_BLOCK-->", titleBlock);
       fs.writeFileSync(path.join(outDir, "card.svg"), cardSvg);
 
       if (Resvg) {
         const resvg = new Resvg(cardSvg, {
-          fitTo: { mode: "width", value: 2400 },
+          fitTo: { mode: "width", value: 1200 },
           background: "#12100e",
           font: CARD_FONTS,
         });
