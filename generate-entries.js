@@ -297,12 +297,16 @@ function main() {
     const seoBlock = `    <title>${escHtml(p.title)} · Cairn</title>
     <meta name="description" content="${escHtml(p.excerpt)}" />
     <meta property="og:type" content="article" />
+    <meta property="og:site_name" content="Cairn" />
+    <meta property="og:locale" content="en_US" />
     <meta property="og:title" content="${escHtml(p.title)}" />
     <meta property="og:description" content="${escHtml(p.excerpt)}" />
     <meta property="og:url" content="${url}" />
     <meta property="og:image" content="${cardImgUrl}" />
-    <meta property="og:image:width" content="2400" />
-    <meta property="og:image:height" content="1256" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="628" />
+    <meta property="og:image:type" content="image/png" />
+    <meta property="og:image:alt" content="Article preview card: ${escHtml(p.title)} — Cairn, field notes by Madhava Rayulu" />
     <link rel="canonical" href="${url}" />
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:title" content="${escHtml(p.title)}" />
@@ -374,7 +378,24 @@ function main() {
     const dir = path.join(__dirname, route);
     fs.mkdirSync(dir, { recursive: true });
     const routeTitle = route === "archive" ? "Archive · Cairn" : "About · Cairn";
-    const seo = `    <title>${routeTitle}</title>\n    <link rel="canonical" href="${SITE}/${route}/" />`;
+    const siteDesc = "Field notes from an Oracle Fusion Finance functional consultant.";
+    const seo = `    <title>${routeTitle}</title>
+    <link rel="canonical" href="${SITE}/${route}/" />
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="Cairn" />
+    <meta property="og:locale" content="en_US" />
+    <meta property="og:title" content="${routeTitle}" />
+    <meta property="og:description" content="${siteDesc}" />
+    <meta property="og:url" content="${SITE}/${route}/" />
+    <meta property="og:image" content="${SITE}/cairn-card-wide.png" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="628" />
+    <meta property="og:image:type" content="image/png" />
+    <meta property="og:image:alt" content="Cairn — a small stack of stones on a dark field, with the wordmark and tagline" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="${routeTitle}" />
+    <meta name="twitter:description" content="${siteDesc}" />
+    <meta name="twitter:image" content="${SITE}/cairn-card-wide.png" />`;
     fs.writeFileSync(path.join(dir, "index.html"), injectPage(shell, seo, ""));
     console.log(`✓ Generated ${route}/index.html`);
   });
