@@ -79,6 +79,27 @@ function readTime(text) {
   return Math.max(1, Math.round(w / 220)) + " min read";
 }
 
+/* Wrap a card title into balanced lines for the SVG stencil (max 3 lines). */
+function wrapCardTitle(title, max = 32, maxLines = 3) {
+  const words = String(title || "").split(/\s+/).filter(Boolean);
+  const lines = [];
+  let cur = "";
+  for (const w of words) {
+    const cand = cur ? cur + " " + w : w;
+    if (cand.length <= max) cur = cand;
+    else {
+      if (cur) lines.push(cur);
+      cur = w;
+    }
+  }
+  if (cur) lines.push(cur);
+  if (lines.length > maxLines) {
+    lines.length = maxLines;
+    lines[maxLines - 1] = lines[maxLines - 1].replace(/\s*\S*$/, "") + "…";
+  }
+  return lines;
+}
+
 function injectPage(shellHtml, seoBlock, viewBlock) {
   return shellHtml
     .replace(/<!--SEO_START-->[\s\S]*?<!--SEO_END-->/, `<!--SEO_START-->\n${seoBlock}\n    <!--SEO_END-->`)
@@ -151,7 +172,7 @@ function main() {
     const older = parsed[index + 1];
     const bodyHtml = marked.parse(p.body);
     const url = `${SITE}/entry/${p.slug}/`;
-    const cardImgUrl = `${SITE}/entry/${p.slug}/card.svg`;
+    const cardImgUrl = cardTemplate ? `${SITE}/entry/${p.slug}/card.svg` : `${SITE}/cairn-card-wide.png`;
     const isoDate = p.dateMs ? new Date(p.dateMs).toISOString() : "";
 
     const jsonLd = JSON.stringify({
@@ -204,10 +225,15 @@ function main() {
     fs.mkdirSync(outDir, { recursive: true });
     fs.writeFileSync(path.join(outDir, "index.html"), injectPage(shell, seoBlock, viewBlock));
 
-    // Generate unique article preview card if template exists
+    // Stamp the post title into the card stencil (replaces <!--TITLE_BLOCK-->)
     if (cardTemplate) {
-      const postCardSvg = cardTemplate.replace("Your Article Title Flows Naturally Respecting Card Space", escHtml(p.title));
-      fs.writeFileSync(path.join(outDir, "card.svg"), postCardSvg);
+      const lines = wrapCardTitle(p.title);
+      const y0 = 352 - (lines.length - 1) * 31;
+      const titleBlock =
+        '<text x="110" y="' + y0 + '" class="title">' +
+        lines.map((l, i) => `<tspan x="110"${i ? ' dy="62"' : ""}>${escHtml(l)}</tspan>`).join("") +
+        "</text>";
+      fs.writeFileSync(path.join(outDir, "card.svg"), cardTemplate.replace("<!--TITLE_BLOCK-->", titleBlock));
     }
 
     console.log(`✓ Generated entry/${p.slug}/`);
@@ -279,7 +305,7 @@ function main() {
     <link>${SITE}/</link>
     <description>Field notes from an Oracle Fusion Finance functional consultant.</description>
     <language>en-us</language>
-${rssItems}
+ ${rssItems}
   </channel>
 </rss>\n`;
   fs.writeFileSync(path.join(__dirname, "rss.xml"), rss);
