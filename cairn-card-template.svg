@@ -2,13 +2,12 @@
   <defs>
     <style>
       .bg { fill: #12100e; }
-      .frame { fill: none; stroke: #332C25; stroke-width: 1.5; }
-      .brand { font-family: 'Fraunces', Georgia, serif; font-weight: 500; font-size: 34px; fill: #B5AB9C; letter-spacing: -0.025em; }
+      .brand { font-family: 'Fraunces', Georgia, serif; font-weight: 400; font-size: 42px; fill: #B5AB9C; letter-spacing: -0.02em; }
       .dot { fill: #E06D44; }
-      .title { font-family: 'Fraunces', Georgia, serif; font-weight: 600; font-size: 50px; fill: #F2ECE1; letter-spacing: -0.02em; }
-      .author { font-family: 'Spline Sans Mono', ui-monospace, Menlo, monospace; font-weight: 400; font-size: 17px; fill: #7E7567; letter-spacing: 0.08em; }
+      .title { font-family: 'Fraunces', Georgia, serif; font-weight: 400; font-size: 62px; fill: #F2ECE1; letter-spacing: -0.015em; }
+      .author { font-family: 'Spline Sans Mono', ui-monospace, Menlo, monospace; font-weight: 400; font-size: 20px; fill: #7E7567; letter-spacing: 0.08em; }
     </style>
-    <radialGradient id="bgGlow" cx="50%" cy="30%" r="70%">
+    <radialGradient id="bgGlow" cx="50%" cy="28%" r="75%">
       <stop offset="0%" stop-color="#E06D44" stop-opacity="0.10"/>
       <stop offset="100%" stop-color="#12100e" stop-opacity="0"/>
     </radialGradient>
@@ -16,11 +15,10 @@
 
   <rect width="1200" height="628" class="bg"/>
   <rect width="1200" height="628" fill="url(#bgGlow)"/>
-  <rect x="56" y="56" width="1088" height="516" rx="16" class="frame"/>
 
-  <text x="110" y="120" class="brand">Cairn<tspan class="dot">.</tspan></text>
+  <text x="90" y="116" class="brand">Cairn<tspan class="dot">.</tspan></text>
 
   <!--TITLE_BLOCK-->
 
-  <text x="110" y="480" class="author">Madhava Rayulu</text>
+  <text x="90" y="560" class="author">Madhava Rayulu</text>
 </svg>
