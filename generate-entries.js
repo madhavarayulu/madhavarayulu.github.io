@@ -255,6 +255,10 @@ function main() {
   fs.writeFileSync(path.join(__dirname, "sitemap.xml"), sitemap);
   console.log("✓ Generated sitemap.xml");
 
+  // At the end of main(), right after generating posts.json/sitemap:
+  fs.writeFileSync(path.join(__dirname, "404.html"), shell);
+  console.log("✓ Generated 404.html fallback for graceful routing");
+
   const rssItems = parsed
     .slice(0, 25)
     .map(
