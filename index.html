@@ -119,10 +119,13 @@
         box-sizing: border-box;
       }
 
+      /* Stable gutter prevents page layout shifts when scrollbars appear/disappear */
       html {
         scroll-behavior: smooth;
+        scrollbar-gutter: stable both-edges;
         scrollbar-width: thin;
         scrollbar-color: transparent transparent;
+        transition: scrollbar-color 0.3s;
       }
 
       html:hover {
@@ -130,8 +133,8 @@
       }
 
       ::-webkit-scrollbar {
-        width: 4px;
-        height: 4px;
+        width: 5px;
+        height: 5px;
       }
       ::-webkit-scrollbar-track {
         background: transparent;
@@ -139,7 +142,7 @@
       ::-webkit-scrollbar-thumb {
         background: transparent;
         border-radius: var(--radius-full);
-        transition: background 0.2s;
+        transition: background 0.3s;
       }
       :hover::-webkit-scrollbar-thumb {
         background: var(--md-sys-color-outline-variant);
@@ -222,7 +225,7 @@
         transition: width 0.08s linear;
       }
 
-      /* Header is now relative so it scrolls away naturally with the page */
+      /* Header scrolls away naturally with the page */
       header {
         position: relative;
         z-index: 50;
@@ -259,13 +262,6 @@
 
       .logo-dot {
         color: var(--md-sys-color-primary);
-      }
-
-      /* Subtle non-competing Oracle Fusion Finance label */
-      .brand-badge {
-        font: 400 11.5px/1 var(--font-mono);
-        letter-spacing: 0.04em;
-        color: var(--md-sys-color-outline);
       }
 
       .header-actions {
@@ -1428,7 +1424,7 @@
       <div class="header-inner">
         <div class="brand-group">
           <a href="/" class="logo" data-nav>Cairn<span class="logo-dot">.</span></a>
-          <span class="brand-badge">Oracle Fusion Finance</span>
+          <span class="brand-badge only-desktop">Oracle Fusion Finance</span>
         </div>
 
         <div class="header-actions">
@@ -1625,7 +1621,6 @@ So this is a cairn too — smaller, slower, made of words instead of granite. Fi
 
       const view = $("#view"),
         toastEl = $("#toast"),
-        header = $("#header"),
         progressBar = $("#progress-bar");
       let POSTS = [],
         currentTag = null,
