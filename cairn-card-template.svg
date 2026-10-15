@@ -1,0 +1,41 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 628" width="1200" height="628">
+  <defs>
+    <style>
+      @import url('https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600&family=Spline+Sans+Mono:wght@400&amp;display=swap');
+
+      .bg { fill: #12100e; }
+      .frame { fill: none; stroke: #332C25; stroke-width: 1.5; }
+      .brand { font-family: 'Fraunces', Georgia, serif; font-weight: 500; font-size: 34px; fill: #B5AB9C; letter-spacing: -0.025em; }
+      .dot { fill: #E06D44; }
+      .author { font-family: 'Spline Sans Mono', monospace; font-weight: 400; font-size: 17px; fill: #7E7567; letter-spacing: 0.08em; }
+    </style>
+    <radialGradient id="bgGlow" cx="50%" cy="30%" r="70%">
+      <stop offset="0%" stop-color="#E06D44" stop-opacity="0.10"/>
+      <stop offset="100%" stop-color="#12100e" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+
+  <!-- Background -->
+  <rect width="1200" height="628" class="bg"/>
+  <rect width="1200" height="628" fill="url(#bgGlow)"/>
+
+  <!-- Border Frame -->
+  <rect x="56" y="56" width="1088" height="516" rx="16" class="frame"/>
+
+  <!-- Top bar: Muted Cairn. brand mark -->
+  <g transform="translate(110, 120)">
+    <text x="0" y="0" class="brand">Cairn<tspan class="dot">.</tspan></text>
+  </g>
+
+  <!-- Article Title Box (Natural flow layout with explicit padding) -->
+  <foreignObject x="110" y="230" width="980" height="220">
+    <div xmlns="http://www.w3.org/1999/xhtml" style="font-family: 'Fraunces', Georgia, serif; font-weight: 600; font-size: 50px; color: #F2ECE1; letter-spacing: -0.02em; line-height: 1.25; word-break: break-word;">
+      Your Article Title Flows Naturally Respecting Card Space
+    </div>
+  </foreignObject>
+
+  <!-- Bottom Left: Author Name (Title Case) -->
+  <g transform="translate(110, 480)">
+    <text x="0" y="0" class="author">Madhava Rayulu</text>
+  </g>
+</svg>
