@@ -2,6 +2,7 @@
 /**
  * generate-entries.js
  * Single-source-of-truth static generator for Cairn.
+ * Automatically builds static entries, archive/about routes, posts.json, sitemap.xml, rss.xml, and unique article SVG preview cards.
  */
 const fs = require("fs");
 const path = require("path");
@@ -11,6 +12,7 @@ const SITE = "https://madhavarayulu.github.io";
 const POSTS_DIR = path.join(__dirname, "posts");
 const ENTRY_DIR = path.join(__dirname, "entry");
 const INDEX_PATH = path.join(__dirname, "index.html");
+const CARD_TEMPLATE_PATH = path.join(__dirname, "cairn-card-template.svg");
 
 const escHtml = (s) =>
   String(s || "").replace(
@@ -99,6 +101,11 @@ function main() {
   const shell = fs.readFileSync(INDEX_PATH, "utf8");
   if (!fs.existsSync(ENTRY_DIR)) fs.mkdirSync(ENTRY_DIR, { recursive: true });
 
+  let cardTemplate = null;
+  if (fs.existsSync(CARD_TEMPLATE_PATH)) {
+    cardTemplate = fs.readFileSync(CARD_TEMPLATE_PATH, "utf8");
+  }
+
   const files = fs.readdirSync(POSTS_DIR).filter((f) => f.endsWith(".md"));
   const parsed = [];
 
@@ -144,6 +151,7 @@ function main() {
     const older = parsed[index + 1];
     const bodyHtml = marked.parse(p.body);
     const url = `${SITE}/entry/${p.slug}/`;
+    const cardImgUrl = `${SITE}/entry/${p.slug}/card.svg`;
     const isoDate = p.dateMs ? new Date(p.dateMs).toISOString() : "";
 
     const jsonLd = JSON.stringify({
@@ -163,9 +171,12 @@ function main() {
     <meta property="og:title" content="${escHtml(p.title)}" />
     <meta property="og:description" content="${escHtml(p.excerpt)}" />
     <meta property="og:url" content="${url}" />
+    <meta property="og:image" content="${cardImgUrl}" />
     <link rel="canonical" href="${url}" />
+    <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:title" content="${escHtml(p.title)}" />
     <meta name="twitter:description" content="${escHtml(p.excerpt)}" />
+    <meta name="twitter:image" content="${cardImgUrl}" />
     <script type="application/ld+json">${jsonLd}</script>`;
 
     const viewBlock = `
@@ -192,7 +203,14 @@ function main() {
     const outDir = path.join(ENTRY_DIR, p.slug);
     fs.mkdirSync(outDir, { recursive: true });
     fs.writeFileSync(path.join(outDir, "index.html"), injectPage(shell, seoBlock, viewBlock));
-    console.log(`✓ Generated entry/${p.slug}/index.html`);
+
+    // Generate unique article preview card if template exists
+    if (cardTemplate) {
+      const postCardSvg = cardTemplate.replace("Your Article Title Flows Naturally Respecting Card Space", escHtml(p.title));
+      fs.writeFileSync(path.join(outDir, "card.svg"), postCardSvg);
+    }
+
+    console.log(`✓ Generated entry/${p.slug}/`);
   });
 
   ["archive", "about"].forEach((route) => {
