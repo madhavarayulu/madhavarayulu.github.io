@@ -5,7 +5,7 @@
       .brand { font-family: 'Fraunces', Georgia, serif; font-weight: 400; font-size: 42px; fill: #B5AB9C; letter-spacing: -0.02em; }
       .dot { fill: #E06D44; }
       .title { font-family: 'Fraunces', Georgia, serif; font-weight: 400; font-size: 62px; fill: #F2ECE1; letter-spacing: -0.015em; }
-      .author { font-family: 'Spline Sans Mono', ui-monospace, Menlo, monospace; font-weight: 400; font-size: 20px; fill: #7E7567; letter-spacing: 0.08em; }
+      .author { font-family: 'Spline Sans Mono', ui-monospace, Menlo, monospace; font-weight: 400; font-size: 21px; fill: #7E7567; letter-spacing: 0.08em; }
     </style>
     <radialGradient id="bgGlow" cx="50%" cy="28%" r="75%">
       <stop offset="0%" stop-color="#E06D44" stop-opacity="0.10"/>
@@ -20,5 +20,5 @@
 
   <!--TITLE_BLOCK-->
 
-  <text x="90" y="560" class="author">Madhava Rayulu</text>
+  <text x="90" y="572" class="author">Madhava Rayulu</text>
 </svg>
