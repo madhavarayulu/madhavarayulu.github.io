@@ -261,7 +261,7 @@ function main() {
     // Stamp the post title into the card stencil, then rasterize to PNG for scrapers
     if (cardTemplate) {
       const lines = wrapCardTitle(p.title);
-      const y0 = 352 - (lines.length - 1) * 31;
+      const y0 = 300 - (lines.length - 1) * 31;
       const titleBlock =
         '<text x="110" y="' + y0 + '" class="title">' +
         lines.map((l, i) => `<tspan x="110"${i ? ' dy="62"' : ""}>${escHtml(l)}</tspan>`).join("") +
@@ -271,6 +271,7 @@ function main() {
 
       if (Resvg) {
         const resvg = new Resvg(cardSvg, {
+          try { console.log("Loaded font families:", resvg.fonts()); } catch (_) {}
           fitTo: { mode: "width", value: 1200 },
           background: "#12100e",
           font: CARD_FONTS,
