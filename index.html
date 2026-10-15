@@ -119,7 +119,6 @@
         box-sizing: border-box;
       }
 
-      /* Stable gutter prevents page layout shifts when scrollbars appear/disappear */
       html {
         scroll-behavior: smooth;
         scrollbar-gutter: stable both-edges;
@@ -225,7 +224,6 @@
         transition: width 0.08s linear;
       }
 
-      /* Header scrolls away naturally with the page */
       header {
         position: relative;
         z-index: 50;
@@ -1375,9 +1373,7 @@
           display: flex;
           flex-direction: column;
         }
-        .only-desktop,
-        .brand-badge,
-        .cmd-trigger span:not(.ms-icon) {
+        .only-desktop {
           display: none !important;
         }
         .only-mobile {
@@ -1424,7 +1420,6 @@
       <div class="header-inner">
         <div class="brand-group">
           <a href="/" class="logo" data-nav>Cairn<span class="logo-dot">.</span></a>
-          <span class="brand-badge only-desktop">Oracle Fusion Finance</span>
         </div>
 
         <div class="header-actions">
@@ -1436,8 +1431,8 @@
 
           <button class="cmd-trigger" id="cmdBtn" aria-label="Search field notes (Ctrl+K)">
             <span class="ms-icon">search</span>
-            <span>Search…</span>
-            <span class="cmd-kbd">⌘K</span>
+            <span class="only-desktop">Search…</span>
+            <span class="cmd-kbd only-desktop">⌘K</span>
           </button>
 
           <button class="icon-btn" id="themeBtn" aria-label="Toggle color theme" title="Toggle theme (T)">
