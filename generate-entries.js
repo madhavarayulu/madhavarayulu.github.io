@@ -4,7 +4,9 @@
  * Single-source-of-truth static generator for Cairn.
  * Builds static entries, archive/about routes, posts.json, sitemap.xml, rss.xml,
  * 404 fallback, and unique per-post preview cards (SVG stencil + PNG for scrapers).
- * Card: full-bleed 1200x628, weight comes from whichever Fraunces static sits in fonts/.
+ * Card titles are wrapped by MEASURED pixel width from the actual font file
+ * (hmtx/cmap metrics), so lines fill the card naturally instead of breaking
+ * at an arbitrary character count.
  */
 const fs = require("fs");
 const path = require("path");
@@ -22,6 +24,18 @@ const POSTS_DIR = path.join(__dirname, "posts");
 const ENTRY_DIR = path.join(__dirname, "entry");
 const INDEX_PATH = path.join(__dirname, "index.html");
 const CARD_TEMPLATE_PATH = path.join(__dirname, "cairn-card-template.svg");
+
+/* Card geometry — must match cairn-card-template.svg */
+const CARD = {
+  marginX: 90,
+  titleSize: 62,
+  titleLS: -0.015 * 62,   /* letter-spacing in px (-0.015em) */
+  titleLine: 76,          /* dy between title lines */
+  titleBase: 338,         /* y of a 1-line title; each extra line shifts up 38 */
+  titleStep: 38,
+  maxLines: 3,
+  get maxWidth() { return 1200 - this.marginX * 2 - 20; } /* usable width, small safety */
+};
 
 const escHtml = (s) =>
   String(s || "").replace(
@@ -49,6 +63,7 @@ function cardFontConfig() {
   return { loadSystemFonts: true };
 }
 
+/* Read internal family names (nameID 1 + 16) from a TTF/OTF — parses the 'name' table, no deps. */
 function readFontNames(buf) {
   const numTables = buf.readUInt16BE(4);
   let nameOff = -1;
@@ -81,6 +96,109 @@ function readFontNames(buf) {
     if (s && !names.includes(s)) names.push(s);
   }
   return names;
+}
+
+/* Parse head/cmap/hhea/hmtx to measure REAL rendered text width from a font file.
+   Returns { width(text, fontSize, letterSpacingPx) } or null. */
+function fontMetrics(buf) {
+  try {
+    const numTables = buf.readUInt16BE(4);
+    const tables = {};
+    for (let i = 0; i < numTables; i++) {
+      const rec = 12 + i * 16;
+      tables[buf.toString("ascii", rec, rec + 4)] = buf.readUInt32BE(rec + 8);
+    }
+    if (!tables.head || !tables.cmap || !tables.hmtx || !tables.hhea) return null;
+
+    const unitsPerEm = buf.readUInt16BE(tables.head + 18);
+    const numHMetrics = buf.readUInt16BE(tables.hhea + 34);
+
+    /* cmap → glyph id (format 4 BMP, or format 12) */
+    const cmapOff = tables.cmap;
+    const nSub = buf.readUInt16BE(cmapOff + 2);
+    let sub = -1;
+    for (let i = 0; i < nSub; i++) {
+      const rec = cmapOff + 4 + i * 8;
+      const pid = buf.readUInt16BE(rec), eid = buf.readUInt16BE(rec + 2);
+      if ((pid === 3 && (eid === 1 || eid === 10)) || pid === 0) { sub = cmapOff + buf.readUInt32BE(rec + 4); break; }
+    }
+    if (sub < 0) return null;
+    const fmt = buf.readUInt16BE(sub);
+    let glyphOf = null;
+    if (fmt === 4) {
+      const segX2 = buf.readUInt16BE(sub + 6), seg = segX2 / 2;
+      const endBase = sub + 14;
+      const startBase = endBase + segX2 + 2;
+      const deltaBase = startBase + segX2;
+      const rangeBase = deltaBase + segX2;
+      glyphOf = (cp) => {
+        for (let s = 0; s < seg; s++) {
+          if (cp <= buf.readUInt16BE(endBase + s * 2)) {
+            const start = buf.readUInt16BE(startBase + s * 2);
+            if (cp < start) return 0;
+            const delta = buf.readInt16BE(deltaBase + s * 2);
+            const ro = buf.readUInt16BE(rangeBase + s * 2);
+            if (ro === 0) return (cp + delta) & 0xFFFF;
+            const gi = buf.readUInt16BE(rangeBase + s * 2 + ro + (cp - start) * 2);
+            return gi === 0 ? 0 : (gi + delta) & 0xFFFF;
+          }
+        }
+        return 0;
+      };
+    } else if (fmt === 12) {
+      const nGroups = buf.readUInt32BE(sub + 12);
+      glyphOf = (cp) => {
+        for (let g = 0; g < nGroups; g++) {
+          const rec = sub + 16 + g * 12;
+          const s = buf.readUInt32BE(rec), e = buf.readUInt32BE(rec + 4);
+          if (cp >= s && cp <= e) return buf.readUInt32BE(rec + 8) + (cp - s);
+          if (cp < s) break;
+        }
+        return 0;
+      };
+    } else return null;
+
+    const hmtxOff = tables.hmtx;
+    const advance = (gid) =>
+      gid < numHMetrics
+        ? buf.readUInt16BE(hmtxOff + gid * 4)
+        : buf.readUInt16BE(hmtxOff + (numHMetrics - 1) * 4);
+
+    return {
+      unitsPerEm,
+      width(text, fontSize, ls) {
+        let u = 0, n = 0;
+        for (const ch of String(text)) { u += advance(glyphOf(ch.codePointAt(0))); n++; }
+        return (u / unitsPerEm) * fontSize + (ls || 0) * n;
+      },
+    };
+  } catch (_) {
+    return null;
+  }
+}
+
+/* Find the Fraunces file (non-italic) in fonts/ and return its metrics. */
+function pickTitleMetrics() {
+  const fontsDir = path.join(__dirname, "fonts");
+  if (!fs.existsSync(fontsDir)) return null;
+  const files = fs
+    .readdirSync(fontsDir)
+    .filter((f) => /\.(ttf|otf)$/i.test(f) && fs.statSync(path.join(fontsDir, f)).size > 10000);
+  for (const f of files) {
+    try {
+      const buf = fs.readFileSync(path.join(fontsDir, f));
+      const names = readFontNames(buf);
+      if (names.some((n) => /fraunces/i.test(n) && !/italic/i.test(n))) {
+        const m = fontMetrics(buf);
+        if (m) {
+          console.log(`title wrap: measuring with ${f} (unitsPerEm ${m.unitsPerEm})`);
+          return m;
+        }
+      }
+    } catch (_) {}
+  }
+  console.log("title wrap: no usable Fraunces metrics — falling back to char-count wrap");
+  return null;
 }
 
 function probeFonts() {
@@ -151,17 +269,38 @@ function readTime(text) {
   return Math.max(1, Math.round(w / 220)) + " min read";
 }
 
-function wrapCardTitle(title, max = 30, maxLines = 3) {
+/* Width-based wrap: fills each line to the measured pixel limit. */
+function wrapCardTitle(title, measure, maxWidth, maxLines) {
+  const words = String(title || "").split(/\s+/).filter(Boolean);
+  if (!words.length) return [""];
+  const lines = [];
+  let cur = "";
+  for (const w of words) {
+    const cand = cur ? cur + " " + w : w;
+    /* on the final allowed line, reserve room for the ellipsis */
+    const limit = lines.length === maxLines - 1 ? maxWidth - measure("…") : maxWidth;
+    if (!cur || measure(cand) <= limit) { cur = cand; continue; }
+    if (lines.length === maxLines - 1) return lines.concat([cur + "…"]);
+    lines.push(cur);
+    cur = w;
+  }
+  lines.push(cur);
+  if (lines.length > maxLines) {
+    lines.length = maxLines;
+    lines[maxLines - 1] = lines[maxLines - 1] + "…";
+  }
+  return lines;
+}
+
+/* Char-count fallback if font metrics are unavailable. */
+function wrapCardTitleChars(title, max = 30, maxLines = 3) {
   const words = String(title || "").split(/\s+/).filter(Boolean);
   const lines = [];
   let cur = "";
   for (const w of words) {
     const cand = cur ? cur + " " + w : w;
     if (cand.length <= max) cur = cand;
-    else {
-      if (cur) lines.push(cur);
-      cur = w;
-    }
+    else { if (cur) lines.push(cur); cur = w; }
   }
   if (cur) lines.push(cur);
   if (lines.length > maxLines) {
@@ -200,6 +339,7 @@ function main() {
 
   const CARD_FONTS = cardFontConfig();
   probeFonts();
+  const TITLE_METRICS = pickTitleMetrics();
 
   const files = fs.readdirSync(POSTS_DIR).filter((f) => f.endsWith(".md"));
   const parsed = [];
@@ -303,11 +443,14 @@ function main() {
     fs.writeFileSync(path.join(outDir, "index.html"), injectPage(shell, seoBlock, viewBlock));
 
     if (cardTemplate) {
-      const lines = wrapCardTitle(p.title);
-      const y0 = 334 - (lines.length - 1) * 38;
+      const measure = (s) => TITLE_METRICS.width(s, CARD.titleSize, CARD.titleLS);
+      const lines = TITLE_METRICS
+        ? wrapCardTitle(p.title, measure, CARD.maxWidth, CARD.maxLines)
+        : wrapCardTitleChars(p.title, 30, CARD.maxLines);
+      const y0 = CARD.titleBase - (lines.length - 1) * CARD.titleStep;
       const titleBlock =
         '<text x="90" y="' + y0 + '" class="title">' +
-        lines.map((l, i) => `<tspan x="90"${i ? ' dy="76"' : ""}>${escHtml(l)}</tspan>`).join("") +
+        lines.map((l, i) => `<tspan x="90"${i ? ` dy="${CARD.titleLine}"` : ""}>${escHtml(l)}</tspan>`).join("") +
         "</text>";
       const cardSvg = cardTemplate.replace("<!--TITLE_BLOCK-->", titleBlock);
       fs.writeFileSync(path.join(outDir, "card.svg"), cardSvg);
