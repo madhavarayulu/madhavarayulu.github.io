@@ -195,7 +195,7 @@ function main() {
     console.log(`✓ Generated entry/${p.slug}/index.html`);
   });
 
-  ["archive", "trailhead"].forEach((route) => {
+  ["archive", "about"].forEach((route) => {
     const dir = path.join(__dirname, route);
     fs.mkdirSync(dir, { recursive: true });
     const routeTitle = route === "archive" ? "Archive · Cairn" : "About · Cairn";
@@ -222,7 +222,7 @@ function main() {
   const urls = [
     { loc: `${SITE}/`, lastmod: latestMod },
     { loc: `${SITE}/archive/`, lastmod: latestMod },
-    { loc: `${SITE}/trailhead/`, lastmod: latestMod },
+    { loc: `${SITE}/about/`, lastmod: latestMod },
     ...parsed.map((p) => ({
       loc: `${SITE}/entry/${p.slug}/`,
       lastmod: p.dateMs ? new Date(p.dateMs).toISOString().slice(0, 10) : "",
