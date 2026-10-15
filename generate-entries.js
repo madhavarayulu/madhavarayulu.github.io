@@ -4,6 +4,7 @@
  * Single-source-of-truth static generator for Cairn.
  * Builds static entries, archive/about routes, posts.json, sitemap.xml, rss.xml,
  * 404 fallback, and unique per-post preview cards (SVG stencil + PNG for scrapers).
+ * Cards render at 2x (2400x1256) so display-cut hairlines survive scraper downscaling.
  * Fonts in fonts/ are probed and logged; a display-cut instance (72pt) is
  * auto-detected and pinned into the card for the PNG rasterizer.
  */
@@ -300,8 +301,8 @@ function main() {
     <meta property="og:description" content="${escHtml(p.excerpt)}" />
     <meta property="og:url" content="${url}" />
     <meta property="og:image" content="${cardImgUrl}" />
-    <meta property="og:image:width" content="1200" />
-    <meta property="og:image:height" content="628" />
+    <meta property="og:image:width" content="2400" />
+    <meta property="og:image:height" content="1256" />
     <link rel="canonical" href="${url}" />
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:title" content="${escHtml(p.title)}" />
@@ -334,7 +335,9 @@ function main() {
     fs.mkdirSync(outDir, { recursive: true });
     fs.writeFileSync(path.join(outDir, "index.html"), injectPage(shell, seoBlock, viewBlock));
 
-    // Stamp the post title into the card stencil, then rasterize to PNG for scrapers
+    // Stamp the post title into the card stencil, then rasterize to PNG for scrapers.
+    // Rendered at 2x (2400x1256): display-cut hairlines survive only when there are
+    // enough pixels for them; scrapers downscale, which restores the intended contrast.
     if (cardTemplate) {
       const lines = wrapCardTitle(p.title);
       const y0 = 300 - (lines.length - 1) * 31;
@@ -344,7 +347,7 @@ function main() {
         "</text>";
       let cardSvg = cardTemplate.replace("<!--TITLE_BLOCK-->", titleBlock);
 
-      // Pin the display-cut family ahead of the fallbacks when a 72pt instance exists
+      // Pin the detected families ahead of the fallbacks (idempotent with the template's own pins)
       if (CARD_FAMILIES.display) {
         const override =
           `\n      .title { font-family: '${CARD_FAMILIES.display}', 'Fraunces', Georgia, serif; }` +
@@ -356,7 +359,7 @@ function main() {
 
       if (Resvg) {
         const resvg = new Resvg(cardSvg, {
-          fitTo: { mode: "width", value: 1200 },
+          fitTo: { mode: "width", value: 2400 },
           background: "#12100e",
           font: CARD_FONTS,
         });
