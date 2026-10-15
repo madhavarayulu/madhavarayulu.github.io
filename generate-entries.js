@@ -2,13 +2,6 @@
 /**
  * generate-entries.js
  * Single-source-of-truth static generator for Cairn.
- * Uses root index.html as the master shell — no separate templates/entry.html required!
- * Generates:
- *   - /entry/{slug}/index.html (with pre-rendered HTML, OpenGraph, & JSON-LD)
- *   - /archive/index.html & /trailhead/index.html (for clean URL routing on GitHub Pages)
- *   - /posts.json
- *   - /sitemap.xml
- *   - /rss.xml
  */
 const fs = require("fs");
 const path = require("path");
@@ -138,7 +131,6 @@ function main() {
 
   parsed.sort((a, b) => b.dateMs - a.dateMs);
 
-  // Remove stale entry directories
   const validSlugs = parsed.map((p) => p.slug);
   fs.readdirSync(ENTRY_DIR).forEach((d) => {
     if (!validSlugs.includes(d)) {
@@ -147,7 +139,6 @@ function main() {
     }
   });
 
-  // 1. Generate static /entry/{slug}/index.html pages
   parsed.forEach((p, index) => {
     const newer = parsed[index - 1];
     const older = parsed[index + 1];
@@ -204,17 +195,15 @@ function main() {
     console.log(`✓ Generated entry/${p.slug}/index.html`);
   });
 
-  // 2. Generate /archive/index.html & /trailhead/index.html route shells
   ["archive", "trailhead"].forEach((route) => {
     const dir = path.join(__dirname, route);
     fs.mkdirSync(dir, { recursive: true });
-    const routeTitle = route === "archive" ? "The Pile · Cairn" : "Trailhead · Cairn";
+    const routeTitle = route === "archive" ? "Archive · Cairn" : "About · Cairn";
     const seo = `    <title>${routeTitle}</title>\n    <link rel="canonical" href="${SITE}/${route}/" />`;
     fs.writeFileSync(path.join(dir, "index.html"), injectPage(shell, seo, ""));
     console.log(`✓ Generated ${route}/index.html`);
   });
 
-  // 3. Write posts.json
   const postsMeta = parsed.map((p) => ({
     slug: p.slug,
     title: p.title,
@@ -229,7 +218,6 @@ function main() {
   fs.writeFileSync(path.join(__dirname, "posts.json"), JSON.stringify(postsMeta, null, 2));
   console.log("✓ Generated posts.json");
 
-  // 4. Write sitemap.xml
   const latestMod = parsed[0] && parsed[0].dateMs ? new Date(parsed[0].dateMs).toISOString().slice(0, 10) : "";
   const urls = [
     { loc: `${SITE}/`, lastmod: latestMod },
@@ -249,7 +237,6 @@ function main() {
   fs.writeFileSync(path.join(__dirname, "sitemap.xml"), sitemap);
   console.log("✓ Generated sitemap.xml");
 
-  // 5. Write rss.xml
   const rssItems = parsed
     .slice(0, 25)
     .map(
