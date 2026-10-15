@@ -3,9 +3,9 @@
     <style>
       .bg { fill: #12100e; }
       .frame { fill: none; stroke: #332C25; stroke-width: 1.5; }
-      .brand { font-family: 'Fraunces 72pt SemiBold', 'Fraunces', Georgia, serif; font-weight: 500; font-size: 34px; fill: #B5AB9C; letter-spacing: -0.025em; }
+      .brand { font-family: 'Fraunces', Georgia, serif; font-weight: 500; font-size: 34px; fill: #B5AB9C; letter-spacing: -0.025em; }
       .dot { fill: #E06D44; }
-      .title { font-family: 'Fraunces 72pt SemiBold', 'Fraunces', Georgia, serif; font-weight: 600; font-size: 50px; fill: #F2ECE1; letter-spacing: -0.02em; }
+      .title { font-family: 'Fraunces', Georgia, serif; font-weight: 600; font-size: 50px; fill: #F2ECE1; letter-spacing: -0.02em; }
       .author { font-family: 'Spline Sans Mono', ui-monospace, Menlo, monospace; font-weight: 400; font-size: 17px; fill: #7E7567; letter-spacing: 0.08em; }
     </style>
     <radialGradient id="bgGlow" cx="50%" cy="30%" r="70%">
