@@ -709,25 +709,30 @@
         overflow-y: auto;
         padding-right: 4px;
         scrollbar-width: thin;
-        scrollbar-color: var(--md-sys-color-outline) var(--md-sys-color-surface-container-low);
+        scrollbar-color: transparent transparent;
+        transition: scrollbar-color 0.2s;
+      }
+
+      .topic-scrollbox:hover {
+        scrollbar-color: var(--md-sys-color-outline-variant) transparent;
       }
 
       .topic-scrollbox::-webkit-scrollbar {
-        width: 6px;
+        width: 3px;
       }
 
       .topic-scrollbox::-webkit-scrollbar-track {
-        background: var(--md-sys-color-surface-container-low);
-        border-radius: var(--radius-full);
+        background: transparent;
       }
 
       .topic-scrollbox::-webkit-scrollbar-thumb {
-        background: var(--md-sys-color-outline-variant);
+        background: transparent;
         border-radius: var(--radius-full);
+        transition: background 0.2s;
       }
 
-      .topic-scrollbox::-webkit-scrollbar-thumb:hover {
-        background: var(--md-sys-color-outline);
+      .topic-scrollbox:hover::-webkit-scrollbar-thumb {
+        background: var(--md-sys-color-outline-variant);
       }
 
       .mtag {
@@ -1352,13 +1357,7 @@
           grid-template-columns: 32px minmax(0, 1fr);
         }
         .item-right {
-          grid-column: 2;
-          align-items: flex-start;
-          margin-top: 6px;
-          flex-direction: row;
-        }
-        .item-right .read-time-mobile {
-          display: none;
+          display: none !important;
         }
         .nav-row {
           grid-template-columns: 1fr;
@@ -1451,7 +1450,6 @@
             </svg>
             Madhava Rayulu
           </span>
-          <span style="opacity:0.75">Field notes, stacked one stone at a time</span>
         </span>
         <div class="footer-links">
           <a href="/archive/" data-nav>Archive</a>
