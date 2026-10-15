@@ -122,23 +122,27 @@
       html {
         scroll-behavior: smooth;
         scrollbar-width: thin;
-        scrollbar-color: var(--md-sys-color-outline-variant) var(--md-sys-color-surface);
+        scrollbar-color: transparent transparent;
       }
 
-      /* Global Slim Custom Scrollbar */
+      html:hover {
+        scrollbar-color: var(--md-sys-color-outline-variant) transparent;
+      }
+
       ::-webkit-scrollbar {
-        width: 6px;
-        height: 6px;
+        width: 4px;
+        height: 4px;
       }
       ::-webkit-scrollbar-track {
-        background: var(--md-sys-color-surface);
+        background: transparent;
       }
       ::-webkit-scrollbar-thumb {
-        background: var(--md-sys-color-outline-variant);
+        background: transparent;
         border-radius: var(--radius-full);
+        transition: background 0.2s;
       }
-      ::-webkit-scrollbar-thumb:hover {
-        background: var(--md-sys-color-outline);
+      :hover::-webkit-scrollbar-thumb {
+        background: var(--md-sys-color-outline-variant);
       }
 
       body {
@@ -218,19 +222,14 @@
         transition: width 0.08s linear;
       }
 
+      /* Header is now relative so it scrolls away naturally with the page */
       header {
-        position: sticky;
-        top: 0;
+        position: relative;
         z-index: 50;
         background: var(--md-sys-color-header-bg);
         backdrop-filter: blur(16px);
         -webkit-backdrop-filter: blur(16px);
-        border-bottom: 1px solid transparent;
-        transition: border-color 0.25s var(--ease-m3), background-color 0.3s var(--ease-m3);
-      }
-
-      header.scrolled {
-        border-bottom-color: var(--md-sys-color-outline-variant);
+        border-bottom: 1px solid var(--md-sys-color-outline-variant);
       }
 
       .header-inner {
@@ -262,18 +261,11 @@
         color: var(--md-sys-color-primary);
       }
 
+      /* Subtle non-competing Oracle Fusion Finance label */
       .brand-badge {
-        font: 500 10.5px/1 var(--font-mono);
-        letter-spacing: 0.08em;
-        text-transform: uppercase;
-        color: var(--md-sys-color-on-surface-variant);
-        background: var(--md-sys-color-surface-container);
-        border: 1px solid var(--md-sys-color-outline-variant);
-        padding: 0 11px;
-        height: 36px;
-        display: inline-flex;
-        align-items: center;
-        border-radius: var(--radius-full);
+        font: 400 11.5px/1 var(--font-mono);
+        letter-spacing: 0.04em;
+        color: var(--md-sys-color-outline);
       }
 
       .header-actions {
@@ -392,7 +384,7 @@
 
       .m-sticky {
         position: sticky;
-        top: 96px;
+        top: 32px;
       }
 
       .only-mobile {
@@ -1675,7 +1667,6 @@ So this is a cairn too — smaller, slower, made of words instead of granite. Fi
       window.addEventListener(
         "scroll",
         () => {
-          header.classList.toggle("scrolled", window.scrollY > 8);
           const winScroll = document.body.scrollTop || document.documentElement.scrollTop;
           const height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
           const p = height > 0 ? (winScroll / height) * 100 : 0;
@@ -1815,7 +1806,7 @@ So this is a cairn too — smaller, slower, made of words instead of granite. Fi
             <div class="main-col">
               <article class="hero-card">
                 <div class="hero-top">
-                  <span class="eyebrow"><span class="eyebrow-dot"></span>The Pile</span>
+                  <span class="eyebrow"><span class="eyebrow-dot"></span>Latest Note</span>
                   ${latest.verified ? `<span class="vfy-chip">● Verified on ${esc(latest.verified)}</span>` : ""}
                 </div>
                 <h1 class="hero-title"><a href="/entry/${encodeURIComponent(latest.slug)}/" data-nav>${esc(latest.title)}</a></h1>
