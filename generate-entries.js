@@ -4,6 +4,8 @@
  * Single-source-of-truth static generator for Cairn.
  * Builds static entries, archive/about routes, posts.json, sitemap.xml, rss.xml,
  * 404 fallback, and unique per-post preview cards (SVG stencil + PNG for scrapers).
+ * Fonts in fonts/ are probed and logged; a display-cut instance (72pt) is
+ * auto-detected and pinned into the card for the PNG rasterizer.
  */
 const fs = require("fs");
 const path = require("path");
@@ -29,13 +31,19 @@ const escHtml = (s) =>
     (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[c]
   );
 
-/* Font setup for the PNG rasterizer: fonts/ dir if present, else system fonts */
+/* Font setup for the PNG rasterizer: fonts/ dir if present, else system fonts.
+   Files under 10KB are ignored — a truncated/empty TTF must never poison rendering. */
 function cardFontConfig() {
   const fontsDir = path.join(__dirname, "fonts");
   if (fs.existsSync(fontsDir)) {
     const files = fs
       .readdirSync(fontsDir)
       .filter((f) => /\.(ttf|otf)$/i.test(f))
+      .filter((f) => {
+        const ok = fs.statSync(path.join(fontsDir, f)).size > 10000;
+        if (!ok) console.log(`- fonts/${f} ignored (too small to be a real font file)`);
+        return ok;
+      })
       .map((f) => path.join(fontsDir, f));
     if (files.length) {
       return { loadSystemFonts: false, fontFiles: files, defaultFontFamily: "Fraunces" };
@@ -43,6 +51,73 @@ function cardFontConfig() {
   }
   console.log("- No fonts/ TTFs found — card.png will render with runner system fonts");
   return { loadSystemFonts: true };
+}
+
+/* Read internal family names (nameID 1 + 16) from a TTF/OTF — parses the 'name' table, no deps. */
+function readFontNames(buf) {
+  const numTables = buf.readUInt16BE(4);
+  let nameOff = -1;
+  for (let i = 0; i < numTables; i++) {
+    const rec = 12 + i * 16;
+    if (buf.toString("ascii", rec, rec + 4) === "name") {
+      nameOff = buf.readUInt32BE(rec + 8);
+      break;
+    }
+  }
+  if (nameOff < 0) return [];
+  const count = buf.readUInt16BE(nameOff + 2);
+  const strOff = nameOff + buf.readUInt16BE(nameOff + 4);
+  const names = [];
+  for (let i = 0; i < count; i++) {
+    const rec = nameOff + 6 + i * 12;
+    const platformID = buf.readUInt16BE(rec);
+    const encodingID = buf.readUInt16BE(rec + 2);
+    const nameID = buf.readUInt16BE(rec + 6);
+    const len = buf.readUInt16BE(rec + 8);
+    const off = buf.readUInt16BE(rec + 10);
+    if (nameID !== 1 && nameID !== 16) continue;
+    let s = "";
+    if (platformID === 3 && (encodingID === 1 || encodingID === 10) && len % 2 === 0) {
+      s = Buffer.from(buf.subarray(strOff + off, strOff + off + len)).swap16().toString("utf16le");
+    } else if (platformID === 1) {
+      s = buf.toString("latin1", strOff + off, strOff + off + len);
+    } else continue;
+    s = s.replace(/\0/g, "").trim();
+    if (s && !names.includes(s)) names.push(s);
+  }
+  return names;
+}
+
+/* Probe fonts/: log every family name resvg will see, and auto-detect a
+   display-cut (72pt) instance for the card title. Returns the chosen families. */
+function probeFonts() {
+  const fontsDir = path.join(__dirname, "fonts");
+  if (!fs.existsSync(fontsDir)) {
+    console.log("font probe: no fonts/ directory");
+    return { display: null, brand: null };
+  }
+  const files = fs
+    .readdirSync(fontsDir)
+    .filter((f) => /\.(ttf|otf)$/i.test(f) && fs.statSync(path.join(fontsDir, f)).size > 10000);
+  if (!files.length) {
+    console.log("font probe: no usable ttf/otf files in fonts/");
+    return { display: null, brand: null };
+  }
+  const names = [];
+  for (const f of files) {
+    try {
+      const n = readFontNames(fs.readFileSync(path.join(fontsDir, f)));
+      console.log(`font probe ${f}: ${JSON.stringify(n)}`);
+      names.push(...n);
+    } catch (e) {
+      console.log(`font probe ${f}: failed (${e.message})`);
+    }
+  }
+  const uniq = [...new Set(names)];
+  const display = uniq.find((n) => /72\s*pt/i.test(n)) || null;
+  const brand = uniq.find((n) => /72\s*pt/i.test(n) && /medium/i.test(n)) || display;
+  console.log(`font probe: display family = ${display || "(none — variable Fraunces will be used)"}`);
+  return { display, brand };
 }
 
 function parseFrontMatter(raw) {
@@ -153,13 +228,7 @@ function main() {
   }
 
   const CARD_FONTS = cardFontConfig();
-
-  try {
-    const fontMap = Resvg.detectFonts ? Resvg.detectFonts(CARD_FONTS) : null;
-    console.log("resvg font families:", fontMap ? JSON.stringify(Object.keys(fontMap)) : "detectFonts unavailable");
-  } catch (e) {
-    console.log("font inspect skipped:", e.message);
-  }
+  const CARD_FAMILIES = probeFonts();
 
   const files = fs.readdirSync(POSTS_DIR).filter((f) => f.endsWith(".md"));
   const parsed = [];
@@ -273,7 +342,16 @@ function main() {
         '<text x="110" y="' + y0 + '" class="title">' +
         lines.map((l, i) => `<tspan x="110"${i ? ' dy="62"' : ""}>${escHtml(l)}</tspan>`).join("") +
         "</text>";
-      const cardSvg = cardTemplate.replace("<!--TITLE_BLOCK-->", titleBlock);
+      let cardSvg = cardTemplate.replace("<!--TITLE_BLOCK-->", titleBlock);
+
+      // Pin the display-cut family ahead of the fallbacks when a 72pt instance exists
+      if (CARD_FAMILIES.display) {
+        const override =
+          `\n      .title { font-family: '${CARD_FAMILIES.display}', 'Fraunces', Georgia, serif; }` +
+          `\n      .brand { font-family: '${CARD_FAMILIES.brand || CARD_FAMILIES.display}', 'Fraunces', Georgia, serif; }\n  `;
+        cardSvg = cardSvg.replace("</style>", override + "</style>");
+      }
+
       fs.writeFileSync(path.join(outDir, "card.svg"), cardSvg);
 
       if (Resvg) {
