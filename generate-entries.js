@@ -154,6 +154,13 @@ function main() {
 
   const CARD_FONTS = cardFontConfig();
 
+  try {
+    const fontMap = Resvg.detectFonts ? Resvg.detectFonts(CARD_FONTS) : null;
+    console.log("resvg font families:", fontMap ? JSON.stringify(Object.keys(fontMap)) : "detectFonts unavailable");
+  } catch (e) {
+    console.log("font inspect skipped:", e.message);
+  }
+
   const files = fs.readdirSync(POSTS_DIR).filter((f) => f.endsWith(".md"));
   const parsed = [];
 
@@ -271,7 +278,6 @@ function main() {
 
       if (Resvg) {
         const resvg = new Resvg(cardSvg, {
-          try { console.log("Loaded font families:", resvg.fonts()); } catch (_) {}
           fitTo: { mode: "width", value: 1200 },
           background: "#12100e",
           font: CARD_FONTS,
