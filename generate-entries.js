@@ -546,7 +546,7 @@ function main() {
   const rss = `<?xml version="1.0" encoding="UTF-8"?>
 <rss version="2.0">
   <channel>
-    <title>Cairn — Oracle Fusion Finance Field Notes</title>
+    <title>Cairn · Oracle Fusion Finance Field Notes</title>
     <link>${SITE}/</link>
     <description>Field notes from an Oracle Fusion Finance functional consultant.</description>
     <language>en-us</language>
