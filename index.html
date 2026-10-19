@@ -640,17 +640,8 @@
         transition: color 0.18s;
       }
       
-      .m-link .ms-icon {
-        font-size: 14px;
-        transition: transform 0.18s;
-      }
-      
       .m-link:hover {
         color: var(--md-sys-color-primary-hover);
-      }
-      
-      .m-link:hover .ms-icon {
-        transform: translateX(3px);
       }
 
       .page-head {
@@ -1473,6 +1464,22 @@
           margin-top: 56px;
         }
       }
+
+      /* ── Wayfinding arrows · one glyph, one face, one motion ── */
+      .ar {
+        font-family: var(--font-mono);
+        font-weight: 500;
+        letter-spacing: normal;
+        display: inline-block;
+        transition: transform 0.18s var(--ease-m3);
+      }
+      a:hover .ar { transform: translateX(4px); }
+      a:hover .ar.rev { transform: translateX(-4px); }
+      @media (prefers-reduced-motion: reduce) {
+        .ar { transition: none; }
+        a:hover .ar { transform: none; }
+      }
+
     </style>
   </head>
   <body>
@@ -1871,7 +1878,7 @@ So this is a cairn too — smaller, slower, made of words instead of granite. Fi
                     <span>${rt(latest.body)}</span>
                   </div>
                   <a class="m3-btn-filled" href="/entry/${encodeURIComponent(latest.slug)}/" data-nav>
-                    Read Note <span class="ms-icon">arrow_forward</span>
+                    Read Note <span class="ar">→</span>
                   </a>
                 </div>
               </article>
@@ -1880,7 +1887,7 @@ So this is a cairn too — smaller, slower, made of words instead of granite. Fi
                 rest.length
                   ? `<div class="section-bar">
                       <span class="eyebrow">Earlier Field Notes</span>
-                      <a href="/archive/" data-nav style="font:500 11.5px var(--font-mono);color:var(--md-sys-color-primary)">All ${POSTS.length} entries →</a>
+                      <a href="/archive/" data-nav style="font:500 11.5px var(--font-mono);color:var(--md-sys-color-primary)">All ${POSTS.length} entries <span class="ar">→</span></a>
                     </div>
                     <div class="item-list">${list}</div>`
                   : ""
@@ -2126,7 +2133,7 @@ So this is a cairn too — smaller, slower, made of words instead of granite. Fi
         view.innerHTML = `
           <div class="page-grid">
             <div class="main-col">
-              <a class="back-chip" href="/" data-nav><span class="ms-icon">arrow_back</span> Field notes</a>
+              <a class="back-chip" href="/" data-nav><span class="ar rev">←</span> Field notes</a>
 
               <header class="art-header">
                 <h1 class="art-title">${esc(p.title)}</h1>
@@ -2154,7 +2161,7 @@ So this is a cairn too — smaller, slower, made of words instead of granite. Fi
                 ${
                   newer
                     ? `<a class="nav-link prev" href="/entry/${encodeURIComponent(newer.slug)}/" data-nav>
-                        <span class="nav-label">← Newer Note</span>
+                        <span class="nav-label"><span class="ar rev">←</span> Newer Note</span>
                         <span class="nav-title">${esc(newer.title)}</span>
                       </a>`
                     : `<div></div>`
@@ -2162,7 +2169,7 @@ So this is a cairn too — smaller, slower, made of words instead of granite. Fi
                 ${
                   older
                     ? `<a class="nav-link next" href="/entry/${encodeURIComponent(older.slug)}/" data-nav>
-                        <span class="nav-label">Older Note →</span>
+                        <span class="nav-label">Older Note <span class="ar">→</span></span>
                         <span class="nav-title">${esc(older.title)}</span>
                       </a>`
                     : `<div></div>`
@@ -2219,7 +2226,7 @@ So this is a cairn too — smaller, slower, made of words instead of granite. Fi
               <div class="m-sticky m-card">
                 <div id="abCairnD">${cairnSVG(POSTS, { uid: "aba" })}</div>
                 <div class="cairn-cap" id="abCapD" data-def="${esc(capDef)}">${esc(capDef)}</div>
-                 ${why ? `<a class="m-link" href="/entry/why-cairn/" data-nav>Why Cairn? <span class="ms-icon">arrow_forward</span></a>` : ""}
+                 ${why ? `<a class="m-link" href="/entry/why-cairn/" data-nav>Why Cairn? <span class="ar">→</span></a>` : ""}
               </div>
             </aside>
           </div>`;
