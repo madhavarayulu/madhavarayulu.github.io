@@ -629,6 +629,30 @@
         margin-top: 6px;
       }
 
+      .m-link {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        margin-top: 14px;
+        font: 500 11.5px/1 var(--font-mono);
+        letter-spacing: 0.08em;
+        color: var(--md-sys-color-primary);
+        transition: color 0.18s;
+      }
+      
+      .m-link .ms-icon {
+        font-size: 14px;
+        transition: transform 0.18s;
+      }
+      
+      .m-link:hover {
+        color: var(--md-sys-color-primary-hover);
+      }
+      
+      .m-link:hover .ms-icon {
+        transform: translateX(3px);
+      }
+
       .page-head {
         padding: 44px 0 8px;
       }
@@ -2186,7 +2210,6 @@ So this is a cairn too — smaller, slower, made of words instead of granite. Fi
                 <p>My work is to bridge the gap between business needs and system capabilities — guiding implementations, designing financial processes, and configuring solutions that hold up in production.</p>
                 <p><strong>Cairn</strong> is a collection of field notes from that journey. It covers the practical realities of deployments, quarterly release cycles, and the edge cases that official documentation misses.</p>
                 <p>Client identities remain strictly confidential. The insights, however, are left here for anyone walking the same trail.</p>
-                ${why ? `<p><a href="/entry/why-cairn/" data-nav>Read "Why Cairn?" →</a></p>` : ""}
               </div>
               <div style="margin-top:44px;padding:20px;border-radius:var(--radius-md);background:var(--md-sys-color-surface-container-low);border:1px dashed var(--md-sys-color-outline-variant);font-size:13px;color:var(--md-sys-color-on-surface-variant)">
                 <strong>Disclaimer:</strong> This site is an independent project and is not affiliated with, endorsed by, or sponsored by Oracle Corporation. Oracle and related trademarks are the property of their respective owners. Content is based on personal implementation experience and does not constitute official documentation.
@@ -2196,6 +2219,7 @@ So this is a cairn too — smaller, slower, made of words instead of granite. Fi
               <div class="m-sticky m-card">
                 <div id="abCairnD">${cairnSVG(POSTS, { uid: "aba" })}</div>
                 <div class="cairn-cap" id="abCapD" data-def="${esc(capDef)}">${esc(capDef)}</div>
+                 ${why ? `<a class="m-link" href="/entry/why-cairn/" data-nav>Why Cairn? <span class="ms-icon">arrow_forward</span></a>` : ""}
               </div>
             </aside>
           </div>`;
